@@ -1,3 +1,4 @@
+import '/auth/firebase_auth/auth_util.dart';
 import '/components/button/button_widget.dart';
 import '/components/text_field/text_field_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -20,6 +21,8 @@ class LoginWidget extends StatefulWidget {
 
 class _LoginWidgetState extends State<LoginWidget> {
   late LoginModel _model;
+  bool isLoading = false;
+  bool isCreateAccount = false;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -48,9 +51,11 @@ class _LoginWidgetState extends State<LoginWidget> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-        body: Padding(
-          padding: EdgeInsets.all(32.0),
-          child: Column(
+        body: Form(
+          key: _model.formKey,
+          child: Padding(
+            padding: EdgeInsets.all(32.0),
+            child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -211,29 +216,32 @@ class _LoginWidgetState extends State<LoginWidget> {
                         model: _model.textFieldModel1,
                         updateCallback: () => safeSetState(() {}),
                         child: TextFieldWidget(
-                          label: 'Teacher ID',
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          label: 'Email',
                           labelPresent: true,
                           helper: '',
                           helperPresent: false,
                           leadingIcon: Icon(
-                            Icons.person_outline_rounded,
+                            Icons.email_outlined,
                             color: FlutterFlowTheme.of(context).primaryText,
                             size: 24.0,
                           ),
                           leadingIconPresent: true,
                           trailingIconPresent: false,
-                          hint: 'Enter your ID',
+                          hint: 'Enter your email',
                           value: '',
                           onChange: '',
                           onSubmit: '',
                           variant: 'outlined',
                           error: false,
+                          keyboardType: TextInputType.emailAddress,
                         ),
                       ),
                       wrapWithModel(
                         model: _model.textFieldModel2,
                         updateCallback: () => safeSetState(() {}),
                         child: TextFieldWidget(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           label: 'Password',
                           labelPresent: true,
                           helper: '',
@@ -256,6 +264,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                           onSubmit: '',
                           variant: 'outlined',
                           error: false,
+                          obscureText: true,
                         ),
                       ),
                     ].divide(SizedBox(height: 16.0)),
@@ -270,38 +279,158 @@ class _LoginWidgetState extends State<LoginWidget> {
                         focusColor: Colors.transparent,
                         hoverColor: Colors.transparent,
                         highlightColor: Colors.transparent,
-                        onTap: () async {
-                          context.goNamed(HomeDashboardWidget.routeName);
-                        },
+                        onTap: isLoading
+                            ? null
+                            : () async {
+                                if (!_model.formKey.currentState!.validate()) {
+                                  return;
+                                }
+
+                                final email = _model.textFieldModel1.inputTextController?.text.trim() ?? '';
+                                final password = _model.textFieldModel2.inputTextController?.text ?? '';
+
+                                setState(() => isLoading = true);
+                                final user = isCreateAccount
+                                    ? await authManager.createAccountWithEmail(
+                                        context,
+                                        email,
+                                        password,
+                                      )
+                                    : await authManager.signInWithEmail(
+                                        context,
+                                        email,
+                                        password,
+                                      );
+                                setState(() => isLoading = false);
+
+                                if (user != null) {
+                                  context.goNamed(HomeDashboardWidget.routeName);
+                                }
+                              },
                         child: wrapWithModel(
                           model: _model.buttonModel1,
                           updateCallback: () => safeSetState(() {}),
                           child: ButtonWidget(
                             iconPresent: false,
                             iconEndPresent: false,
-                            content: 'Login',
+                            content: isCreateAccount ? 'Create Account' : 'Login',
                             variant: 'primary',
                             size: 'large',
                             fullWidth: true,
-                            loading: false,
-                            disabled: false,
+                            loading: isLoading,
+                            disabled: isLoading,
                           ),
                         ),
                       ),
-                      Container(
-                        alignment: AlignmentDirectional(0.0, 0.0),
-                        child: wrapWithModel(
-                          model: _model.buttonModel2,
-                          updateCallback: () => safeSetState(() {}),
-                          child: ButtonWidget(
-                            iconPresent: false,
-                            iconEndPresent: false,
-                            content: 'Forgot Password?',
-                            variant: 'ghost',
-                            size: 'small',
-                            fullWidth: false,
-                            loading: false,
-                            disabled: false,
+                      Padding(
+                        padding: EdgeInsets.only(top: 8.0),
+                        child: InkWell(
+                          splashColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: isLoading
+                              ? null
+                              : () async {
+                                  setState(() => isLoading = true);
+                                  final user = await authManager.signInWithGoogle(context);
+                                  setState(() => isLoading = false);
+                                  if (user != null) {
+                                    context.goNamed(HomeDashboardWidget.routeName);
+                                  }
+                                },
+                          child: wrapWithModel(
+                            model: _model.buttonModel2,
+                            updateCallback: () => safeSetState(() {}),
+                            child: ButtonWidget(
+                              icon: Icon(
+                                Icons.g_mobiledata,
+                                color: FlutterFlowTheme.of(context).primary,
+                                size: 24.0,
+                              ),
+                              iconPresent: true,
+                              iconEndPresent: false,
+                              content: 'Sign in with Google',
+                              variant: 'outline',
+                              size: 'large',
+                              fullWidth: true,
+                              loading: isLoading,
+                              disabled: isLoading,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 8.0),
+                        child: TextButton(
+                          onPressed: isLoading
+                              ? null
+                              : () {
+                                  setState(() => isCreateAccount = !isCreateAccount);
+                                },
+                          child: Text(
+                            isCreateAccount ? 'Already have an account? Login' : 'Create a new account',
+                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                  font: GoogleFonts.inter(
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontStyle,
+                                  ),
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontStyle,
+                                  lineHeight: 1.47,
+                                ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 8.0),
+                        child: TextButton(
+                          onPressed: isLoading
+                              ? null
+                              : () async {
+                                  final email = _model.textFieldModel1.inputTextController?.text.trim() ?? '';
+                                  if (email.isEmpty) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text('Please enter your email to reset password.')),
+                                    );
+                                    return;
+                                  }
+                                  await authManager.resetPassword(
+                                    context: context,
+                                    email: email,
+                                  );
+                                },
+                          child: Text(
+                            'Forgot Password?',
+                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                  font: GoogleFonts.inter(
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontStyle,
+                                  ),
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontStyle,
+                                  lineHeight: 1.47,
+                                ),
                           ),
                         ),
                       ),

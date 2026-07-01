@@ -22,6 +22,9 @@ class TextFieldWidget extends StatefulWidget {
     String? onSubmit,
     String? variant,
     bool? error,
+    bool? obscureText,
+    TextInputType? keyboardType,
+    this.autovalidateMode,
   })  : this.label = label ?? 'Teacher ID',
         this.labelPresent = labelPresent ?? true,
         this.helper = helper ?? '',
@@ -33,7 +36,9 @@ class TextFieldWidget extends StatefulWidget {
         this.onChange = onChange ?? '',
         this.onSubmit = onSubmit ?? '',
         this.variant = variant ?? 'outlined',
-        this.error = error ?? false;
+        this.error = error ?? false,
+        this.obscureText = obscureText ?? false,
+        this.keyboardType = keyboardType;
 
   final String label;
   final bool labelPresent;
@@ -49,6 +54,9 @@ class TextFieldWidget extends StatefulWidget {
   final String onSubmit;
   final String variant;
   final bool error;
+  final bool obscureText;
+  final TextInputType? keyboardType;
+  final AutovalidateMode? autovalidateMode;
 
   @override
   State<TextFieldWidget> createState() => _TextFieldWidgetState();
@@ -378,7 +386,9 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
                     child: TextFormField(
                       controller: _model.inputTextController,
                       focusNode: _model.inputFocusNode,
-                      obscureText: false,
+                      obscureText: widget.obscureText,
+                      keyboardType: widget.keyboardType,
+                      autovalidateMode: widget.autovalidateMode,
                       decoration: InputDecoration(
                         isDense: true,
                         hintText: valueOrDefault<String>(
