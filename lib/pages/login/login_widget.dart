@@ -56,275 +56,189 @@ class _LoginWidgetState extends State<LoginWidget> {
           child: Padding(
             padding: EdgeInsets.all(32.0),
             child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                    child: Container(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
                       child: Container(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 100.0,
-                              height: 100.0,
-                              decoration: BoxDecoration(
-                                color: FlutterFlowTheme.of(context).primary10,
-                                borderRadius: BorderRadius.circular(16.0),
-                                shape: BoxShape.rectangle,
+                        child: Container(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 100.0,
+                                height: 100.0,
+                                decoration: BoxDecoration(
+                                  color: FlutterFlowTheme.of(context).primary10,
+                                  borderRadius: BorderRadius.circular(16.0),
+                                  shape: BoxShape.rectangle,
+                                ),
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                child: Icon(
+                                  Icons.school_rounded,
+                                  color: FlutterFlowTheme.of(context).onPrimary,
+                                  size: 60.0,
+                                ),
                               ),
-                              alignment: AlignmentDirectional(0.0, 0.0),
-                              child: Icon(
-                                Icons.school_rounded,
-                                color: FlutterFlowTheme.of(context).onPrimary,
-                                size: 60.0,
-                              ),
-                            ),
-                            Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'DCI Teacher App',
-                                  style: FlutterFlowTheme.of(context)
-                                      .headlineMedium
-                                      .override(
-                                        font: GoogleFonts.plusJakartaSans(
-                                          fontWeight: FontWeight.bold,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .headlineMedium
-                                                  .fontStyle,
-                                        ),
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        letterSpacing: 0.0,
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'DCI Teacher App',
+                                    style: FlutterFlowTheme.of(context).headlineMedium.override(
+                                      font: GoogleFonts.plusJakartaSans(
                                         fontWeight: FontWeight.bold,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .headlineMedium
-                                            .fontStyle,
-                                        lineHeight: 1.25,
+                                        fontStyle: FlutterFlowTheme.of(context).headlineMedium.fontStyle,
                                       ),
-                                ),
-                                Text(
-                                  'Deshmukh Coaching Institute',
-                                  style: FlutterFlowTheme.of(context)
-                                      .labelLarge
-                                      .override(
-                                        font: GoogleFonts.inter(
-                                          fontWeight:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelLarge
-                                                  .fontWeight,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelLarge
-                                                  .fontStyle,
-                                        ),
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryText,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .labelLarge
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .labelLarge
-                                            .fontStyle,
-                                        lineHeight: 1.33,
+                                      color: FlutterFlowTheme.of(context).primary,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FontWeight.bold,
+                                      fontStyle: FlutterFlowTheme.of(context).headlineMedium.fontStyle,
+                                      lineHeight: 1.25,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Deshmukh Coaching Institute',
+                                    style: FlutterFlowTheme.of(context).labelLarge.override(
+                                      font: GoogleFonts.inter(
+                                        fontWeight: FlutterFlowTheme.of(context).labelLarge.fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context).labelLarge.fontStyle,
                                       ),
-                                ),
-                              ].divide(SizedBox(height: 4.0)),
-                            ),
-                          ].divide(SizedBox(height: 16.0)),
+                                      color: FlutterFlowTheme.of(context).secondaryText,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FlutterFlowTheme.of(context).labelLarge.fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context).labelLarge.fontStyle,
+                                      lineHeight: 1.33,
+                                    ),
+                                  ),
+                                ].divide(SizedBox(height: 4.0)),
+                              ),
+                            ].divide(SizedBox(height: 16.0)),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Welcome Back',
-                        style: FlutterFlowTheme.of(context)
-                            .headlineSmall
-                            .override(
-                              font: GoogleFonts.plusJakartaSans(
-                                fontWeight: FontWeight.bold,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .headlineSmall
-                                    .fontStyle,
-                              ),
-                              color: FlutterFlowTheme.of(context).primaryText,
-                              letterSpacing: 0.0,
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Welcome Back',
+                          style: FlutterFlowTheme.of(context).headlineSmall.override(
+                            font: GoogleFonts.plusJakartaSans(
                               fontWeight: FontWeight.bold,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .headlineSmall
-                                  .fontStyle,
-                              lineHeight: 1.3,
+                              fontStyle: FlutterFlowTheme.of(context).headlineSmall.fontStyle,
                             ),
-                      ),
-                      Text(
-                        'Sign in to manage your classes',
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              font: GoogleFonts.inter(
-                                fontWeight: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontWeight,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontStyle,
-                              ),
-                              color: FlutterFlowTheme.of(context).secondaryText,
-                              letterSpacing: 0.0,
-                              fontWeight: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontWeight,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontStyle,
-                              lineHeight: 1.47,
+                            color: FlutterFlowTheme.of(context).primaryText,
+                            letterSpacing: 0.0,
+                            fontWeight: FontWeight.bold,
+                            fontStyle: FlutterFlowTheme.of(context).headlineSmall.fontStyle,
+                            lineHeight: 1.3,
+                          ),
+                        ),
+                        Text(
+                          'Sign in to manage your classes',
+                          style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            font: GoogleFonts.inter(
+                              fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                             ),
-                      ),
-                    ].divide(SizedBox(height: 4.0)),
-                  ),
-                ].divide(SizedBox(height: 32.0)),
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      wrapWithModel(
-                        model: _model.textFieldModel1,
-                        updateCallback: () => safeSetState(() {}),
-                        child: TextFieldWidget(
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          label: 'Email',
-                          labelPresent: true,
-                          helper: '',
-                          helperPresent: false,
-                          leadingIcon: Icon(
-                            Icons.email_outlined,
-                            color: FlutterFlowTheme.of(context).primaryText,
-                            size: 24.0,
+                            color: FlutterFlowTheme.of(context).secondaryText,
+                            letterSpacing: 0.0,
+                            fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                            fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                            lineHeight: 1.47,
                           ),
-                          leadingIconPresent: true,
-                          trailingIconPresent: false,
-                          hint: 'Enter your email',
-                          value: '',
-                          onChange: '',
-                          onSubmit: '',
-                          variant: 'outlined',
-                          error: false,
-                          keyboardType: TextInputType.emailAddress,
                         ),
-                      ),
-                      wrapWithModel(
-                        model: _model.textFieldModel2,
-                        updateCallback: () => safeSetState(() {}),
-                        child: TextFieldWidget(
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          label: 'Password',
-                          labelPresent: true,
-                          helper: '',
-                          helperPresent: false,
-                          leadingIcon: Icon(
-                            Icons.lock_outline_rounded,
-                            color: FlutterFlowTheme.of(context).primaryText,
-                            size: 24.0,
-                          ),
-                          leadingIconPresent: true,
-                          trailingIcon: Icon(
-                            Icons.visibility_off_rounded,
-                            color: FlutterFlowTheme.of(context).primaryText,
-                            size: 24.0,
-                          ),
-                          trailingIconPresent: true,
-                          hint: '••••••••',
-                          value: '',
-                          onChange: '',
-                          onSubmit: '',
-                          variant: 'outlined',
-                          error: false,
-                          obscureText: true,
-                        ),
-                      ),
-                    ].divide(SizedBox(height: 16.0)),
-                  ),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        splashColor: Colors.transparent,
-                        focusColor: Colors.transparent,
-                        hoverColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        onTap: isLoading
-                            ? null
-                            : () async {
-                                if (!_model.formKey.currentState!.validate()) {
-                                  return;
-                                }
-
-                                final email = _model.textFieldModel1.inputTextController?.text.trim() ?? '';
-                                final password = _model.textFieldModel2.inputTextController?.text ?? '';
-
-                                setState(() => isLoading = true);
-                                final user = isCreateAccount
-                                    ? await authManager.createAccountWithEmail(
-                                        context,
-                                        email,
-                                        password,
-                                      )
-                                    : await authManager.signInWithEmail(
-                                        context,
-                                        email,
-                                        password,
-                                      );
-                                setState(() => isLoading = false);
-
-                                if (user != null) {
-                                  context.goNamed(HomeDashboardWidget.routeName);
-                                }
-                              },
-                        child: wrapWithModel(
-                          model: _model.buttonModel1,
+                      ].divide(SizedBox(height: 4.0)),
+                    ),
+                  ].divide(SizedBox(height: 32.0)),
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        wrapWithModel(
+                          model: _model.textFieldModel1,
                           updateCallback: () => safeSetState(() {}),
-                          child: ButtonWidget(
-                            iconPresent: false,
-                            iconEndPresent: false,
-                            content: isCreateAccount ? 'Create Account' : 'Login',
-                            variant: 'primary',
-                            size: 'large',
-                            fullWidth: true,
-                            loading: isLoading,
-                            disabled: isLoading,
+                          child: TextFieldWidget(
+                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                            label: 'Email',
+                            labelPresent: true,
+                            helper: '',
+                            helperPresent: false,
+                            leadingIcon: Icon(
+                              Icons.email_outlined,
+                              color: FlutterFlowTheme.of(context).primaryText,
+                              size: 24.0,
+                            ),
+                            leadingIconPresent: true,
+                            trailingIconPresent: false,
+                            hint: 'Enter your email',
+                            value: '',
+                            onChange: '',
+                            onSubmit: '',
+                            variant: 'outlined',
+                            error: false,
+                            keyboardType: TextInputType.emailAddress,
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 8.0),
-                        child: InkWell(
+                        wrapWithModel(
+                          model: _model.textFieldModel2,
+                          updateCallback: () => safeSetState(() {}),
+                          child: TextFieldWidget(
+                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                            label: 'Password',
+                            labelPresent: true,
+                            helper: '',
+                            helperPresent: false,
+                            leadingIcon: Icon(
+                              Icons.lock_outline_rounded,
+                              color: FlutterFlowTheme.of(context).primaryText,
+                              size: 24.0,
+                            ),
+                            leadingIconPresent: true,
+                            trailingIcon: Icon(
+                              Icons.visibility_off_rounded,
+                              color: FlutterFlowTheme.of(context).primaryText,
+                              size: 24.0,
+                            ),
+                            trailingIconPresent: true,
+                            hint: '••••••••',
+                            value: '',
+                            onChange: '',
+                            onSubmit: '',
+                            variant: 'outlined',
+                            error: false,
+                            obscureText: true,
+                          ),
+                        ),
+                      ].divide(SizedBox(height: 16.0)),
+                    ),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        InkWell(
                           splashColor: Colors.transparent,
                           focusColor: Colors.transparent,
                           hoverColor: Colors.transparent,
@@ -332,26 +246,39 @@ class _LoginWidgetState extends State<LoginWidget> {
                           onTap: isLoading
                               ? null
                               : () async {
+                                  if (!_model.formKey.currentState!.validate()) {
+                                    return;
+                                  }
+
+                                  final email = _model.textFieldModel1.inputTextController?.text.trim() ?? '';
+                                  final password = _model.textFieldModel2.inputTextController?.text ?? '';
+
                                   setState(() => isLoading = true);
-                                  final user = await authManager.signInWithGoogle(context);
+                                  final user = isCreateAccount
+                                      ? await authManager.createAccountWithEmail(
+                                          context,
+                                          email,
+                                          password,
+                                        )
+                                      : await authManager.signInWithEmail(
+                                          context,
+                                          email,
+                                          password,
+                                        );
                                   setState(() => isLoading = false);
+
                                   if (user != null) {
                                     context.goNamed(HomeDashboardWidget.routeName);
                                   }
                                 },
                           child: wrapWithModel(
-                            model: _model.buttonModel2,
+                            model: _model.buttonModel1,
                             updateCallback: () => safeSetState(() {}),
                             child: ButtonWidget(
-                              icon: Icon(
-                                Icons.g_mobiledata,
-                                color: FlutterFlowTheme.of(context).primary,
-                                size: 24.0,
-                              ),
-                              iconPresent: true,
+                              iconPresent: false,
                               iconEndPresent: false,
-                              content: 'Sign in with Google',
-                              variant: 'outline',
+                              content: isCreateAccount ? 'Create Account' : 'Login',
+                              variant: 'primary',
                               size: 'large',
                               fullWidth: true,
                               loading: isLoading,
@@ -359,142 +286,148 @@ class _LoginWidgetState extends State<LoginWidget> {
                             ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 8.0),
-                        child: TextButton(
-                          onPressed: isLoading
-                              ? null
-                              : () {
-                                  setState(() => isCreateAccount = !isCreateAccount);
-                                },
-                          child: Text(
-                            isCreateAccount ? 'Already have an account? Login' : 'Create a new account',
-                            style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                  font: GoogleFonts.inter(
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 8.0),
+                          child: InkWell(
+                            splashColor: Colors.transparent,
+                            focusColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            onTap: isLoading
+                                ? null
+                                : () async {
+                                    setState(() => isLoading = true);
+                                    final user = await authManager.signInWithGoogle(context);
+                                    setState(() => isLoading = false);
+                                    if (user != null) {
+                                      context.goNamed(HomeDashboardWidget.routeName);
+                                    }
+                                  },
+                            child: wrapWithModel(
+                              model: _model.buttonModel2,
+                              updateCallback: () => safeSetState(() {}),
+                              child: ButtonWidget(
+                                icon: Icon(
+                                  Icons.g_mobiledata,
                                   color: FlutterFlowTheme.of(context).primary,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontStyle,
-                                  lineHeight: 1.47,
+                                  size: 24.0,
                                 ),
+                                iconPresent: true,
+                                iconEndPresent: false,
+                                content: 'Sign in with Google',
+                                variant: 'outline',
+                                size: 'large',
+                                fullWidth: true,
+                                loading: isLoading,
+                                disabled: isLoading,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 8.0),
-                        child: TextButton(
-                          onPressed: isLoading
-                              ? null
-                              : () async {
-                                  final email = _model.textFieldModel1.inputTextController?.text.trim() ?? '';
-                                  if (email.isEmpty) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('Please enter your email to reset password.')),
+                        Padding(
+                          padding: EdgeInsets.only(top: 8.0),
+                          child: TextButton(
+                            onPressed: isLoading
+                                ? null
+                                : () {
+                                    setState(() => isCreateAccount = !isCreateAccount);
+                                  },
+                            child: Text(
+                              isCreateAccount ? 'Already have an account? Login' : 'Create a new account',
+                              style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                font: GoogleFonts.inter(
+                                  fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                ),
+                                color: FlutterFlowTheme.of(context).primary,
+                                letterSpacing: 0.0,
+                                fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                                fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                lineHeight: 1.47,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 8.0),
+                          child: TextButton(
+                            onPressed: isLoading
+                                ? null
+                                : () async {
+                                    final email = _model.textFieldModel1.inputTextController?.text.trim() ?? '';
+                                    if (email.isEmpty) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text('Please enter your email to reset password.')),
+                                      );
+                                      return;
+                                    }
+                                    await authManager.resetPassword(
+                                      context: context,
+                                      email: email,
                                     );
-                                    return;
-                                  }
-                                  await authManager.resetPassword(
-                                    context: context,
-                                    email: email,
-                                  );
-                                },
-                          child: Text(
-                            'Forgot Password?',
-                            style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                  font: GoogleFonts.inter(
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                                  color: FlutterFlowTheme.of(context).primary,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontStyle,
-                                  lineHeight: 1.47,
+                                  },
+                            child: Text(
+                              'Forgot Password?',
+                              style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                font: GoogleFonts.inter(
+                                  fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                 ),
+                                color: FlutterFlowTheme.of(context).primary,
+                                letterSpacing: 0.0,
+                                fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                                fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                lineHeight: 1.47,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ].divide(SizedBox(height: 8.0)),
-                  ),
-                ].divide(SizedBox(height: 24.0)),
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
-                child: Container(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Version 1.0.0',
-                        style: FlutterFlowTheme.of(context).labelSmall.override(
-                              font: GoogleFonts.inter(
-                                fontWeight: FlutterFlowTheme.of(context)
-                                    .labelSmall
-                                    .fontWeight,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .labelSmall
-                                    .fontStyle,
-                              ),
-                              color: FlutterFlowTheme.of(context).onBackground,
-                              letterSpacing: 0.0,
-                              fontWeight: FlutterFlowTheme.of(context)
-                                  .labelSmall
-                                  .fontWeight,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .labelSmall
-                                  .fontStyle,
-                              lineHeight: 1.27,
+                      ].divide(SizedBox(height: 8.0)),
+                    ),
+                  ].divide(SizedBox(height: 24.0)),
+                ),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
+                  child: Container(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Version 1.0.0',
+                          style: FlutterFlowTheme.of(context).labelSmall.override(
+                            font: GoogleFonts.inter(
+                              fontWeight: FlutterFlowTheme.of(context).labelSmall.fontWeight,
+                              fontStyle: FlutterFlowTheme.of(context).labelSmall.fontStyle,
                             ),
-                      ),
-                      Text(
-                        '© 2024 Deshmukh Coaching Institute',
-                        style: FlutterFlowTheme.of(context).labelSmall.override(
-                              font: GoogleFonts.inter(
-                                fontWeight: FlutterFlowTheme.of(context)
-                                    .labelSmall
-                                    .fontWeight,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .labelSmall
-                                    .fontStyle,
-                              ),
-                              color: FlutterFlowTheme.of(context).onBackground,
-                              letterSpacing: 0.0,
-                              fontWeight: FlutterFlowTheme.of(context)
-                                  .labelSmall
-                                  .fontWeight,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .labelSmall
-                                  .fontStyle,
-                              lineHeight: 1.27,
+                            color: FlutterFlowTheme.of(context).onBackground,
+                            letterSpacing: 0.0,
+                            fontWeight: FlutterFlowTheme.of(context).labelSmall.fontWeight,
+                            fontStyle: FlutterFlowTheme.of(context).labelSmall.fontStyle,
+                            lineHeight: 1.27,
+                          ),
+                        ),
+                        Text(
+                          '© 2024 Deshmukh Coaching Institute',
+                          style: FlutterFlowTheme.of(context).labelSmall.override(
+                            font: GoogleFonts.inter(
+                              fontWeight: FlutterFlowTheme.of(context).labelSmall.fontWeight,
+                              fontStyle: FlutterFlowTheme.of(context).labelSmall.fontStyle,
                             ),
-                      ),
-                    ].divide(SizedBox(height: 4.0)),
+                            color: FlutterFlowTheme.of(context).onBackground,
+                            letterSpacing: 0.0,
+                            fontWeight: FlutterFlowTheme.of(context).labelSmall.fontWeight,
+                            fontStyle: FlutterFlowTheme.of(context).labelSmall.fontStyle,
+                            lineHeight: 1.27,
+                          ),
+                        ),
+                      ].divide(SizedBox(height: 4.0)),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
