@@ -1,11 +1,10 @@
 import '/auth/firebase_auth/auth_util.dart';
-import '/components/bottom_nav/bottom_nav_widget.dart';
-import '/components/bottom_nav_child/bottom_nav_child_widget.dart';
 import '/components/dashboard_card/dashboard_card_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'home_dashboard_model.dart';
@@ -74,13 +73,13 @@ class _HomeDashboardWidgetState extends State<HomeDashboardWidget> {
                 boxShadow: [
                   BoxShadow(
                     color: FlutterFlowTheme.of(context).primary.withOpacity(0.2),
-                    blurRadius: 12.0,
+                    blurRadius: 16.0,
                     offset: Offset(0, 4),
                   ),
                 ],
               ),
               child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(20.0, 24.0, 20.0, 32.0),
+                padding: EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 16.0),
                 child: Container(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -98,7 +97,9 @@ class _HomeDashboardWidgetState extends State<HomeDashboardWidget> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                'Welcome, Teacher',
+                                currentUserDisplayName.isNotEmpty
+    ? 'Welcome, ${currentUserDisplayName.split(" ").first}'
+    : 'Welcome',
                                 style: FlutterFlowTheme.of(context)
                                     .titleMedium
                                     .override(
@@ -123,14 +124,18 @@ class _HomeDashboardWidgetState extends State<HomeDashboardWidget> {
                                     ),
                               ),
                               Text(
-                                'Prof. Rajesh Deshmukh',
+                                currentUserDisplayName.isNotEmpty
+    ? currentUserDisplayName
+    : (currentUserEmail.isNotEmpty
+        ? currentUserEmail.split('@').first
+        : 'Teacher'),
                                 style: FlutterFlowTheme.of(context)
-                                    .headlineSmall
+                                    .titleMedium
                                     .override(
                                       font: GoogleFonts.plusJakartaSans(
                                         fontWeight: FontWeight.bold,
                                         fontStyle: FlutterFlowTheme.of(context)
-                                            .headlineSmall
+                                            .titleMedium
                                             .fontStyle,
                                       ),
                                       color: FlutterFlowTheme.of(context)
@@ -138,7 +143,7 @@ class _HomeDashboardWidgetState extends State<HomeDashboardWidget> {
                                       letterSpacing: 0.0,
                                       fontWeight: FontWeight.bold,
                                       fontStyle: FlutterFlowTheme.of(context)
-                                          .headlineSmall
+                                          .titleMedium
                                           .fontStyle,
                                       lineHeight: 1.3,
                                     ),
@@ -182,7 +187,7 @@ class _HomeDashboardWidgetState extends State<HomeDashboardWidget> {
                         ),
                         child: Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
-                              24.0, 16.0, 24.0, 16.0),
+                              16.0, 16.0, 16.0, 16.0),
                           child: Container(
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
@@ -201,7 +206,8 @@ class _HomeDashboardWidgetState extends State<HomeDashboardWidget> {
                                       size: 18.0,
                                     ),
                                     Text(
-                                      'Oct 24, 2023',
+                                      DateFormat('EEEE, MMMM d, y')
+                                          .format(getCurrentTimestamp),
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
@@ -278,7 +284,7 @@ class _HomeDashboardWidgetState extends State<HomeDashboardWidget> {
                           ),
                         ),
                       ),
-                    ].divide(SizedBox(height: 24.0)),
+                    ].divide(SizedBox(height: 12.0)),
                   ),
                 ),
               ),
@@ -286,15 +292,14 @@ class _HomeDashboardWidgetState extends State<HomeDashboardWidget> {
             Expanded(
               flex: 1,
               child: Container(
-                child: SingleChildScrollView(
-                  primary: false,
+                child: Expanded(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Padding(
-                        padding: EdgeInsets.all(24.0),
+                        padding: EdgeInsets.all(14.0),
                         child: Container(
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
@@ -382,7 +387,7 @@ class _HomeDashboardWidgetState extends State<HomeDashboardWidget> {
                                         Icons.assignment_rounded,
                                         color: FlutterFlowTheme.of(context)
                                             .primary,
-                                        size: 28.0,
+                                        size: 24.0,
                                       ),
                                       label: 'Daily Report',
                                       target: 'DailyReportForm',
@@ -398,7 +403,7 @@ class _HomeDashboardWidgetState extends State<HomeDashboardWidget> {
                                         Icons.how_to_reg_rounded,
                                         color: FlutterFlowTheme.of(context)
                                             .primary,
-                                        size: 28.0,
+                                        size: 24.0,
                                       ),
                                       label: 'Attendance',
                                       target: 'TeacherAttendance',
@@ -497,7 +502,7 @@ class _HomeDashboardWidgetState extends State<HomeDashboardWidget> {
                                   ],
                                 ),
                                 child: Padding(
-                                  padding: EdgeInsets.all(24.0),
+                                  padding: EdgeInsets.all(14.0),
                                   child: Container(
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
@@ -543,7 +548,7 @@ class _HomeDashboardWidgetState extends State<HomeDashboardWidget> {
                                   ),
                                 ),
                               ),
-                            ].divide(SizedBox(height: 24.0)),
+                            ].divide(SizedBox(height: 12.0)),
                           ),
                         ),
                       ),
