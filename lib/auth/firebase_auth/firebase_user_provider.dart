@@ -24,11 +24,10 @@ class DCITeacherAppFirebaseUser extends BaseAuthUser {
 
   @override
   Future? updateEmail(String email) async {
-    try {
-      await user?.updateEmail(email);
-    } catch (_) {
-      await user?.verifyBeforeUpdateEmail(email);
+    if (user == null) {
+      return null;
     }
+    await user?.verifyBeforeUpdateEmail(email);
   }
 
   @override
