@@ -41,7 +41,7 @@ class _BottomNavChildWidgetState extends State<BottomNavChildWidget> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         wrapWithModel(
           model: _model.navItemModel1,

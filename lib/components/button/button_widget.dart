@@ -218,6 +218,23 @@ class _ButtonWidgetState extends State<ButtonWidget> {
               0.0,
             ),
           ),
+          boxShadow: [
+            if (valueOrDefault<String>(
+                  widget.variant,
+                  'primary',
+                ) !=
+                'ghost' &&
+                valueOrDefault<String>(
+                  widget.variant,
+                  'primary',
+                ) !=
+                'outline')
+              BoxShadow(
+                color: FlutterFlowTheme.of(context).primary.withOpacity(0.2),
+                blurRadius: 8.0,
+                offset: Offset(0, 2),
+              ),
+          ],
         ),
         child: Stack(
           alignment: AlignmentDirectional(0.0, 0.0),

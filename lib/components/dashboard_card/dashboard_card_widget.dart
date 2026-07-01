@@ -71,6 +71,13 @@ class _DashboardCardWidgetState extends State<DashboardCardWidget> {
               color: FlutterFlowTheme.of(context).alternate,
               width: 1.0,
             ),
+            boxShadow: [
+              BoxShadow(
+                color: FlutterFlowTheme.of(context).primary.withOpacity(0.1),
+                blurRadius: 8.0,
+                offset: Offset(0, 2),
+              ),
+            ],
           ),
           child: Padding(
             padding: EdgeInsets.all(24.0),
@@ -84,10 +91,21 @@ class _DashboardCardWidgetState extends State<DashboardCardWidget> {
                     width: 56.0,
                     height: 56.0,
                     decoration: BoxDecoration(
-                      color: valueOrDefault<Color>(
-                        widget.tone,
-                        FlutterFlowTheme.of(context).primary,
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          valueOrDefault<Color>(
+                            widget.tone,
+                            FlutterFlowTheme.of(context).primary,
+                          ),
+                          valueOrDefault<Color>(
+                            widget.tone,
+                            FlutterFlowTheme.of(context).primary,
+                          ).withOpacity(0.7),
+                        ],
                       ),
+                      borderRadius: BorderRadius.circular(12.0),
                       shape: BoxShape.rectangle,
                     ),
                     child: widget.icon!,

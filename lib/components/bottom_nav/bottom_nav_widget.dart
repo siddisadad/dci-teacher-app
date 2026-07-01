@@ -50,6 +50,13 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
           color: FlutterFlowTheme.of(context).alternate,
           width: 1.0,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: FlutterFlowTheme.of(context).primary.withOpacity(0.08),
+            blurRadius: 8.0,
+            offset: Offset(0, -2),
+          ),
+        ],
       ),
       child: Padding(
         padding: EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 8.0),

@@ -1,9 +1,11 @@
+import '/auth/firebase_auth/auth_util.dart';
 import '/components/bottom_nav/bottom_nav_widget.dart';
 import '/components/bottom_nav_child/bottom_nav_child_widget.dart';
 import '/components/dashboard_card/dashboard_card_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'home_dashboard_model.dart';
@@ -28,7 +30,7 @@ class _HomeDashboardWidgetState extends State<HomeDashboardWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => HomeDashboardModel());
-
+    print('HomeDashboardWidget mounted!');
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
@@ -56,12 +58,26 @@ class _HomeDashboardWidgetState extends State<HomeDashboardWidget> {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: FlutterFlowTheme.of(context).primary,
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    FlutterFlowTheme.of(context).primary,
+                    FlutterFlowTheme.of(context).primary.withOpacity(0.85),
+                  ],
+                ),
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(32.0),
                   bottomRight: Radius.circular(32.0),
                 ),
                 shape: BoxShape.rectangle,
+                boxShadow: [
+                  BoxShadow(
+                    color: FlutterFlowTheme.of(context).primary.withOpacity(0.2),
+                    blurRadius: 12.0,
+                    offset: Offset(0, 4),
+                  ),
+                ],
               ),
               child: Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(20.0, 24.0, 20.0, 32.0),
@@ -138,8 +154,18 @@ class _HomeDashboardWidgetState extends State<HomeDashboardWidget> {
                               color: FlutterFlowTheme.of(context).onPrimary,
                               size: 24.0,
                             ),
-                            onPressed: () {
-                              print('IconButton pressed ...');
+                            onPressed: () async {
+                              print('Logout button pressed');
+                              try {
+                                await authManager.signOut();
+                                print('Sign out completed');
+                                if (context.mounted) {
+                                  print('Navigating to login: ${LoginWidget.routeName}');
+                                  context.goNamed(LoginWidget.routeName);
+                                }
+                              } catch (e) {
+                                print('Logout error: $e');
+                              }
                             },
                           ),
                         ],
@@ -273,7 +299,7 @@ class _HomeDashboardWidgetState extends State<HomeDashboardWidget> {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Row(
                                 mainAxisSize: MainAxisSize.max,
@@ -447,15 +473,28 @@ class _HomeDashboardWidgetState extends State<HomeDashboardWidget> {
                               ),
                               Container(
                                 decoration: BoxDecoration(
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryBackground,
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      FlutterFlowTheme.of(context).primary.withOpacity(0.08),
+                                      FlutterFlowTheme.of(context).primary.withOpacity(0.04),
+                                    ],
+                                  ),
                                   borderRadius: BorderRadius.circular(16.0),
                                   shape: BoxShape.rectangle,
                                   border: Border.all(
                                     color:
-                                        FlutterFlowTheme.of(context).alternate,
-                                    width: 1.0,
+                                        FlutterFlowTheme.of(context).primary.withOpacity(0.2),
+                                    width: 1.5,
                                   ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: FlutterFlowTheme.of(context).primary.withOpacity(0.1),
+                                      blurRadius: 8.0,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
                                 ),
                                 child: Padding(
                                   padding: EdgeInsets.all(24.0),
@@ -489,7 +528,7 @@ class _HomeDashboardWidgetState extends State<HomeDashboardWidget> {
                                                 ),
                                                 color:
                                                     FlutterFlowTheme.of(context)
-                                                        .secondaryText,
+                                                        .primaryText,
                                                 letterSpacing: 0.0,
                                                 fontWeight:
                                                     FlutterFlowTheme.of(context)

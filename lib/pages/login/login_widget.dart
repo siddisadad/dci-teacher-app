@@ -4,6 +4,7 @@ import '/components/text_field/text_field_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'login_model.dart';
@@ -78,14 +79,28 @@ class _LoginWidgetState extends State<LoginWidget> {
                                 width: 100.0,
                                 height: 100.0,
                                 decoration: BoxDecoration(
-                                  color: FlutterFlowTheme.of(context).primary10,
-                                  borderRadius: BorderRadius.circular(16.0),
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      FlutterFlowTheme.of(context).primary,
+                                      FlutterFlowTheme.of(context).primary.withOpacity(0.8),
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(20.0),
                                   shape: BoxShape.rectangle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: FlutterFlowTheme.of(context).primary.withOpacity(0.3),
+                                      blurRadius: 12.0,
+                                      offset: Offset(0, 4),
+                                    ),
+                                  ],
                                 ),
                                 alignment: AlignmentDirectional(0.0, 0.0),
                                 child: Icon(
                                   Icons.school_rounded,
-                                  color: FlutterFlowTheme.of(context).onPrimary,
+                                  color: Colors.white,
                                   size: 60.0,
                                 ),
                               ),
@@ -254,22 +269,37 @@ class _LoginWidgetState extends State<LoginWidget> {
                                   final password = _model.textFieldModel2.inputTextController?.text ?? '';
 
                                   setState(() => isLoading = true);
-                                  final user = isCreateAccount
-                                      ? await authManager.createAccountWithEmail(
-                                          context,
-                                          email,
-                                          password,
-                                        )
-                                      : await authManager.signInWithEmail(
-                                          context,
-                                          email,
-                                          password,
-                                        );
+                                  BaseAuthUser? user;
+
+try {
+  user = isCreateAccount
+      ? await authManager.createAccountWithEmail(
+          context,
+          email,
+          password,
+        )
+      : await authManager.signInWithEmail(
+          context,
+          email,
+          password,
+        );
+} catch (e) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text(e.toString())),
+  );
+}
                                   setState(() => isLoading = false);
 
-                                  if (user != null) {
-                                    context.goNamed(HomeDashboardWidget.routeName);
-                                  }
+                                  if (user == null) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(
+      content: Text('Google Sign-In cancelled'),
+    ),
+  );
+  return;
+}
+
+context.goNamed(HomeDashboardWidget.routeName);
                                 },
                           child: wrapWithModel(
                             model: _model.buttonModel1,
@@ -409,7 +439,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                           ),
                         ),
                         Text(
-                          '© 2024 Deshmukh Coaching Institute',
+                          '© ${DateTime.now().year} Deshmukh Coaching Institute',
                           style: FlutterFlowTheme.of(context).labelSmall.override(
                             font: GoogleFonts.inter(
                               fontWeight: FlutterFlowTheme.of(context).labelSmall.fontWeight,
