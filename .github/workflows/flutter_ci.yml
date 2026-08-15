@@ -237,6 +237,37 @@ jobs:
           whatsNewDirectory: .github/whatsnew
           mappingFile: ${{ steps.mapping.outputs.file }}
 
+  deploy_hosting:
+    name: Deploy Firebase Hosting
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    env:
+      HAS_FIREBASE: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON != '' }}
+    defaults:
+      run:
+        working-directory: firebase
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Firebase CLI
+        if: env.HAS_FIREBASE == 'true'
+        run: npm install -g firebase-tools
+      - name: Deploy Hosting
+        if: env.HAS_FIREBASE == 'true'
+        env:
+          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+        run: |
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT_JSON" > "$RUNNER_TEMP/firebase-sa.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/firebase-sa.json"
+          firebase deploy --only hosting --project d-c-i-teacher-app-lffjyu
+      - name: Skip Firebase Hosting
+        if: env.HAS_FIREBASE != 'true'
+        run: echo "::warning::FIREBASE_SERVICE_ACCOUNT_JSON is not set. Skipping Firebase Hosting deploy."
+
   build_web:
     name: Build Web
     needs: test
