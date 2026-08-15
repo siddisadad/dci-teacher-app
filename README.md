@@ -96,7 +96,7 @@ Pushes to `R1` / `main` / `dev` and `workflow_dispatch` also build a signed AAB 
 | `FIREBASE_SERVICE_ACCOUNT_JSON` | Firebase / GCP service account with App Distribution Admin |
 | `PLAY_STORE_SERVICE_ACCOUNT_JSON` | Play Console service account with Release to production / closed tracks |
 
-Optional: `ANDROID_KEY_PROPERTIES` (whole `key.properties` file instead of the individual key fields). Optional repo variables: `FIREBASE_ANDROID_APP_ID`, `FIREBASE_TESTER_GROUPS` (default `testers`).
+Optional repo variables: `FIREBASE_ANDROID_APP_ID`, `FIREBASE_TESTER_GROUPS` (omit until the Firebase testers group exists).
 
 Create the `testers` group in Firebase App Distribution and invite testers there. The Play app `com.dciteacherapp` must already exist in Play Console, and the service account must be invited under Play Console → Users and permissions.
 
