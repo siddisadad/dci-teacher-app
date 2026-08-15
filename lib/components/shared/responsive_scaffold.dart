@@ -88,6 +88,13 @@ class _Sidebar extends ConsumerWidget {
       decoration: BoxDecoration(
         color: theme.secondaryBackground,
         border: Border(right: BorderSide(color: theme.alternate)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(5),
+            blurRadius: 10,
+            offset: const Offset(2, 0),
+          ),
+        ],
       ),
       child: Column(
         children: [
