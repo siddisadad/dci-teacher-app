@@ -332,8 +332,9 @@ class _StudentDashboardWidgetState
           data: (exams) {
             final upcoming =
                 exams.where((e) => e.date.isAfter(DateTime.now())).toList();
-            if (upcoming.isEmpty)
+            if (upcoming.isEmpty) {
               return _buildEmptyState('No upcoming tests scheduled.');
+            }
             return ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -350,8 +351,9 @@ class _StudentDashboardWidgetState
         _buildSectionTitle('Recent Performance'),
         resultsAsync.when(
           data: (results) {
-            if (results.isEmpty)
+            if (results.isEmpty) {
               return _buildEmptyState('No results available yet.');
+            }
             return ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),

@@ -76,8 +76,9 @@ class _MyResultsWidgetState extends ConsumerState<MyResultsWidget> {
           Expanded(
             child: studentAsync.when(
               data: (student) {
-                if (student == null)
+                if (student == null) {
                   return const Center(child: Text('Profile not found.'));
+                }
 
                 final resultsAsync =
                     ref.watch(studentResultsStreamProvider(student.id));

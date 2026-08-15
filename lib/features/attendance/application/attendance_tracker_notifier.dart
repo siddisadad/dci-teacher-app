@@ -157,7 +157,9 @@ class AttendanceTrackerNotifier
 
     final currentState = state.value!;
     if (currentState.selectedClass == null ||
-        currentState.selectedSubject == null) return false;
+        currentState.selectedSubject == null) {
+      return false;
+    }
 
     state = AsyncData(currentState.copyWith(isSaving: true));
     try {

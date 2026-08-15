@@ -220,8 +220,9 @@ class _AddExamWidgetState extends ConsumerState<AddExamWidget> {
                             firstDate: DateTime.now(),
                             lastDate: DateTime(2030),
                           );
-                          if (picked != null)
+                          if (picked != null) {
                             setState(() => _model.selectedDate = picked);
+                          }
                         },
                       ),
                       const SizedBox(height: AppSpacing.md),
@@ -236,8 +237,9 @@ class _AddExamWidgetState extends ConsumerState<AddExamWidget> {
                             final picked = await showTimePicker(
                                 context: context,
                                 initialTime: _model.startTime!);
-                            if (picked != null)
+                            if (picked != null) {
                               setState(() => _model.startTime = picked);
+                            }
                           },
                         ),
                         _buildSelectorTile(
@@ -248,8 +250,9 @@ class _AddExamWidgetState extends ConsumerState<AddExamWidget> {
                           onTap: () async {
                             final picked = await showTimePicker(
                                 context: context, initialTime: _model.endTime!);
-                            if (picked != null)
+                            if (picked != null) {
                               setState(() => _model.endTime = picked);
+                            }
                           },
                         ),
                       ]),

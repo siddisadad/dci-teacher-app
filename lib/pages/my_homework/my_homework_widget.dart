@@ -54,8 +54,9 @@ class _MyHomeworkWidgetState extends ConsumerState<MyHomeworkWidget> {
           Expanded(
             child: studentAsync.when(
               data: (student) {
-                if (student == null)
+                if (student == null) {
                   return const Center(child: Text('Profile not found.'));
+                }
 
                 final homeworkAsync =
                     ref.watch(studentHomeworkStreamProvider(student.className));

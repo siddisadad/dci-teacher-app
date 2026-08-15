@@ -83,8 +83,9 @@ class AppBottomNavBar extends StatelessWidget {
     if (icon == Icons.home_rounded) return Icons.home_outlined;
     if (icon == Icons.description_outlined) return Icons.description_outlined;
     if (icon == Icons.event_note_outlined) return Icons.event_note_outlined;
-    if (icon == Icons.account_circle_outlined)
+    if (icon == Icons.account_circle_outlined) {
       return Icons.account_circle_outlined;
+    }
     return icon;
   }
 }

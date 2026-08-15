@@ -32,8 +32,9 @@ class _MyProfileWidgetState extends ConsumerState<MyProfileWidget> {
       backgroundColor: theme.primaryBackground,
       body: studentAsync.when(
         data: (student) {
-          if (student == null)
+          if (student == null) {
             return const Center(child: Text('Student profile not found.'));
+          }
           return _buildProfile(context, student);
         },
         loading: () => const Center(child: CircularProgressIndicator()),
