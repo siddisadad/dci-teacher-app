@@ -136,7 +136,7 @@ class _FacultyListWidgetState extends ConsumerState<FacultyListWidget> {
               borderRadius: BorderRadius.circular(22),
               child: user.photoUrl.isNotEmpty 
                 ? CachedNetworkImage(imageUrl: user.photoUrl, fit: BoxFit.cover)
-                : Icon(Icons.person_rounded, color: AppColors.primary, size: 24),
+                : const Icon(Icons.person_rounded, color: AppColors.primary, size: 24),
             ),
           ),
           title: Text(

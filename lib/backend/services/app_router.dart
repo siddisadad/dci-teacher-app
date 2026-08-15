@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,9 +9,9 @@ import 'package:d_c_i_teacher_app/index.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
-  
+
   return GoRouter(
-    debugLogDiagnostics: true,
+    debugLogDiagnostics: kDebugMode,
     refreshListenable: _AuthListenable(authRepository.authStateChanges),
     redirect: (context, state) {
       final user = authRepository.currentUser;
@@ -40,15 +41,18 @@ final routerProvider = Provider<GoRouter>((ref) {
           StudentListWidget.routePath,
         ];
 
-        if (adminOnlyRoutes.contains(state.matchedLocation) && !access.canManageTeachers) {
+        if (adminOnlyRoutes.contains(state.matchedLocation) &&
+            !access.canManageTeachers) {
           return '/';
         }
 
-        if (state.matchedLocation == DailyReportFormWidget.routePath && !access.canSubmitDailyReport) {
+        if (state.matchedLocation == DailyReportFormWidget.routePath &&
+            !access.canSubmitDailyReport) {
           return '/';
         }
 
-        if (staffOnlyRoutes.contains(state.matchedLocation) && access.isStudent) {
+        if (staffOnlyRoutes.contains(state.matchedLocation) &&
+            access.isStudent) {
           return '/';
         }
       }
@@ -239,7 +243,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/homeworkDetails',
         builder: (context, state) {
           final extra = state.extra as Map<String, dynamic>?;
-          return HomeworkDetailsWidget(assignment: extra!['assignment'] as HomeworkAssignment);
+          return HomeworkDetailsWidget(
+              assignment: extra!['assignment'] as HomeworkAssignment);
         },
       ),
       GoRoute(
@@ -252,7 +257,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: TeacherProfileWidget.routePath,
         builder: (context, state) {
           final extra = state.extra as Map<String, dynamic>?;
-          return TeacherProfileWidget(initialUserData: extra?['userData'] as Teacher?);
+          return TeacherProfileWidget(
+              initialUserData: extra?['userData'] as Teacher?);
         },
       ),
       GoRoute(
@@ -260,7 +266,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: EditProfileWidget.routePath,
         builder: (context, state) {
           final extra = state.extra as Map<String, dynamic>?;
-          return EditProfileWidget(userToEdit: extra?['userToEdit'] as Teacher?);
+          return EditProfileWidget(
+              userToEdit: extra?['userToEdit'] as Teacher?);
         },
       ),
       GoRoute(

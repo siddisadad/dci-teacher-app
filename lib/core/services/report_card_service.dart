@@ -25,7 +25,7 @@ class ReportCardService {
                 child: pw.Column(
                   children: [
                     pw.Text(instituteName, style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
-                    pw.Text('STUDENT PROGRESS REPORT', style: pw.TextStyle(fontSize: 18)),
+                    pw.Text('STUDENT PROGRESS REPORT', style: const pw.TextStyle(fontSize: 18)),
                     pw.SizedBox(height: 20),
                   ],
                 ),
@@ -135,7 +135,7 @@ class ReportCardService {
                 child: pw.Column(
                   children: [
                     pw.Text(instituteName, style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
-                    pw.Text('EXAMINATION MERIT LIST', style: pw.TextStyle(fontSize: 18)),
+                    pw.Text('EXAMINATION MERIT LIST', style: const pw.TextStyle(fontSize: 18)),
                     pw.Text('$examTitle - $className', style: const pw.TextStyle(fontSize: 14)),
                     pw.SizedBox(height: 20),
                   ],

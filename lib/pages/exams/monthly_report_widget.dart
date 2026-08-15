@@ -124,7 +124,7 @@ class _MonthlyReportWidgetState extends ConsumerState<MonthlyReportWidget> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Overall Performance', style: AppTypography.caption.copyWith(color: Colors.white.withOpacity(0.8))),
+                  Text('Overall Performance', style: AppTypography.caption.copyWith(color: Colors.white.withValues(alpha: 0.8))),
                   Text('82.5%', style: AppTypography.title.copyWith(color: Colors.white, fontSize: 32)),
                 ],
               ),
@@ -153,7 +153,7 @@ class _MonthlyReportWidgetState extends ConsumerState<MonthlyReportWidget> {
     return Column(
       children: [
         Text(value, style: AppTypography.label.copyWith(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
-        Text(label, style: AppTypography.caption.copyWith(color: Colors.white.withOpacity(0.7), fontSize: 10)),
+        Text(label, style: AppTypography.caption.copyWith(color: Colors.white.withValues(alpha: 0.7), fontSize: 10)),
       ],
     );
   }

@@ -128,7 +128,9 @@ class _DateWiseReportWidgetState extends ConsumerState<DateWiseReportWidget> {
                   return const Text('Results not yet published.', style: TextStyle(fontStyle: FontStyle.italic, fontSize: 10));
                 }
                 double totalObtained = 0;
-                for (var r in results) totalObtained += r.marksObtained;
+                for (var r in results) {
+                  totalObtained += r.marksObtained;
+                }
                 final avg = (totalObtained / (results.length * exam.totalMarks) * 100).toInt();
 
                 return Row(

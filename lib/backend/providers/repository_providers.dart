@@ -57,8 +57,7 @@ final announcementRepositoryProvider = Provider<AnnouncementRepository>((ref) {
 });
 
 final userRepositoryProvider = Provider<UserRepository>((ref) {
-  final configRepo = ref.watch(configRepositoryProvider);
-  return UserRepository(configRepository: configRepo);
+  return UserRepository();
 });
 
 final attendanceRepositoryProvider = Provider<AttendanceRepository>((ref) {
@@ -81,7 +80,6 @@ final resultRepositoryProvider = Provider<ResultRepository>((ref) {
   return ResultRepository();
 });
 
-
 final studentRepositoryProvider = Provider<StudentRepository>((ref) {
   return StudentRepository();
 });
@@ -100,7 +98,8 @@ final currentStudentStreamProvider = StreamProvider<Student?>((ref) {
   return ref.watch(studentRepositoryProvider).getStudentByIdStream(user.uid);
 });
 
-final userDataStreamProvider = StreamProvider.family<Teacher?, String>((ref, uid) {
+final userDataStreamProvider =
+    StreamProvider.family<Teacher?, String>((ref, uid) {
   return ref.watch(userRepositoryProvider).getUserStreamById(uid);
 });
 
@@ -112,11 +111,13 @@ final unreadNotificationsCountProvider = StreamProvider<int>((ref) {
   return ref.watch(notificationRepositoryProvider).getUnreadCountStream();
 });
 
-final instituteInfoStreamProvider = StreamProvider<Map<String, dynamic>?>((ref) {
+final instituteInfoStreamProvider =
+    StreamProvider<Map<String, dynamic>?>((ref) {
   return ref.watch(configRepositoryProvider).getInstituteInfoStream();
 });
 
-final auditLogsStreamProvider = StreamProvider<List<Map<String, dynamic>>>((ref) {
+final auditLogsStreamProvider =
+    StreamProvider<List<Map<String, dynamic>>>((ref) {
   final access = ref.watch(accessControlProvider);
   final userId = (access.role == UserRole.teacher) ? access.user?.uid : null;
   return ref.watch(auditRepositoryProvider).getAuditLogs(userId: userId);
@@ -126,19 +127,27 @@ final announcementsStreamProvider = StreamProvider<List<Announcement>>((ref) {
   return ref.watch(announcementRepositoryProvider).getAnnouncementsStream();
 });
 
-final studentAttendanceLogsProvider = StreamProvider<List<StudentAttendance>>((ref) {
+final studentAttendanceLogsProvider =
+    StreamProvider<List<StudentAttendance>>((ref) {
   final access = ref.watch(accessControlProvider);
   final creatorId = (access.role == UserRole.teacher) ? access.user?.uid : null;
-  return ref.watch(attendanceRepositoryProvider).getStudentAttendanceLogs(userId: creatorId);
+  return ref
+      .watch(attendanceRepositoryProvider)
+      .getStudentAttendanceLogs(userId: creatorId);
 });
 
-final myAttendanceHistoryProvider = StreamProvider<List<StudentAttendance>>((ref) {
+final myAttendanceHistoryProvider =
+    StreamProvider<List<StudentAttendance>>((ref) {
   final user = ref.watch(currentUserDataStreamProvider).value;
   if (user == null) return Stream.value([]);
-  return ref.watch(attendanceRepositoryProvider).getStudentAttendanceHistory(user.uid);
+  return ref
+      .watch(attendanceRepositoryProvider)
+      .getStudentAttendanceHistory(user.uid);
 });
 
-final dailyAttendanceReportProvider = FutureProvider.family<({List<Student> students, List<StudentAttendance> attendance}), ({String className, DateTime date})>((ref, arg) async {
+final dailyAttendanceReportProvider = FutureProvider.family<
+    ({List<Student> students, List<StudentAttendance> attendance}),
+    ({String className, DateTime date})>((ref, arg) async {
   final studentRepo = ref.read(studentRepositoryProvider);
   final attendanceRepo = ref.read(attendanceRepositoryProvider);
 
@@ -153,11 +162,15 @@ final dailyAttendanceReportProvider = FutureProvider.family<({List<Student> stud
   );
 });
 
-final studentAttendanceHistoryProvider = StreamProvider.family<List<StudentAttendance>, String>((ref, studentId) {
-  return ref.watch(attendanceRepositoryProvider).getStudentAttendanceHistory(studentId);
+final studentAttendanceHistoryProvider =
+    StreamProvider.family<List<StudentAttendance>, String>((ref, studentId) {
+  return ref
+      .watch(attendanceRepositoryProvider)
+      .getStudentAttendanceHistory(studentId);
 });
 
-final studentHomeworkStreamProvider = StreamProvider.family<List<HomeworkAssignment>, String>((ref, className) {
+final studentHomeworkStreamProvider =
+    StreamProvider.family<List<HomeworkAssignment>, String>((ref, className) {
   return ref.watch(homeworkRepositoryProvider).getHomeworkByClass(className);
 });
 
@@ -169,19 +182,23 @@ final examsStreamProvider = StreamProvider<List<Exam>>((ref) {
   return ref.watch(examRepositoryProvider).getExamsStream();
 });
 
-final teacherExamsStreamProvider = StreamProvider.family<List<Exam>, String>((ref, teacherUid) {
+final teacherExamsStreamProvider =
+    StreamProvider.family<List<Exam>, String>((ref, teacherUid) {
   return ref.watch(examRepositoryProvider).getExamsByTeacherStream(teacherUid);
 });
 
-final studentExamsStreamProvider = StreamProvider.family<List<Exam>, String>((ref, className) {
+final studentExamsStreamProvider =
+    StreamProvider.family<List<Exam>, String>((ref, className) {
   return ref.watch(examRepositoryProvider).getExamsByClassStream(className);
 });
 
-final dateExamsStreamProvider = StreamProvider.family<List<Exam>, DateTime>((ref, date) {
+final dateExamsStreamProvider =
+    StreamProvider.family<List<Exam>, DateTime>((ref, date) {
   return ref.watch(examRepositoryProvider).getExamsByDateStream(date);
 });
 
-final examResultsStreamProvider = StreamProvider.family<List<ExamResult>, String>((ref, examId) {
+final examResultsStreamProvider =
+    StreamProvider.family<List<ExamResult>, String>((ref, examId) {
   return ref.watch(resultRepositoryProvider).getExamResultsStream(examId);
 });
 
@@ -189,19 +206,25 @@ final allResultsStreamProvider = StreamProvider<List<ExamResult>>((ref) {
   return ref.watch(resultRepositoryProvider).getAllResultsStream();
 });
 
-final studentResultsStreamProvider = StreamProvider.family<List<ExamResult>, String>((ref, studentId) {
+final studentResultsStreamProvider =
+    StreamProvider.family<List<ExamResult>, String>((ref, studentId) {
   return ref.watch(resultRepositoryProvider).getStudentResultsStream(studentId);
 });
 
-final teacherResultsStreamProvider = StreamProvider.family<List<ExamResult>, String>((ref, teacherUid) {
-  return ref.watch(resultRepositoryProvider).getResultsByRecordedByStream(teacherUid);
+final teacherResultsStreamProvider =
+    StreamProvider.family<List<ExamResult>, String>((ref, teacherUid) {
+  return ref
+      .watch(resultRepositoryProvider)
+      .getResultsByRecordedByStream(teacherUid);
 });
 
-
-final recentReportsProvider = StreamProvider.family<List<DailyReport>, int>((ref, limit) {
+final recentReportsProvider =
+    StreamProvider.family<List<DailyReport>, int>((ref, limit) {
   final access = ref.watch(accessControlProvider);
   final creatorId = (access.role == UserRole.teacher) ? access.user?.uid : null;
-  return ref.watch(dailyReportRepositoryProvider).getRecentReports(limit: limit, creatorId: creatorId);
+  return ref
+      .watch(dailyReportRepositoryProvider)
+      .getRecentReports(limit: limit, creatorId: creatorId);
 });
 
 final subjectsStreamProvider = StreamProvider<List<String>>((ref) {

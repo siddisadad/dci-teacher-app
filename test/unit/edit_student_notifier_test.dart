@@ -7,27 +7,54 @@ import 'package:d_c_i_teacher_app/backend/repositories/user_repository.dart';
 import 'package:d_c_i_teacher_app/backend/providers/repository_providers.dart';
 import 'package:d_c_i_teacher_app/backend/models/student.dart';
 import 'package:d_c_i_teacher_app/backend/models/teacher.dart';
+import 'package:d_c_i_teacher_app/backend/repositories/audit_repository.dart';
 
 class MockStudentRepository extends Mock implements StudentRepository {}
+
 class MockUserRepository extends Mock implements UserRepository {}
+
+class MockAuditRepository extends Mock implements AuditRepository {}
 
 void main() {
   late MockStudentRepository mockStudentRepo;
   late MockUserRepository mockUserRepo;
+  late MockAuditRepository mockAuditRepo;
   late ProviderContainer container;
 
   setUp(() {
     mockStudentRepo = MockStudentRepository();
     mockUserRepo = MockUserRepository();
+    mockAuditRepo = MockAuditRepository();
+    when(() => mockUserRepo.getUserStream())
+        .thenAnswer((_) => Stream.value(null));
+    when(() => mockAuditRepo.logAction(
+          module: any(named: 'module'),
+          action: any(named: 'action'),
+          previousValue: any(named: 'previousValue'),
+          newValue: any(named: 'newValue'),
+          metadata: any(named: 'metadata'),
+        )).thenAnswer((_) async {});
+    when(() => mockStudentRepo.getStudentById(any())).thenAnswer(
+      (_) async => Student(
+        id: 'S1',
+        name: 'Student 1',
+        studentId: 'S1',
+        rollNo: '1',
+        className: 'C1',
+      ),
+    );
 
     container = ProviderContainer(
       overrides: [
         studentRepositoryProvider.overrideWithValue(mockStudentRepo),
         userRepositoryProvider.overrideWithValue(mockUserRepo),
+        auditRepositoryProvider.overrideWithValue(mockAuditRepo),
       ],
     );
 
-    registerFallbackValue(Student(id: '', name: '', studentId: '', rollNo: '', className: ''));
+    registerFallbackValue(
+        Student(id: '', name: '', studentId: '', rollNo: '', className: ''));
+    registerFallbackValue(<String, dynamic>{});
   });
 
   tearDown(() {
@@ -36,8 +63,8 @@ void main() {
 
   test('initialize fetches current user data', () async {
     final user = Teacher(
-      uid: '1', 
-      role: 'Teacher', 
+      uid: '1',
+      role: 'Teacher',
       displayName: 'Teacher John',
       email: 'john@dci.com',
       photoUrl: '',
@@ -55,10 +82,30 @@ void main() {
   });
 
   test('saveStudent calls repository and updates state', () async {
-    final student = Student(id: 'S1', name: 'Student 1', studentId: 'S1', rollNo: '1', className: 'C1');
-    when(() => mockStudentRepo.updateStudent(any())).thenAnswer((_) async => {});
+    final admin = Teacher(
+      uid: '1',
+      role: 'Admin',
+      displayName: 'Admin Joe',
+      email: 'admin@dci.com',
+      photoUrl: '',
+      designation: 'Admin',
+      phoneNumber: '1234567890',
+    );
+    when(() => mockUserRepo.getUserStream())
+        .thenAnswer((_) => Stream.value(admin));
+    when(() => mockUserRepo.getUserData()).thenAnswer((_) async => admin);
+    final student = Student(
+        id: 'S1',
+        name: 'Student 1',
+        studentId: 'S1',
+        rollNo: '1',
+        className: 'C1');
+    when(() => mockStudentRepo.updateStudent(any()))
+        .thenAnswer((_) async => {});
 
     final notifier = container.read(editStudentNotifierProvider.notifier);
+    await notifier.initialize();
+    await container.read(currentUserDataStreamProvider.future);
     final result = await notifier.saveStudent(student, isNew: false);
 
     expect(result, isTrue);
@@ -68,8 +115,8 @@ void main() {
 
   test('deleteStudent fails if user is not admin', () async {
     final user = Teacher(
-      uid: '1', 
-      role: 'Teacher', 
+      uid: '1',
+      role: 'Teacher',
       displayName: 'Teacher John',
       email: 'john@dci.com',
       photoUrl: '',
@@ -77,6 +124,8 @@ void main() {
       phoneNumber: '1234567890',
     );
     when(() => mockUserRepo.getUserData()).thenAnswer((_) async => user);
+    when(() => mockUserRepo.getUserStream())
+        .thenAnswer((_) => Stream.value(user));
 
     final notifier = container.read(editStudentNotifierProvider.notifier);
     await notifier.initialize();
@@ -89,8 +138,8 @@ void main() {
 
   test('deleteStudent succeeds if user is admin', () async {
     final admin = Teacher(
-      uid: '1', 
-      role: 'Admin', 
+      uid: '1',
+      role: 'Admin',
       displayName: 'Admin Joe',
       email: 'admin@dci.com',
       photoUrl: '',
@@ -98,10 +147,14 @@ void main() {
       phoneNumber: '1234567890',
     );
     when(() => mockUserRepo.getUserData()).thenAnswer((_) async => admin);
-    when(() => mockStudentRepo.deleteStudent(any())).thenAnswer((_) async => {});
+    when(() => mockUserRepo.getUserStream())
+        .thenAnswer((_) => Stream.value(admin));
+    when(() => mockStudentRepo.deleteStudent(any()))
+        .thenAnswer((_) async => {});
 
     final notifier = container.read(editStudentNotifierProvider.notifier);
     await notifier.initialize();
+    await container.read(currentUserDataStreamProvider.future);
 
     final result = await notifier.deleteStudent('S1');
 
