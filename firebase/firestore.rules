@@ -1,82 +1,146 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Helper functions
     function isAuthenticated() {
       return request.auth != null;
     }
 
-    function isOwner(userId) {
-      return request.auth.uid == userId;
+    function userDocPath() {
+      return /databases/$(database)/documents/users/$(request.auth.uid);
     }
 
-    function hasRole(role) {
-      return isAuthenticated() &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == role;
+    function role() {
+      return isAuthenticated() && 'role' in request.auth.token
+        ? request.auth.token.role
+        : (isAuthenticated() && exists(userDocPath())
+            ? get(userDocPath()).data.role
+            : '');
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
     }
 
     function isAdmin() {
-      return hasRole('Admin');
+      return role() == 'Admin';
     }
 
     function isDirector() {
-      return hasRole('Director');
+      return role() == 'Director';
+    }
+
+    function isTeacher() {
+      return role() == 'Teacher';
     }
 
     function isManager() {
       return isAdmin() || isDirector();
     }
 
-    // User profiles
+    function isStaff() {
+      return isManager() || isTeacher();
+    }
+
+    function unchanged(fields) {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(fields);
+    }
+
+    // User profiles. Owners may edit their own profile but cannot change
+    // privileged fields (role, ids, email). Managers may write any field.
     match /users/{userId} {
-      allow read: if isAuthenticated();
-      allow write: if isOwner(userId) || isAdmin();
+      allow read: if isOwner(userId) || isStaff();
+      allow create: if isManager();
+      allow update: if isManager()
+        || (isOwner(userId) && unchanged(['role', 'uid', 'email', 'employee_id', 'is_pre_provisioned']));
+      allow delete: if isAdmin();
+
+      match /notifications/{notificationId} {
+        allow read, update, delete: if isOwner(userId);
+        allow create: if isOwner(userId) || isManager();
+      }
     }
 
-    // Daily reports
     match /daily_reports/{reportId} {
-      allow read: if isAuthenticated() && (resource.data.createdBy == request.auth.uid || isManager());
-      allow create: if isAuthenticated() && (request.resource.data.createdBy == request.auth.uid);
-      allow update, delete: if isAuthenticated() && (resource.data.createdBy == request.auth.uid || isAdmin());
+      allow read: if isStaff() && (resource.data.createdBy == request.auth.uid || isManager());
+      allow create: if isStaff() && request.resource.data.createdBy == request.auth.uid;
+      allow update, delete: if isStaff()
+        && (resource.data.createdBy == request.auth.uid || isAdmin());
     }
 
-    // Attendance records (Staff)
     match /attendance_records/{recordId} {
-      allow read: if isAuthenticated() && (resource.data.createdBy == request.auth.uid || isManager());
-      allow create: if isAuthenticated() && (request.resource.data.createdBy == request.auth.uid);
-      allow update, delete: if isAuthenticated() && (resource.data.createdBy == request.auth.uid || isAdmin());
+      allow read: if isStaff() && (resource.data.createdBy == request.auth.uid || isManager());
+      allow create: if isStaff() && request.resource.data.createdBy == request.auth.uid;
+      allow update, delete: if isStaff()
+        && (resource.data.createdBy == request.auth.uid || isAdmin());
     }
 
-    // Student attendance (Individual logs)
     match /student_attendance/{logId} {
-      allow read: if isAuthenticated() && (resource.data.markedBy == request.auth.uid || isManager());
-      allow create: if isAuthenticated() && (request.resource.data.markedBy == request.auth.uid);
-      allow update, delete: if isAuthenticated() && (resource.data.markedBy == request.auth.uid || isAdmin());
+      allow read: if (isStaff() && (resource.data.markedBy == request.auth.uid || isManager()))
+        || (isAuthenticated() && resource.data.studentId == request.auth.uid);
+      allow create: if isStaff() && request.resource.data.markedBy == request.auth.uid;
+      allow update, delete: if isStaff()
+        && (resource.data.markedBy == request.auth.uid || isAdmin());
     }
 
-    // Homework assignments
     match /homework_assignments/{assignmentId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated() && (request.resource.data.createdBy == request.auth.uid);
-      allow update, delete: if isAuthenticated() && (resource.data.createdBy == request.auth.uid || isAdmin());
+      allow read: if isStaff()
+        || (isAuthenticated() && resource.data.status == 'published');
+      allow create: if isStaff() && request.resource.data.createdBy == request.auth.uid;
+      allow update, delete: if isStaff()
+        && (resource.data.createdBy == request.auth.uid || isAdmin());
     }
 
-    // Students list
+    // Students: staff can list/read all. A student may only read their own
+    // record (doc id is the Auth uid). Parent-contact PII stays off student clients.
     match /students/{studentId} {
-      allow read: if isAuthenticated();
-      allow write: if isAdmin();
+      allow read: if isStaff() || (isAuthenticated() && studentId == request.auth.uid);
+      allow write: if isManager();
     }
 
-    // Announcements
     match /announcements/{announcementId} {
       allow read: if isAuthenticated();
-      allow write: if isAdmin();
+      allow write: if isManager();
     }
 
-    // Institute Config
     match /config/{configId} {
       allow read: if isAuthenticated();
-      allow write: if isAdmin();
+      allow write: if isManager();
+    }
+
+    match /subjects/{subjectId} {
+      allow read: if isAuthenticated();
+      allow write: if isManager();
+    }
+
+    match /exams/{examId} {
+      allow read: if isAuthenticated();
+      allow create: if isStaff() && request.resource.data.createdBy == request.auth.uid;
+      allow update, delete: if isStaff()
+        && (resource.data.createdBy == request.auth.uid || isManager());
+    }
+
+    match /exam_results/{resultId} {
+      allow read: if isStaff()
+        || (isAuthenticated() && resource.data.studentId == request.auth.uid);
+      allow create, update: if isStaff();
+      allow delete: if isManager();
+    }
+
+    match /audit_logs/{logId} {
+      allow read: if isManager()
+        || (isStaff() && resource.data.userId == request.auth.uid);
+      allow create: if isStaff();
+      allow update, delete: if false;
+    }
+
+    match /error_logs/{logId} {
+      allow read: if isManager();
+      allow create: if isAuthenticated();
+      allow update, delete: if false;
+    }
+
+    match /pending_invites/{email} {
+      allow read, write: if false;
     }
   }
 }

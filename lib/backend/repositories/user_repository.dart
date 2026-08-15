@@ -1,28 +1,28 @@
 import 'package:d_c_i_teacher_app/backend/repositories/interfaces/i_user_repository.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:d_c_i_teacher_app/backend/services/user_profile_write.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'dart:io';
 import 'package:d_c_i_teacher_app/backend/models/teacher.dart';
-import 'package:d_c_i_teacher_app/backend/repositories/config_repository.dart';
 
 class UserRepository implements IUserRepository {
   UserRepository(
       {FirebaseFirestore? firestore,
       FirebaseAuth? auth,
       FirebaseStorage? storage,
-      ConfigRepository? configRepository})
+      FirebaseFunctions? functions})
       : _firestore = firestore ?? FirebaseFirestore.instance,
         _auth = auth ?? FirebaseAuth.instance,
         _storage = storage ?? FirebaseStorage.instance,
-        _configRepository = configRepository ?? ConfigRepository();
+        _functions = functions ?? FirebaseFunctions.instance;
 
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
   final FirebaseStorage _storage;
-  final ConfigRepository _configRepository;
+  final FirebaseFunctions _functions;
 
   @override
   Stream<Teacher?> getUserStream() {
@@ -41,7 +41,6 @@ class UserRepository implements IUserRepository {
         .map((doc) => doc.exists ? Teacher.fromFirestore(doc) : null);
   }
 
-  @override
   @override
   Future<Teacher?> getUserData() async {
     final user = _auth.currentUser;
@@ -78,9 +77,18 @@ class UserRepository implements IUserRepository {
   }
 
   @override
-  @override
   Future<void> updateProfile(Teacher user) async {
-    await _firestore.collection('users').doc(user.uid).set(user.toFirestore(), SetOptions(merge: true));
+    final caller = await getUserData();
+    final isManager =
+        caller != null && (caller.role == 'Admin' || caller.role == 'Director');
+    final data = UserProfileWrite.sanitize(
+      data: user.toFirestore(),
+      isManager: isManager,
+    );
+    await _firestore
+        .collection('users')
+        .doc(user.uid)
+        .set(data, SetOptions(merge: true));
   }
 
   @override
@@ -92,7 +100,7 @@ class UserRepository implements IUserRepository {
         .collection('users')
         .doc(user.uid)
         .update({'notifications_enabled': enabled});
-    
+
     if (!enabled) {
       await _firestore.collection('users').doc(user.uid).update({
         'fcm_token': FieldValue.delete(),
@@ -133,23 +141,24 @@ class UserRepository implements IUserRepository {
   }
 
   @override
-  Future<String> uploadProfilePicture(File imageFile, {String? targetUid}) async {
+  Future<String> uploadProfilePicture(File imageFile,
+      {String? targetUid}) async {
     final user = _auth.currentUser;
     if (user == null) throw Exception('User not authenticated');
 
     final uid = targetUid ?? user.uid;
 
     final storageRef = _storage.ref().child('users/$uid/profile_photo.jpg');
-    
+
     // Upload the file
     final uploadTask = await storageRef.putFile(imageFile);
-    
+
     // Get the download URL
     final downloadUrl = await uploadTask.ref.getDownloadURL();
-    
+
     // Update the user profile with the new URL
     await updatePhotoUrl(downloadUrl, targetUid: targetUid);
-    
+
     return downloadUrl;
   }
 
@@ -163,91 +172,23 @@ class UserRepository implements IUserRepository {
     String? employeeId,
     required String subjectExpertise,
   }) async {
-    final emailLower = email.trim().toLowerCase();
-
-    // 0. Handle Employee ID generation
-    String finalEmployeeId = employeeId?.trim() ?? '';
-    if (finalEmployeeId.isEmpty) {
-      finalEmployeeId = await _configRepository.getNextEmployeeId();
-    }
-
-    // 1. Check if user already exists in Firestore
-    final query = await _firestore
-        .collection('users')
-        .where('email', isEqualTo: emailLower)
-        .get();
-
-    DocumentSnapshot? existingDoc;
-    String? existingUid;
-
-    if (query.docs.isNotEmpty) {
-      existingDoc = query.docs.first;
-      final data = existingDoc.data() as Map<String, dynamic>?;
-      existingUid = data?['uid'];
-    }
-
-    // 2. Handle Authentication
-    String uid;
-    if (existingUid != null) {
-      uid = existingUid;
-    } else {
-      FirebaseApp secondaryApp;
-      try {
-        secondaryApp = Firebase.app('SecondaryApp');
-      } catch (e) {
-        secondaryApp = await Firebase.initializeApp(
-          name: 'SecondaryApp',
-          options: Firebase.app().options,
-        );
-      }
-
-      final secondaryAuth = FirebaseAuth.instanceFor(app: secondaryApp);
-      try {
-        final credential = await secondaryAuth.createUserWithEmailAndPassword(
-          email: emailLower,
-          password: password,
-        );
-        uid = credential.user!.uid;
-        await secondaryAuth.signOut();
-        await secondaryApp.delete();
-      } on FirebaseAuthException catch (_) {
-        await secondaryApp.delete();
-        rethrow;
-      } catch (e) {
-        await secondaryApp.delete();
-        rethrow;
-      }
-    }
-
-    // 3. Update or Create Firestore record
-    final userData = {
-      'uid': uid,
-      'email': emailLower,
-      'display_name': displayName,
-      'role': role,
-      'designation': designation,
-      'phone_number': phoneNumber,
-      'employee_id': finalEmployeeId,
-      'subject_expertise': subjectExpertise,
-      'updated_time': FieldValue.serverTimestamp(),
-      'notifications_enabled': true,
-      'is_pre_provisioned': false,
-    };
-
-    if (existingDoc == null) {
-      userData['created_time'] = FieldValue.serverTimestamp();
-      await _firestore.collection('users').doc(uid).set(userData);
-    } else {
-      if (existingDoc.id != uid) {
-        await _firestore.collection('users').doc(uid).set(userData);
-        await existingDoc.reference.delete();
-      } else {
-        await _firestore.collection('users').doc(uid).update(userData);
-      }
+    try {
+      final callable = _functions.httpsCallable('createStaffUser');
+      await callable.call({
+        'email': email.trim().toLowerCase(),
+        'password': password,
+        'displayName': displayName.trim(),
+        'role': role.trim(),
+        'designation': designation.trim(),
+        'phoneNumber': phoneNumber.trim(),
+        'employeeId': employeeId?.trim() ?? '',
+        'subjectExpertise': subjectExpertise.trim(),
+      });
+    } on FirebaseFunctionsException catch (e) {
+      throw Exception(e.message ?? 'Failed to create user.');
     }
   }
 
-  @override
   @override
   Future<List<Teacher>> getTeachers() async {
     final query = await _firestore
@@ -264,10 +205,10 @@ class UserRepository implements IUserRepository {
         .collection('users')
         .orderBy('display_name')
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => Teacher.fromFirestore(doc)).toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Teacher.fromFirestore(doc)).toList());
   }
 
-  @override
   @override
   Future<List<String>> getAllUserSubjects() async {
     final query = await _firestore.collection('users').get();

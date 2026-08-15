@@ -3,10 +3,17 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
 class WhatsappService {
-  // These should be moved to a secure configuration or environment variables in production
   static const String _baseUrl = 'https://graph.facebook.com/v17.0';
-  static const String _phoneNumberId = 'YOUR_PHONE_NUMBER_ID';
-  static const String _accessToken = 'YOUR_ACCESS_TOKEN';
+  static const String _phoneNumberId = String.fromEnvironment(
+    'WHATSAPP_PHONE_NUMBER_ID',
+    defaultValue: '',
+  );
+  static const String _accessToken = String.fromEnvironment(
+    'WHATSAPP_ACCESS_TOKEN',
+    defaultValue: '',
+  );
+
+  bool get isConfigured => _phoneNumberId.isNotEmpty && _accessToken.isNotEmpty;
 
   /// Opens the WhatsApp app on the device with a pre-filled message.
   /// If [phone] is provided, it opens a direct chat with that number.
@@ -28,7 +35,8 @@ class WhatsappService {
         return await launchUrl(uri, mode: LaunchMode.externalApplication);
       } else {
         // Fallback to wa.me if whatsapp:// protocol is not supported
-        final webUrl = Uri.parse("https://wa.me/?text=${Uri.encodeComponent(message)}");
+        final webUrl =
+            Uri.parse("https://wa.me/?text=${Uri.encodeComponent(message)}");
         return await launchUrl(webUrl, mode: LaunchMode.externalApplication);
       }
     } catch (e) {
@@ -42,8 +50,9 @@ class WhatsappService {
     List<String> parameters = const [],
     String languageCode = 'en_US',
   }) async {
+    if (!isConfigured) return false;
     final url = Uri.parse('$_baseUrl/$_phoneNumberId/messages');
-    
+
     final body = {
       "messaging_product": "whatsapp",
       "to": to,
@@ -55,7 +64,8 @@ class WhatsappService {
           if (parameters.isNotEmpty)
             {
               "type": "body",
-              "parameters": parameters.map((p) => {"type": "text", "text": p}).toList(),
+              "parameters":
+                  parameters.map((p) => {"type": "text", "text": p}).toList(),
             }
         ]
       }
@@ -85,8 +95,9 @@ class WhatsappService {
     required String to,
     required String message,
   }) async {
+    if (!isConfigured) return false;
     final url = Uri.parse('$_baseUrl/$_phoneNumberId/messages');
-    
+
     final body = {
       "messaging_product": "whatsapp",
       "recipient_type": "individual",

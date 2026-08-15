@@ -9,7 +9,9 @@ import 'package:d_c_i_teacher_app/backend/providers/repository_providers.dart';
 import 'package:d_c_i_teacher_app/backend/models/daily_report.dart';
 
 class MockDailyReportRepository extends Mock implements DailyReportRepository {}
+
 class MockStudentRepository extends Mock implements StudentRepository {}
+
 class MockUserRepository extends Mock implements UserRepository {}
 
 void main() {
@@ -32,9 +34,18 @@ void main() {
     );
 
     registerFallbackValue(DailyReport(
-      id: '', className: '', subject: '', teacher: '', chapter: '',
-      topics: '', presentCount: 0, absentCount: 0, homeworkAssigned: '',
-      remarks: '', createdBy: '', createdByEmail: '',
+      id: '',
+      className: '',
+      subject: '',
+      teacher: '',
+      chapter: '',
+      topics: '',
+      presentCount: 0,
+      absentCount: 0,
+      homeworkAssigned: '',
+      remarks: '',
+      createdBy: '',
+      createdByEmail: '',
     ));
   });
 
@@ -58,14 +69,15 @@ void main() {
       createdByEmail: 'j@dci.com',
     );
 
-    when(() => mockReportRepo.getLastReport()).thenAnswer((_) async => lastReport);
+    when(() => mockReportRepo.getLastReport())
+        .thenAnswer((_) async => lastReport);
     when(() => mockUserRepo.getTeachers()).thenAnswer((_) async => []);
     when(() => mockStudentRepo.getAllStudents()).thenAnswer((_) async => []);
     when(() => mockUserRepo.getAllUserSubjects()).thenAnswer((_) async => []);
 
     final notifier = container.read(dailyReportNotifierProvider.notifier);
     await container.read(dailyReportNotifierProvider.future);
-    
+
     notifier.applyLastReport();
 
     final state = container.read(dailyReportNotifierProvider).value!;
@@ -77,6 +89,11 @@ void main() {
   });
 
   test('setCounts updates present and absent values', () async {
+    when(() => mockUserRepo.getTeachers()).thenAnswer((_) async => []);
+    when(() => mockStudentRepo.getAllStudents()).thenAnswer((_) async => []);
+    when(() => mockUserRepo.getAllUserSubjects()).thenAnswer((_) async => []);
+    when(() => mockReportRepo.getLastReport()).thenAnswer((_) async => null);
+
     final notifier = container.read(dailyReportNotifierProvider.notifier);
     await container.read(dailyReportNotifierProvider.future);
 

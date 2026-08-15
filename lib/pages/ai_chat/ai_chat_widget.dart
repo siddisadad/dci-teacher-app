@@ -21,7 +21,8 @@ class _AIChatWidgetState extends ConsumerState<AIChatWidget> {
   final List<Map<String, String>> _messages = [
     {
       'role': 'ai',
-      'text': 'Hello! I am your Deshmukh AI Assistant. How can I help you with your classes today?'
+      'text':
+          'Hello! I am your Deshmukh AI Assistant. How can I help you with your classes today?'
     },
   ];
 
@@ -103,7 +104,7 @@ class _AIChatWidgetState extends ConsumerState<AIChatWidget> {
           children: [
             HeaderSectionWidget(
               title: 'Deshmukh AI Assistant',
-              subtitle: 'Smart academic support',
+              subtitle: 'Preview — responses are simulated',
               onBackPressed: () async => context.safePop(),
               showActionIcon: false,
             ),
@@ -134,7 +135,8 @@ class _AIChatWidgetState extends ConsumerState<AIChatWidget> {
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
+        constraints:
+            BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
         decoration: BoxDecoration(
           color: isAi ? theme.secondaryBackground : theme.primary,
           borderRadius: BorderRadius.only(
@@ -154,9 +156,14 @@ class _AIChatWidgetState extends ConsumerState<AIChatWidget> {
                 padding: const EdgeInsets.only(bottom: 4),
                 child: Row(
                   children: [
-                    const Icon(Icons.auto_awesome_rounded, size: 12, color: AppColors.secondary),
+                    const Icon(Icons.auto_awesome_rounded,
+                        size: 12, color: AppColors.secondary),
                     const SizedBox(width: 4),
-                    Text('Deshmukh AI', style: AppTypography.caption.copyWith(fontWeight: FontWeight.bold, color: AppColors.secondary, fontSize: 11)),
+                    Text('Deshmukh AI',
+                        style: AppTypography.caption.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.secondary,
+                            fontSize: 11)),
                   ],
                 ),
               ),
@@ -174,7 +181,11 @@ class _AIChatWidgetState extends ConsumerState<AIChatWidget> {
   }
 
   Widget _buildQuickActions() {
-    final suggestions = ['Help with lesson plan', 'Analyze performance', 'Attendance trends'];
+    final suggestions = [
+      'Help with lesson plan',
+      'Analyze performance',
+      'Attendance trends'
+    ];
     return Container(
       height: 40,
       margin: const EdgeInsets.only(bottom: 8),
@@ -186,13 +197,15 @@ class _AIChatWidgetState extends ConsumerState<AIChatWidget> {
           return Padding(
             padding: const EdgeInsets.only(right: 8),
             child: ActionChip(
-              label: Text(suggestions[index], style: const TextStyle(fontSize: 11)),
+              label: Text(suggestions[index],
+                  style: const TextStyle(fontSize: 11)),
               onPressed: () {
                 _model.chatInputTextController!.text = suggestions[index];
                 _sendMessage();
               },
               backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
-              side: BorderSide(color: FlutterFlowTheme.of(context).primary.withAlpha(50)),
+              side: BorderSide(
+                  color: FlutterFlowTheme.of(context).primary.withAlpha(50)),
             ),
           );
         },
@@ -203,10 +216,16 @@ class _AIChatWidgetState extends ConsumerState<AIChatWidget> {
   Widget _buildInputArea() {
     final theme = FlutterFlowTheme.of(context);
     return Container(
-      padding: EdgeInsets.fromLTRB(16, 8, 16, MediaQuery.of(context).viewInsets.bottom + 16),
+      padding: EdgeInsets.fromLTRB(
+          16, 8, 16, MediaQuery.of(context).viewInsets.bottom + 16),
       decoration: BoxDecoration(
         color: theme.secondaryBackground,
-        boxShadow: [BoxShadow(color: Colors.black.withAlpha(10), blurRadius: 4, offset: const Offset(0, -2))],
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withAlpha(10),
+              blurRadius: 4,
+              offset: const Offset(0, -2))
+        ],
       ),
       child: Row(
         children: [
@@ -217,10 +236,13 @@ class _AIChatWidgetState extends ConsumerState<AIChatWidget> {
               decoration: InputDecoration(
                 hintText: 'Ask anything...',
                 hintStyle: AppTypography.caption,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(24), borderSide: BorderSide.none),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(24),
+                    borderSide: BorderSide.none),
                 fillColor: theme.primaryBackground,
                 filled: true,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               ),
               style: AppTypography.body,
               maxLines: null,
@@ -228,9 +250,11 @@ class _AIChatWidgetState extends ConsumerState<AIChatWidget> {
           ),
           const SizedBox(width: 8),
           Container(
-            decoration: BoxDecoration(color: theme.primary, shape: BoxShape.circle),
+            decoration:
+                BoxDecoration(color: theme.primary, shape: BoxShape.circle),
             child: IconButton(
-              icon: const Icon(Icons.send_rounded, color: Colors.white, size: 20),
+              icon:
+                  const Icon(Icons.send_rounded, color: Colors.white, size: 20),
               onPressed: _sendMessage,
             ),
           ),

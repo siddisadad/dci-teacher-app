@@ -10,13 +10,15 @@ class StudentRepository implements IStudentRepository {
 
   final FirebaseFirestore _firestore;
 
-  CollectionReference get _studentsCollection => _firestore.collection('students');
+  CollectionReference get _studentsCollection =>
+      _firestore.collection('students');
 
   void _sortStudents(List<Student> students) {
     students.sort((a, b) {
       final rollA = int.tryParse(a.rollNo) ?? 0;
       final rollB = int.tryParse(b.rollNo) ?? 0;
-      if (rollA != 0 && rollB != 0 && rollA != rollB) return rollA.compareTo(rollB);
+      if (rollA != 0 && rollB != 0 && rollA != rollB)
+        return rollA.compareTo(rollB);
       return a.name.toLowerCase().compareTo(b.name.toLowerCase());
     });
   }
@@ -28,10 +30,9 @@ class StudentRepository implements IStudentRepository {
         .where('class', isEqualTo: normalizedClass)
         .get();
 
-    final students = querySnapshot.docs
-        .map((doc) => Student.fromFirestore(doc))
-        .toList();
-    
+    final students =
+        querySnapshot.docs.map((doc) => Student.fromFirestore(doc)).toList();
+
     _sortStudents(students);
     return students;
   }
@@ -39,27 +40,23 @@ class StudentRepository implements IStudentRepository {
   @override
   Future<List<Student>> getAllStudents() async {
     final querySnapshot = await _studentsCollection.get();
-    final students = querySnapshot.docs
-        .map((doc) => Student.fromFirestore(doc))
-        .toList();
+    final students =
+        querySnapshot.docs.map((doc) => Student.fromFirestore(doc)).toList();
     _sortStudents(students);
     return students;
   }
 
   @override
-  Future<List<Student>> getStudentsPaginated(int limit, {DocumentSnapshot? lastDocument}) async {
-    var query = _studentsCollection
-        .orderBy('name')
-        .limit(limit);
-    
+  Future<List<Student>> getStudentsPaginated(int limit,
+      {DocumentSnapshot? lastDocument}) async {
+    var query = _studentsCollection.orderBy('name').limit(limit);
+
     if (lastDocument != null) {
       query = query.startAfterDocument(lastDocument);
     }
 
     final querySnapshot = await query.get();
-    return querySnapshot.docs
-        .map((doc) => Student.fromFirestore(doc))
-        .toList();
+    return querySnapshot.docs.map((doc) => Student.fromFirestore(doc)).toList();
   }
 
   @override
@@ -77,7 +74,8 @@ class StudentRepository implements IStudentRepository {
   @override
   Stream<List<Student>> getAllStudentsStream() {
     return _studentsCollection.snapshots().map((snapshot) {
-      final students = snapshot.docs.map((doc) => Student.fromFirestore(doc)).toList();
+      final students =
+          snapshot.docs.map((doc) => Student.fromFirestore(doc)).toList();
       _sortStudents(students);
       return students;
     });
@@ -85,7 +83,9 @@ class StudentRepository implements IStudentRepository {
 
   @override
   Future<void> updateStudent(Student student) async {
-    await _studentsCollection.doc(student.id).set(student.toFirestore(), SetOptions(merge: true));
+    await _studentsCollection
+        .doc(student.id)
+        .set(student.toFirestore(), SetOptions(merge: true));
   }
 
   @override
@@ -94,28 +94,28 @@ class StudentRepository implements IStudentRepository {
   }
 
   @override
-  @override
   Future<void> bulkAddStudents(List<Map<String, String>> studentsData) async {
-    debugPrint('StudentRepository: Starting bulk add for ${studentsData.length} students');
-    
+    debugPrint(
+        'StudentRepository: Starting bulk add for ${studentsData.length} students');
+
     final List<String> errors = [];
     final Set<String> seenIds = {};
-    
+
     for (var i = 0; i < studentsData.length; i += 500) {
       final chunk = studentsData.sublist(
-        i, i + 500 > studentsData.length ? studentsData.length : i + 500
-      );
-      
+          i, i + 500 > studentsData.length ? studentsData.length : i + 500);
+
       final currentBatch = _firestore.batch();
-      
+      var writesInBatch = 0;
+
       for (var j = 0; j < chunk.length; j++) {
         final data = chunk[j];
         final rowIndex = i + j + 1;
-        
+
         final studentId = data['student_id']?.toString().trim();
         final name = data['name']?.toString().trim();
         final rollNo = data['roll_no']?.toString().trim();
-        
+
         if (studentId == null || studentId.isEmpty) {
           errors.add('Row $rowIndex: Missing Student ID');
           continue;
@@ -125,14 +125,15 @@ class StudentRepository implements IStudentRepository {
           continue;
         }
         if (seenIds.contains(studentId)) {
-          errors.add('Row $rowIndex: Duplicate Student ID ($studentId) in current file');
+          errors.add(
+              'Row $rowIndex: Duplicate Student ID ($studentId) in current file');
           continue;
         }
         seenIds.add(studentId);
 
         String className = normalizeClassName(data['class']?.toString());
         final docRef = _studentsCollection.doc(studentId);
-        
+
         final studentData = {
           'name': name,
           'student_id': studentId,
@@ -161,22 +162,24 @@ class StudentRepository implements IStudentRepository {
         };
 
         currentBatch.set(docRef, studentData, SetOptions(merge: true));
+        writesInBatch++;
       }
-      
+
+      if (writesInBatch == 0) continue;
+
       try {
-        if (errors.isNotEmpty) {
-          debugPrint('StudentRepository: Validation failed for some rows: ${errors.join(", ")}');
-        }
         await currentBatch.commit();
-        debugPrint('StudentRepository: Committed batch of ${chunk.length} students');
+        debugPrint(
+            'StudentRepository: Committed batch of $writesInBatch students');
       } catch (e) {
         debugPrint('StudentRepository: Error committing batch: $e');
         rethrow;
       }
     }
-    
+
     if (errors.isNotEmpty) {
-      throw Exception('Import completed with errors:\n${errors.take(5).join("\n")}${errors.length > 5 ? "\n...and ${errors.length - 5} more" : ""}');
+      throw Exception(
+          'Import completed with errors:\n${errors.take(5).join("\n")}${errors.length > 5 ? "\n...and ${errors.length - 5} more" : ""}');
     }
   }
 }

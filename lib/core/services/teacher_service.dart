@@ -19,8 +19,9 @@ class TeacherService {
     required String subjectExpertise,
   }) async {
     final currentUser = ref.read(currentUserDataStreamProvider).value;
-    if (currentUser?.role != 'Admin') {
-      throw Exception('Unauthorized: Only Admins can create new faculty profiles.');
+    if (currentUser?.role != 'Admin' && currentUser?.role != 'Director') {
+      throw Exception(
+          'Unauthorized: Only Admins or Directors can create new faculty profiles.');
     }
 
     final repository = ref.read(userRepositoryProvider);
