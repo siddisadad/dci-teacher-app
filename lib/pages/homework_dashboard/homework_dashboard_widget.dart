@@ -11,7 +11,6 @@ import 'package:d_c_i_teacher_app/pages/teacher_profile/teacher_profile_widget.d
 import 'package:d_c_i_teacher_app/pages/reports_dashboard/reports_dashboard_widget.dart';
 import 'package:d_c_i_teacher_app/pages/homework_assignment/homework_assignment_widget.dart';
 import 'package:d_c_i_teacher_app/pages/homework_history/homework_history_widget.dart';
-import 'package:d_c_i_teacher_app/shared/app_colors.dart';
 import 'package:d_c_i_teacher_app/shared/app_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

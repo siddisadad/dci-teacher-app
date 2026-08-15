@@ -114,8 +114,9 @@ class AttendanceRepository implements IAttendanceRepository {
 
       // Local Sort: Newest first. Pending records (null createdAt) go to top.
       list.sort((a, b) {
-        if (a.createdAt == null && b.createdAt == null)
+        if (a.createdAt == null && b.createdAt == null) {
           return b.date.compareTo(a.date);
+        }
         if (a.createdAt == null) return -1;
         if (b.createdAt == null) return 1;
         return b.createdAt!.compareTo(a.createdAt!);

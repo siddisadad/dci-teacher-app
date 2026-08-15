@@ -17,8 +17,9 @@ class StudentRepository implements IStudentRepository {
     students.sort((a, b) {
       final rollA = int.tryParse(a.rollNo) ?? 0;
       final rollB = int.tryParse(b.rollNo) ?? 0;
-      if (rollA != 0 && rollB != 0 && rollA != rollB)
+      if (rollA != 0 && rollB != 0 && rollA != rollB) {
         return rollA.compareTo(rollB);
+      }
       return a.name.toLowerCase().compareTo(b.name.toLowerCase());
     });
   }

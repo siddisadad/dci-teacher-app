@@ -172,15 +172,24 @@ FFUploadedFile uploadedFileFromString(String uploadedFileStr) =>
 enum ParamType {
   int,
   double,
+  // ignore: constant_identifier_names
   String,
   bool,
+  // ignore: constant_identifier_names
   DateTime,
+  // ignore: constant_identifier_names
   DateTimeRange,
+  // ignore: constant_identifier_names
   LatLng,
+  // ignore: constant_identifier_names
   Color,
+  // ignore: constant_identifier_names
   FFPlace,
+  // ignore: constant_identifier_names
   FFUploadedFile,
+  // ignore: constant_identifier_names
   JSON,
+  // ignore: constant_identifier_names
   Enum,
 }
 
