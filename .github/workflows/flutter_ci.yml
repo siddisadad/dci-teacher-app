@@ -107,7 +107,6 @@ jobs:
       - name: Setup Signing
         id: signing
         env:
-          # Check both secrets and vars in case they were misconfigured
           SEC_KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           SEC_KEY_PROPS: ${{ secrets.ANDROID_KEY_PROPERTIES }}
           VAR_KEYSTORE_B64: ${{ vars.ANDROID_KEYSTORE_BASE64 }}
@@ -117,12 +116,11 @@ jobs:
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
         run: |
-          # Prioritize secrets over vars
           B64="${SEC_KEYSTORE_B64:-$VAR_KEYSTORE_B64}"
           PROPS="${SEC_KEY_PROPS:-$VAR_KEY_PROPS}"
           
           if [ -z "$B64" ] && [ -z "$PROPS" ]; then
-            echo "::warning::Signing secrets (ANDROID_KEYSTORE_BASE64 or ANDROID_KEY_PROPERTIES) not found in secrets or vars. Skipping signed Android release."
+            echo "::warning title=Signing Disabled::Neither ANDROID_KEYSTORE_BASE64 nor ANDROID_KEY_PROPERTIES found in secrets or vars."
             echo "ready=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
@@ -130,16 +128,18 @@ jobs:
           KEYSTORE_PATH="$GITHUB_WORKSPACE/android/app/upload-keystore.jks"
           
           if [ -n "$B64" ]; then
-            echo "$B64" | base64 --decode > "$KEYSTORE_PATH"
+            printf '%s' "$B64" | base64 --decode > "$KEYSTORE_PATH"
           fi
           
           if [ -n "$PROPS" ]; then
             printf '%s\n' "$PROPS" > android/key.properties
-            # Force the storeFile path to the local decoded file
             sed -i '/^storeFile=/d' android/key.properties
             echo "storeFile=$KEYSTORE_PATH" >> android/key.properties
           else
-            # Manual fallback if key.properties is not provided
+            if [ -z "$ANDROID_KEYSTORE_PASSWORD" ]; then
+              echo "::error title=Missing Config::ANDROID_KEYSTORE_PASSWORD is required when ANDROID_KEY_PROPERTIES is not provided."
+              exit 1
+            fi
             {
               echo "storePassword=${ANDROID_KEYSTORE_PASSWORD}"
               echo "keyPassword=${ANDROID_KEY_PASSWORD:-$ANDROID_KEYSTORE_PASSWORD}"
@@ -191,8 +191,9 @@ jobs:
           groups: ${{ vars.FIREBASE_TESTER_GROUPS }}
           file: build/app/outputs/flutter-apk/app-release.apk
           releaseNotes: |
-            ${{ github.ref_name }} (${{ steps.version.outputs.name }}+${{ steps.version.outputs.code }})
-            ${{ github.event.head_commit.message }}
+            Release: ${{ github.ref_name }}
+            Build: ${{ steps.version.outputs.name }}+${{ steps.version.outputs.code }}
+            Message: ${{ github.event.head_commit.message || 'Manual build / triggered workflow' }}
 
       - name: Google Play Store
         if: steps.signing.outputs.ready == 'true' && secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON != ''
