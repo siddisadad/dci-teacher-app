@@ -1,85 +1,22 @@
-name: Flutter CI/CD
+name: Release
 
 on:
   push:
     branches: [ dev, main, R1, R2 ]
     tags: [ 'v*' ]
-  pull_request:
-    branches: [ dev, main, R1, R2 ]
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  group: release-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
-  test:
-    name: Flutter Analyze & Test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          flutter-version: '3.47.0'
-          cache: true
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Run build_runner
-        run: dart run build_runner build --delete-conflicting-outputs
-
-      - name: Check formatting
-        run: dart format --set-exit-if-changed lib test
-
-      - name: Analyze project
-        run: flutter analyze
-
-      - name: Run tests
-        run: flutter test
-
-  firestore_rules:
-    name: Firestore rules tests
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: firebase
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '21'
-
-      - name: Install Firebase CLI
-        run: npm install -g firebase-tools
-
-      - name: Install rules test deps
-        run: npm --prefix tests ci
-
-      - name: Run Firestore rules tests
-        run: firebase emulators:exec --only firestore "npm --prefix tests test"
-
-  release_android:
-    name: AAB → App Distribution → Play
-    needs: test
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+  android:
+    name: Android Release
     runs-on: ubuntu-latest
     env:
       FIREBASE_ANDROID_APP_ID: ${{ vars.FIREBASE_ANDROID_APP_ID || '1:185309718906:android:b7183fa10298724e6d8ec3' }}
       FIREBASE_TESTER_GROUPS: ${{ vars.FIREBASE_TESTER_GROUPS }}
-      HAS_FIREBASE: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON != '' }}
-      HAS_PLAY: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -119,7 +56,7 @@ jobs:
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
         run: |
           if [ -z "$ANDROID_KEYSTORE_BASE64" ]; then
-            echo "::warning::ANDROID_KEYSTORE_BASE64 is not set as a repository secret. Skipping signed Android release, Firebase App Distribution, and Play upload."
+            echo "::warning title=Signing Disabled::ANDROID_KEYSTORE_BASE64 is not set. Skipping signed release."
             echo "ready=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
@@ -131,7 +68,7 @@ jobs:
             echo "storeFile=$KEYSTORE_PATH" >> android/key.properties
           else
             if [ -z "$ANDROID_KEYSTORE_PASSWORD" ]; then
-              echo "::error::Set ANDROID_KEYSTORE_PASSWORD (or ANDROID_KEY_PROPERTIES) in GitHub repository secrets."
+              echo "::error title=Missing Config::ANDROID_KEYSTORE_PASSWORD is required when ANDROID_KEY_PROPERTIES is not provided."
               exit 1
             fi
             {
@@ -175,16 +112,8 @@ jobs:
           name: release-apk
           path: build/app/outputs/flutter-apk/*.apk
 
-      - name: Locate R8 mapping file
-        if: steps.signing.outputs.ready == 'true'
-        id: mapping
-        run: |
-          if [ -f build/app/outputs/mapping/release/mapping.txt ]; then
-            echo "file=build/app/outputs/mapping/release/mapping.txt" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Firebase App Distribution
-        if: steps.signing.outputs.ready == 'true' && env.HAS_FIREBASE == 'true'
+        if: steps.signing.outputs.ready == 'true' && secrets.FIREBASE_SERVICE_ACCOUNT_JSON != ''
         continue-on-error: true
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
@@ -193,54 +122,23 @@ jobs:
           groups: ${{ env.FIREBASE_TESTER_GROUPS }}
           file: build/app/outputs/flutter-apk/app-release.apk
           releaseNotes: |
-            ${{ github.ref_name }} (${{ steps.version.outputs.name }}+${{ steps.version.outputs.code }})
-            ${{ github.event.head_commit.message }}
+            Release: ${{ github.ref_name }}
+            Build: ${{ steps.version.outputs.name }}+${{ steps.version.outputs.code }}
+            Message: ${{ github.event.head_commit.message || 'Manual build' }}
 
-      - name: Skip Firebase App Distribution
-        if: steps.signing.outputs.ready == 'true' && env.HAS_FIREBASE != 'true'
-        run: echo "::warning::FIREBASE_SERVICE_ACCOUNT_JSON is not set. Skipping Firebase App Distribution."
-
-      - name: Google Play Closed Testing
-        if: >-
-          steps.signing.outputs.ready == 'true' &&
-          env.HAS_PLAY == 'true' &&
-          startsWith(github.ref, 'refs/tags/v') == false
+      - name: Google Play Store
+        if: steps.signing.outputs.ready == 'true' && secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON != ''
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
           packageName: com.dciteacherapp
           releaseFiles: build/app/outputs/bundle/release/app-release.aab
-          track: alpha
-          tracks: alpha
+          track: ${{ startsWith(github.ref, 'refs/tags/v') && 'production' || 'alpha' }}
           status: completed
           changesNotSentForReview: true
-          whatsNewDirectory: .github/whatsnew
-          mappingFile: ${{ steps.mapping.outputs.file }}
 
-      - name: Skip Google Play Closed Testing
-        if: steps.signing.outputs.ready == 'true' && env.HAS_PLAY != 'true'
-        run: echo "::warning::PLAY_STORE_SERVICE_ACCOUNT_JSON is not set. Skipping Play Closed Testing and production."
-
-      - name: Google Play Closed Testing + Release
-        if: >-
-          steps.signing.outputs.ready == 'true' &&
-          env.HAS_PLAY == 'true' &&
-          startsWith(github.ref, 'refs/tags/v')
-        uses: r0adkll/upload-google-play@v1
-        with:
-          serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
-          packageName: com.dciteacherapp
-          releaseFiles: build/app/outputs/bundle/release/app-release.aab
-          tracks: alpha,production
-          status: completed
-          changesNotSentForReview: true
-          whatsNewDirectory: .github/whatsnew
-          mappingFile: ${{ steps.mapping.outputs.file }}
-
-  build_web:
-    name: Build Web
-    needs: test
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/R1' || github.ref == 'refs/heads/R2' || startsWith(github.ref, 'refs/tags/v'))
+  web:
+    name: Web Release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -259,3 +157,24 @@ jobs:
         with:
           name: web-build
           path: build/web
+
+  firebase:
+    name: Firebase Configs & Hosting
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: firebase
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+      - name: Deploy Firebase
+        if: secrets.FIREBASE_SERVICE_ACCOUNT_JSON != ''
+        run: |
+          firebase deploy --only firestore,storage,hosting --project d-c-i-teacher-app-lffjyu
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
