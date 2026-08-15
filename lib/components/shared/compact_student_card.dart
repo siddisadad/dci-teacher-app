@@ -36,7 +36,8 @@ class CompactStudentCard extends StatelessWidget {
                 width: 1,
               ),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+            padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md, vertical: AppSpacing.sm),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -64,7 +65,8 @@ class CompactStudentCard extends StatelessWidget {
                               'Roll: ${student.rollNo}',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: AppTypography.caption.copyWith(fontSize: 12),
+                              style:
+                                  AppTypography.caption.copyWith(fontSize: 12),
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -82,7 +84,8 @@ class CompactStudentCard extends StatelessWidget {
                               student.className,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: AppTypography.caption.copyWith(fontSize: 12),
+                              style:
+                                  AppTypography.caption.copyWith(fontSize: 12),
                             ),
                           ),
                         ],
@@ -116,7 +119,8 @@ class CompactStudentCard extends StatelessWidget {
                   fit: BoxFit.cover,
                   width: 36,
                   height: 36,
-                  placeholder: (context, url) => Container(color: FlutterFlowTheme.of(context).accent4),
+                  placeholder: (context, url) =>
+                      Container(color: FlutterFlowTheme.of(context).accent4),
                   errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
               )

@@ -15,10 +15,12 @@ class MyAttendanceHistoryWidget extends ConsumerStatefulWidget {
   static String routePath = '/myAttendanceHistory';
 
   @override
-  ConsumerState<MyAttendanceHistoryWidget> createState() => _MyAttendanceHistoryWidgetState();
+  ConsumerState<MyAttendanceHistoryWidget> createState() =>
+      _MyAttendanceHistoryWidgetState();
 }
 
-class _MyAttendanceHistoryWidgetState extends ConsumerState<MyAttendanceHistoryWidget> {
+class _MyAttendanceHistoryWidgetState
+    extends ConsumerState<MyAttendanceHistoryWidget> {
   late MyAttendanceHistoryModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -57,17 +59,19 @@ class _MyAttendanceHistoryWidgetState extends ConsumerState<MyAttendanceHistoryW
                   return const AppEmptyState(
                     icon: Icons.fact_check_rounded,
                     title: 'No records found',
-                    description: 'Your attendance history will appear here once marked by teachers.',
+                    description:
+                        'Your attendance history will appear here once marked by teachers.',
                   );
                 }
                 return ListView.separated(
                   padding: AppSpacing.pagePadding,
                   itemCount: records.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.md),
+                  separatorBuilder: (_, __) =>
+                      const SizedBox(height: AppSpacing.md),
                   itemBuilder: (context, index) {
                     final record = records[index];
                     final color = _getStatusColor(record.status, theme);
-                    
+
                     return Container(
                       decoration: BoxDecoration(
                         color: theme.secondaryBackground,
@@ -77,20 +81,32 @@ class _MyAttendanceHistoryWidgetState extends ConsumerState<MyAttendanceHistoryW
                       ),
                       child: ListTile(
                         leading: Container(
-                          width: 40, height: 40,
-                          decoration: BoxDecoration(color: color.withAlpha(20), shape: BoxShape.circle),
-                          child: Icon(_getStatusIcon(record.status), color: color, size: 20),
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                              color: color.withAlpha(20),
+                              shape: BoxShape.circle),
+                          child: Icon(_getStatusIcon(record.status),
+                              color: color, size: 20),
                         ),
-                        title: Text(record.subject, style: AppTypography.body.copyWith(fontWeight: FontWeight.bold)),
-                        subtitle: Text(dateTimeFormat('yMMMd', record.date), style: AppTypography.caption),
+                        title: Text(record.subject,
+                            style: AppTypography.body
+                                .copyWith(fontWeight: FontWeight.bold)),
+                        subtitle: Text(dateTimeFormat('yMMMd', record.date),
+                            style: AppTypography.caption),
                         trailing: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
                             color: color.withAlpha(25),
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(color: color.withAlpha(50)),
                           ),
-                          child: Text(record.status.toUpperCase(), style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold)),
+                          child: Text(record.status.toUpperCase(),
+                              style: TextStyle(
+                                  color: color,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold)),
                         ),
                       ),
                     );
@@ -108,19 +124,27 @@ class _MyAttendanceHistoryWidgetState extends ConsumerState<MyAttendanceHistoryW
 
   Color _getStatusColor(String status, FlutterFlowTheme theme) {
     switch (status) {
-      case 'Present': return theme.success;
-      case 'Absent': return theme.error;
-      case 'Leave': return theme.warning;
-      default: return theme.secondaryText;
+      case 'Present':
+        return theme.success;
+      case 'Absent':
+        return theme.error;
+      case 'Leave':
+        return theme.warning;
+      default:
+        return theme.secondaryText;
     }
   }
 
   IconData _getStatusIcon(String status) {
     switch (status) {
-      case 'Present': return Icons.check_circle_rounded;
-      case 'Absent': return Icons.cancel_rounded;
-      case 'Leave': return Icons.pause_circle_rounded;
-      default: return Icons.help_rounded;
+      case 'Present':
+        return Icons.check_circle_rounded;
+      case 'Absent':
+        return Icons.cancel_rounded;
+      case 'Leave':
+        return Icons.pause_circle_rounded;
+      default:
+        return Icons.help_rounded;
     }
   }
 }

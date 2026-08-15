@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:d_c_i_teacher_app/backend/models/exam_result.dart';
 import 'package:d_c_i_teacher_app/backend/providers/service_providers.dart';
-import 'package:d_c_i_teacher_app/auth/firebase_auth/auth_util.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class MarksEntryState {
   final bool isSaving;
@@ -31,7 +31,15 @@ class MarksEntryNotifier extends AutoDisposeAsyncNotifier<MarksEntryState> {
     required String subject,
     required int totalMarks,
     required int passingMarks,
-    required List<({String studentId, String studentName, String className, double marks, String remarks})> entries,
+    required List<
+            ({
+              String studentId,
+              String studentName,
+              String className,
+              double marks,
+              String remarks
+            })>
+        entries,
   }) async {
     state = AsyncData(state.value!.copyWith(isSaving: true));
     try {
@@ -48,7 +56,7 @@ class MarksEntryNotifier extends AutoDisposeAsyncNotifier<MarksEntryState> {
           passingMarks: passingMarks,
           grade: ExamResult.calculateGrade(e.marks, totalMarks),
           remarks: e.remarks,
-          recordedBy: currentUserUid,
+          recordedBy: FirebaseAuth.instance.currentUser?.uid ?? '',
         );
       }).toList();
 
@@ -62,6 +70,7 @@ class MarksEntryNotifier extends AutoDisposeAsyncNotifier<MarksEntryState> {
   }
 }
 
-final marksEntryNotifierProvider = AsyncNotifierProvider.autoDispose<MarksEntryNotifier, MarksEntryState>(() {
+final marksEntryNotifierProvider =
+    AsyncNotifierProvider.autoDispose<MarksEntryNotifier, MarksEntryState>(() {
   return MarksEntryNotifier();
 });

@@ -4,15 +4,16 @@ import 'package:d_c_i_teacher_app/backend/repositories/audit_repository.dart';
 import 'package:d_c_i_teacher_app/flutter_flow/flutter_flow_theme.dart';
 
 class ErrorHandler {
-  static void show(BuildContext context, dynamic error, {AuditRepository? auditRepo, String? errorContext}) {
+  static void show(BuildContext context, dynamic error,
+      {AuditRepository? auditRepo, String? errorContext}) {
     debugPrint('App Error: $error');
-    
+
     if (auditRepo != null) {
       auditRepo.logError(error, context: errorContext);
     }
-    
+
     String message = 'An unexpected error occurred.';
-    
+
     if (error is FirebaseAuthException) {
       switch (error.code) {
         case 'user-not-found':

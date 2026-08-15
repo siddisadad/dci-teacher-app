@@ -44,7 +44,7 @@ class _ExamCardWidgetState extends ConsumerState<ExamCardWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = FlutterFlowTheme.of(context);
-    
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Container(
@@ -81,7 +81,8 @@ class _ExamCardWidgetState extends ConsumerState<ExamCardWidget> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
                             color: theme.primary.withAlpha(25),
                             borderRadius: BorderRadius.circular(20),
@@ -97,11 +98,13 @@ class _ExamCardWidgetState extends ConsumerState<ExamCardWidget> {
                         ),
                         Row(
                           children: [
-                            Icon(Icons.calendar_today_rounded, size: 10, color: theme.secondaryText),
+                            Icon(Icons.calendar_today_rounded,
+                                size: 10, color: theme.secondaryText),
                             const SizedBox(width: 4),
                             Text(
                               dateTimeFormat('yMMMd', widget.exam.date),
-                              style: AppTypography.caption.copyWith(fontSize: 11),
+                              style:
+                                  AppTypography.caption.copyWith(fontSize: 11),
                             ),
                           ],
                         ),
@@ -118,19 +121,23 @@ class _ExamCardWidgetState extends ConsumerState<ExamCardWidget> {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        Icon(Icons.access_time_rounded, size: 12, color: theme.secondaryText),
+                        Icon(Icons.access_time_rounded,
+                            size: 12, color: theme.secondaryText),
                         const SizedBox(width: 4),
                         Text(
                           '${widget.exam.startTime} - ${widget.exam.endTime}',
-                          style: AppTypography.caption.copyWith(color: theme.primaryText, fontSize: 11),
+                          style: AppTypography.caption
+                              .copyWith(color: theme.primaryText, fontSize: 11),
                         ),
                         const SizedBox(width: 12),
-                        Icon(Icons.location_on_rounded, size: 12, color: theme.secondaryText),
+                        Icon(Icons.location_on_rounded,
+                            size: 12, color: theme.secondaryText),
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
                             widget.exam.venue,
-                            style: AppTypography.caption.copyWith(color: theme.primaryText, fontSize: 11),
+                            style: AppTypography.caption.copyWith(
+                                color: theme.primaryText, fontSize: 11),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -150,11 +157,14 @@ class _ExamCardWidgetState extends ConsumerState<ExamCardWidget> {
                               style: OutlinedButton.styleFrom(
                                 foregroundColor: theme.primary,
                                 side: BorderSide(color: theme.primary),
-                                padding: const EdgeInsets.symmetric(vertical: 4),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 4),
                                 minimumSize: const Size(0, 32),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(6)),
                               ),
-                              child: const Text('Enter Marks', style: TextStyle(fontSize: 12)),
+                              child: const Text('Enter Marks',
+                                  style: TextStyle(fontSize: 12)),
                             ),
                           ),
                         if (ref.watch(accessControlProvider).canEnterMarks)
@@ -170,9 +180,12 @@ class _ExamCardWidgetState extends ConsumerState<ExamCardWidget> {
                               side: BorderSide(color: theme.alternate),
                               padding: const EdgeInsets.symmetric(vertical: 4),
                               minimumSize: const Size(0, 32),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6)),
                             ),
-                            child: Text('Merit List', style: TextStyle(fontSize: 12, color: theme.primaryText)),
+                            child: Text('Merit List',
+                                style: TextStyle(
+                                    fontSize: 12, color: theme.primaryText)),
                           ),
                         ),
                       ],
@@ -185,23 +198,29 @@ class _ExamCardWidgetState extends ConsumerState<ExamCardWidget> {
                       children: [
                         RichText(
                           text: TextSpan(
-                            style: AppTypography.caption.copyWith(color: theme.secondaryText, fontSize: 11),
+                            style: AppTypography.caption.copyWith(
+                                color: theme.secondaryText, fontSize: 11),
                             children: [
                               const TextSpan(text: 'Marks: '),
                               TextSpan(
                                 text: '${widget.exam.totalMarks}',
-                                style: TextStyle(fontWeight: FontWeight.bold, color: theme.primaryText),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: theme.primaryText),
                               ),
                               const TextSpan(text: ' (Pass: '),
                               TextSpan(
                                 text: '${widget.exam.passingMarks}',
-                                style: TextStyle(fontWeight: FontWeight.bold, color: theme.primary),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: theme.primary),
                               ),
                               const TextSpan(text: ')'),
                             ],
                           ),
                         ),
-                        if (widget.onDelete != null && ref.watch(accessControlProvider).canManageExams)
+                        if (widget.onDelete != null &&
+                            ref.watch(accessControlProvider).canManageExams)
                           Material(
                             color: Colors.transparent,
                             child: InkWell(
@@ -209,7 +228,8 @@ class _ExamCardWidgetState extends ConsumerState<ExamCardWidget> {
                               borderRadius: BorderRadius.circular(6),
                               child: Padding(
                                 padding: const EdgeInsets.all(2.0),
-                                child: Icon(Icons.delete_outline_rounded, color: theme.error, size: 16),
+                                child: Icon(Icons.delete_outline_rounded,
+                                    color: theme.error, size: 16),
                               ),
                             ),
                           ),

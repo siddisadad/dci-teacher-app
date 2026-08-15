@@ -73,7 +73,9 @@ class Student {
       pinCode: data['pin_code']?.toString(),
       subjects: data['subjects'] is List
           ? List<String>.from(data['subjects'])
-          : (data['subjects']?.toString().split(',')
+          : (data['subjects']
+              ?.toString()
+              .split(',')
               .map((e) => e.trim())
               .where((e) => e.isNotEmpty)
               .toList()),

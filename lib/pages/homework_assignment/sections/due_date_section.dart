@@ -39,10 +39,13 @@ class DueDateSection extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Icon(Icons.calendar_today_rounded, color: FlutterFlowTheme.of(context).primary, size: 18.0),
+                  Icon(Icons.calendar_today_rounded,
+                      color: FlutterFlowTheme.of(context).primary, size: 18.0),
                   const SizedBox(width: 12),
                   Text(
-                    model.dueDate != null ? dateTimeFormat('yMMMd', model.dueDate) : 'Select Due Date',
+                    model.dueDate != null
+                        ? dateTimeFormat('yMMMd', model.dueDate)
+                        : 'Select Due Date',
                     style: FlutterFlowTheme.of(context).bodyMedium,
                   ),
                 ],

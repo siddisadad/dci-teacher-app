@@ -17,10 +17,12 @@ class MonthlyAttendanceWidget extends ConsumerStatefulWidget {
   static String routePath = '/monthlyAttendance';
 
   @override
-  ConsumerState<MonthlyAttendanceWidget> createState() => _MonthlyAttendanceWidgetState();
+  ConsumerState<MonthlyAttendanceWidget> createState() =>
+      _MonthlyAttendanceWidgetState();
 }
 
-class _MonthlyAttendanceWidgetState extends ConsumerState<MonthlyAttendanceWidget> {
+class _MonthlyAttendanceWidgetState
+    extends ConsumerState<MonthlyAttendanceWidget> {
   late MonthlyAttendanceModel _model;
 
   @override
@@ -36,8 +38,18 @@ class _MonthlyAttendanceWidgetState extends ConsumerState<MonthlyAttendanceWidge
     final studentsAsync = ref.watch(studentsStreamProvider);
 
     final months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
     ];
     final years = List.generate(5, (i) => (DateTime.now().year - i).toString());
 
@@ -62,8 +74,10 @@ class _MonthlyAttendanceWidgetState extends ConsumerState<MonthlyAttendanceWidge
                       child: DropDownWidget(
                         label: 'Year',
                         options: years,
-                        controller: FormFieldController<String>(_model.selectedYear.toString()),
-                        onChanged: (val) => setState(() => _model.selectedYear = int.parse(val!)),
+                        controller: FormFieldController<String>(
+                            _model.selectedYear.toString()),
+                        onChanged: (val) => setState(
+                            () => _model.selectedYear = int.parse(val!)),
                         height: 48,
                       ),
                     ),
@@ -73,8 +87,10 @@ class _MonthlyAttendanceWidgetState extends ConsumerState<MonthlyAttendanceWidge
                       child: DropDownWidget(
                         label: 'Month',
                         options: months,
-                        controller: FormFieldController<String>(months[_model.selectedMonth - 1]),
-                        onChanged: (val) => setState(() => _model.selectedMonth = months.indexOf(val!) + 1),
+                        controller: FormFieldController<String>(
+                            months[_model.selectedMonth - 1]),
+                        onChanged: (val) => setState(() =>
+                            _model.selectedMonth = months.indexOf(val!) + 1),
                         height: 48,
                       ),
                     ),
@@ -83,11 +99,17 @@ class _MonthlyAttendanceWidgetState extends ConsumerState<MonthlyAttendanceWidge
                 const SizedBox(height: 12),
                 studentsAsync.when(
                   data: (students) {
-                    final classes = students.map((s) => s.className).where((c) => c.isNotEmpty).toSet().toList()..sort();
+                    final classes = students
+                        .map((s) => s.className)
+                        .where((c) => c.isNotEmpty)
+                        .toSet()
+                        .toList()
+                      ..sort();
                     return DropDownWidget(
                       label: 'Filter by Class',
                       options: ['All Classes', ...classes],
-                      onChanged: (val) => setState(() => _model.selectedClass = val == 'All Classes' ? null : val),
+                      onChanged: (val) => setState(() => _model.selectedClass =
+                          val == 'All Classes' ? null : val),
                       hint: 'All Classes',
                     );
                   },
@@ -100,13 +122,15 @@ class _MonthlyAttendanceWidgetState extends ConsumerState<MonthlyAttendanceWidge
           Expanded(
             child: logsAsync.when(
               data: (logs) {
-                final monthLogs = logs.where((l) => 
-                  l.date.year == _model.selectedYear && 
-                  l.date.month == _model.selectedMonth
-                ).toList();
+                final monthLogs = logs
+                    .where((l) =>
+                        l.date.year == _model.selectedYear &&
+                        l.date.month == _model.selectedMonth)
+                    .toList();
 
                 var filtered = monthLogs.where((l) {
-                  return _model.selectedClass == null || l.className == _model.selectedClass;
+                  return _model.selectedClass == null ||
+                      l.className == _model.selectedClass;
                 }).toList();
 
                 if (filtered.isEmpty) {
@@ -114,9 +138,11 @@ class _MonthlyAttendanceWidgetState extends ConsumerState<MonthlyAttendanceWidge
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.calendar_today_rounded, size: 48, color: theme.secondaryText),
+                        Icon(Icons.calendar_today_rounded,
+                            size: 48, color: theme.secondaryText),
                         const SizedBox(height: 12),
-                        Text('No records for this month.', style: theme.labelSmall),
+                        Text('No records for this month.',
+                            style: theme.labelSmall),
                       ],
                     ),
                   );
@@ -133,7 +159,8 @@ class _MonthlyAttendanceWidgetState extends ConsumerState<MonthlyAttendanceWidge
     );
   }
 
-  Widget _buildMonthSummary(BuildContext context, List<StudentAttendance> logs) {
+  Widget _buildMonthSummary(
+      BuildContext context, List<StudentAttendance> logs) {
     final total = logs.length;
     final present = logs.where((l) => l.status == 'Present').length;
     final absent = logs.where((l) => l.status == 'Absent').length;
@@ -153,15 +180,19 @@ class _MonthlyAttendanceWidgetState extends ConsumerState<MonthlyAttendanceWidge
         children: [
           _buildSummaryCard(context, rate, total, present, absent),
           const SizedBox(height: 24),
-          Text('DAILY PERFORMANCE', style: AppTypography.caption.copyWith(fontWeight: FontWeight.bold, letterSpacing: 1, fontSize: 10)),
+          Text('DAILY PERFORMANCE',
+              style: AppTypography.caption.copyWith(
+                  fontWeight: FontWeight.bold, letterSpacing: 1, fontSize: 10)),
           const SizedBox(height: 8),
           ...sortedDays.map((day) {
             final dayLogs = dayGroups[day]!;
             final dayTotal = dayLogs.length;
-            final dayPresent = dayLogs.where((l) => l.status == 'Present').length;
+            final dayPresent =
+                dayLogs.where((l) => l.status == 'Present').length;
             final dayRate = (dayPresent / dayTotal);
-            
-            return _buildDayProgress(context, day, dayRate, dayTotal, dayPresent);
+
+            return _buildDayProgress(
+                context, day, dayRate, dayTotal, dayPresent);
           }),
           const SizedBox(height: 32),
         ],
@@ -169,7 +200,8 @@ class _MonthlyAttendanceWidgetState extends ConsumerState<MonthlyAttendanceWidge
     );
   }
 
-  Widget _buildSummaryCard(BuildContext context, int rate, int total, int present, int absent) {
+  Widget _buildSummaryCard(
+      BuildContext context, int rate, int total, int present, int absent) {
     final theme = FlutterFlowTheme.of(context);
     return Container(
       padding: const EdgeInsets.all(20),
@@ -190,11 +222,16 @@ class _MonthlyAttendanceWidgetState extends ConsumerState<MonthlyAttendanceWidge
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Average Attendance', style: AppTypography.caption.copyWith(color: Colors.white.withAlpha(200))),
-                  Text('$rate%', style: AppTypography.title.copyWith(color: Colors.white, fontSize: 32)),
+                  Text('Average Attendance',
+                      style: AppTypography.caption
+                          .copyWith(color: Colors.white.withAlpha(200))),
+                  Text('$rate%',
+                      style: AppTypography.title
+                          .copyWith(color: Colors.white, fontSize: 32)),
                 ],
               ),
-              const Icon(Icons.analytics_rounded, color: Colors.white, size: 36),
+              const Icon(Icons.analytics_rounded,
+                  color: Colors.white, size: 36),
             ],
           ),
           const SizedBox(height: 20),
@@ -214,16 +251,25 @@ class _MonthlyAttendanceWidgetState extends ConsumerState<MonthlyAttendanceWidge
   Widget _buildSimpleStat(String label, String value) {
     return Column(
       children: [
-        Text(value, style: AppTypography.label.copyWith(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
-        Text(label, style: AppTypography.caption.copyWith(color: Colors.white.withAlpha(180), fontSize: 10)),
+        Text(value,
+            style: AppTypography.label.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 18)),
+        Text(label,
+            style: AppTypography.caption
+                .copyWith(color: Colors.white.withAlpha(180), fontSize: 10)),
       ],
     );
   }
 
-  Widget _buildDayProgress(BuildContext context, int day, double value, int total, int present) {
+  Widget _buildDayProgress(
+      BuildContext context, int day, double value, int total, int present) {
     final theme = FlutterFlowTheme.of(context);
-    final color = value >= 0.9 ? theme.success : (value >= 0.75 ? theme.primary : theme.warning);
-    
+    final color = value >= 0.9
+        ? theme.success
+        : (value >= 0.75 ? theme.primary : theme.warning);
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
@@ -237,8 +283,12 @@ class _MonthlyAttendanceWidgetState extends ConsumerState<MonthlyAttendanceWidge
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Day $day', style: AppTypography.body.copyWith(fontWeight: FontWeight.bold, fontSize: 14)),
-              Text('$present / $total', style: AppTypography.caption.copyWith(fontWeight: FontWeight.bold)),
+              Text('Day $day',
+                  style: AppTypography.body
+                      .copyWith(fontWeight: FontWeight.bold, fontSize: 14)),
+              Text('$present / $total',
+                  style: AppTypography.caption
+                      .copyWith(fontWeight: FontWeight.bold)),
             ],
           ),
           const SizedBox(height: 8),

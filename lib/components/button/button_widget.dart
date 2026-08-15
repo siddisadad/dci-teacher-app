@@ -70,7 +70,7 @@ class _ButtonWidgetState extends State<ButtonWidget> {
   @override
   Widget build(BuildContext context) {
     final bool isDisabled = widget.disabled || widget.loading;
-    
+
     Color bgColor;
     Color textColor;
     BorderSide borderSide = BorderSide.none;
@@ -83,7 +83,8 @@ class _ButtonWidgetState extends State<ButtonWidget> {
       case 'outline':
         bgColor = Colors.transparent;
         textColor = FlutterFlowTheme.of(context).primary;
-        borderSide = BorderSide(color: FlutterFlowTheme.of(context).primary, width: 1.5);
+        borderSide =
+            BorderSide(color: FlutterFlowTheme.of(context).primary, width: 1.5);
         break;
       case 'ghost':
         bgColor = Colors.transparent;
@@ -162,7 +163,8 @@ class _ButtonWidgetState extends State<ButtonWidget> {
                       Text(
                         widget.content,
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              font: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                              font: GoogleFonts.inter(
+                                  fontWeight: FontWeight.w600),
                               color: textColor,
                               fontSize: fontSize,
                             ),

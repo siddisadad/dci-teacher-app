@@ -24,6 +24,7 @@ class AddUserModel extends FlutterFlowModel {
   late TextFieldModel phoneModel;
   // State field(s) for expertise widget.
   late TextFieldModel subjectExpertiseModel;
+  late TextFieldModel assignedClassesModel;
   // State field(s) for role dropdown.
   String? roleValue;
   FormFieldController<String>? roleValueController;
@@ -35,25 +36,28 @@ class AddUserModel extends FlutterFlowModel {
     headerSectionModel = createModel(context, () => HeaderSectionModel());
     nameModel = createModel(context, () => TextFieldModel());
     nameModel.inputTextController ??= TextEditingController();
-    
+
     emailModel = createModel(context, () => TextFieldModel());
     emailModel.inputTextController ??= TextEditingController();
-    
+
     passwordModel = createModel(context, () => TextFieldModel());
     passwordModel.inputTextController ??= TextEditingController();
-    
+
     designationModel = createModel(context, () => TextFieldModel());
     designationModel.inputTextController ??= TextEditingController();
-    
+
     employeeIdModel = createModel(context, () => TextFieldModel());
     employeeIdModel.inputTextController ??= TextEditingController();
-    
+
     phoneModel = createModel(context, () => TextFieldModel());
     phoneModel.inputTextController ??= TextEditingController();
-    
+
     subjectExpertiseModel = createModel(context, () => TextFieldModel());
     subjectExpertiseModel.inputTextController ??= TextEditingController();
-    
+
+    assignedClassesModel = createModel(context, () => TextFieldModel());
+    assignedClassesModel.inputTextController ??= TextEditingController();
+
     roleValueController = FormFieldController<String>(null);
   }
 
@@ -68,5 +72,6 @@ class AddUserModel extends FlutterFlowModel {
     employeeIdModel.dispose();
     phoneModel.dispose();
     subjectExpertiseModel.dispose();
+    assignedClassesModel.dispose();
   }
 }

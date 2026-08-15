@@ -48,5 +48,36 @@ void main() {
       expect(AccessControl(null).canViewStudents, isFalse);
       expect(AccessControl(_user('')).canManageTeachers, isFalse);
     });
+
+    test('only admins can create admin accounts', () {
+      expect(AccessControl(_user('Admin')).canCreateAdmins, isTrue);
+      expect(AccessControl(_user('Director')).canCreateAdmins, isFalse);
+      expect(AccessControl(_user('Teacher')).canCreateAdmins, isFalse);
+    });
+
+    test('assigned classes restrict teachers but not managers', () {
+      final restricted = AccessControl(
+        _user('Teacher').copyWith(assignedClasses: ['10A', '10B']),
+      );
+      expect(restricted.hasClassRestriction, isTrue);
+      expect(restricted.canAccessClass('10A'), isTrue);
+      expect(restricted.canAccessClass('10C'), isFalse);
+
+      final unrestricted = AccessControl(_user('Teacher'));
+      expect(unrestricted.hasClassRestriction, isFalse);
+      expect(unrestricted.canAccessClass('10C'), isTrue);
+
+      final admin = AccessControl(
+        _user('Admin').copyWith(assignedClasses: ['10A']),
+      );
+      expect(admin.hasClassRestriction, isFalse);
+      expect(admin.canAccessClass('10C'), isTrue);
+    });
+
+    test('parseClassList splits comma-separated class names', () {
+      expect(Teacher.parseClassList('10A, 10B ,'), ['10A', '10B']);
+      expect(Teacher.parseClassList(''), isEmpty);
+      expect(Teacher.parseClassList(null), isEmpty);
+    });
   });
 }

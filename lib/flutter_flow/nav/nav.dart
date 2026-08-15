@@ -265,12 +265,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => const MyProfileWidget(),
         ),
         FFRoute(
-          name: 'AIChat',
-          path: '/aiChat',
-          requireAuth: true,
-          builder: (context, params) => const AIChatWidget(),
-        ),
-        FFRoute(
           name: 'Exams',
           path: '/exams',
           requireAuth: true,

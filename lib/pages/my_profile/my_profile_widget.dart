@@ -32,7 +32,8 @@ class _MyProfileWidgetState extends ConsumerState<MyProfileWidget> {
       backgroundColor: theme.primaryBackground,
       body: studentAsync.when(
         data: (student) {
-          if (student == null) return const Center(child: Text('Student profile not found.'));
+          if (student == null)
+            return const Center(child: Text('Student profile not found.'));
           return _buildProfile(context, student);
         },
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -68,7 +69,8 @@ class _MyProfileWidgetState extends ConsumerState<MyProfileWidget> {
                     value: student.studentId,
                   ),
                   ProfileInfoTileWidget(
-                    icon: Icon(Icons.person_outline_rounded, color: theme.primary),
+                    icon: Icon(Icons.person_outline_rounded,
+                        color: theme.primary),
                     label: 'Parent Name',
                     value: student.parentName ?? 'N/A',
                   ),
@@ -88,9 +90,9 @@ class _MyProfileWidgetState extends ConsumerState<MyProfileWidget> {
                   text: 'Request Profile Edit',
                   variant: 'outline',
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Request sent to the admin department.'))
-                    );
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content:
+                            Text('Request sent to the admin department.')));
                   },
                 ),
                 const SizedBox(height: 40),
@@ -128,18 +130,22 @@ class _MyProfileWidgetState extends ConsumerState<MyProfileWidget> {
   Widget _buildSummaryItem(String label, String value, Color color) {
     return Column(
       children: [
-        Text(value, style: AppTypography.title.copyWith(color: color, fontSize: 22)),
-        Text(label, style: AppTypography.caption.copyWith(fontWeight: FontWeight.bold)),
+        Text(value,
+            style: AppTypography.title.copyWith(color: color, fontSize: 22)),
+        Text(label,
+            style: AppTypography.caption.copyWith(fontWeight: FontWeight.bold)),
       ],
     );
   }
 
   Widget _buildDivider() {
-    return Container(height: 30, width: 1, color: FlutterFlowTheme.of(context).alternate);
+    return Container(
+        height: 30, width: 1, color: FlutterFlowTheme.of(context).alternate);
   }
 
   Widget _buildSectionHeader(String title) {
-    return Text(title, style: AppTypography.section.copyWith(fontWeight: FontWeight.bold));
+    return Text(title,
+        style: AppTypography.section.copyWith(fontWeight: FontWeight.bold));
   }
 
   Widget _buildInfoCard(BuildContext context, List<Widget> children) {

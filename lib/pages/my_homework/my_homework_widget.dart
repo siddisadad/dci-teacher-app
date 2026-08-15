@@ -54,10 +54,12 @@ class _MyHomeworkWidgetState extends ConsumerState<MyHomeworkWidget> {
           Expanded(
             child: studentAsync.when(
               data: (student) {
-                if (student == null) return const Center(child: Text('Profile not found.'));
-                
-                final homeworkAsync = ref.watch(studentHomeworkStreamProvider(student.className));
-                
+                if (student == null)
+                  return const Center(child: Text('Profile not found.'));
+
+                final homeworkAsync =
+                    ref.watch(studentHomeworkStreamProvider(student.className));
+
                 return homeworkAsync.when(
                   data: (assignments) {
                     if (assignments.isEmpty) {
@@ -70,7 +72,8 @@ class _MyHomeworkWidgetState extends ConsumerState<MyHomeworkWidget> {
                     return ListView.separated(
                       padding: AppSpacing.pagePadding,
                       itemCount: assignments.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.md),
+                      separatorBuilder: (_, __) =>
+                          const SizedBox(height: AppSpacing.md),
                       itemBuilder: (context, index) {
                         return HomeworkCardWidget(
                           assignment: assignments[index],
@@ -84,7 +87,8 @@ class _MyHomeworkWidgetState extends ConsumerState<MyHomeworkWidget> {
                       },
                     );
                   },
-                  loading: () => const Center(child: CircularProgressIndicator()),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
                   error: (err, _) => Center(child: Text('Error: $err')),
                 );
               },

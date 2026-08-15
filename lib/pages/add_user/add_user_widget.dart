@@ -1,4 +1,5 @@
 import 'package:d_c_i_teacher_app/shared/app_style.dart';
+import 'package:d_c_i_teacher_app/backend/models/teacher.dart';
 import 'package:d_c_i_teacher_app/backend/providers/service_providers.dart';
 import 'package:d_c_i_teacher_app/backend/providers/repository_providers.dart';
 import 'package:d_c_i_teacher_app/backend/services/validation_service.dart';
@@ -41,7 +42,7 @@ class _AddUserWidgetState extends ConsumerState<AddUserWidget> {
     super.initState();
     _model = createModel(context, () => AddUserModel());
     _checkAdminStatus();
-    
+
     // Add listener for email field to check for existing user
     _model.emailModel.inputTextController?.addListener(_onEmailChanged);
   }
@@ -64,14 +65,19 @@ class _AddUserWidgetState extends ConsumerState<AddUserWidget> {
       if (teacher != null && mounted) {
         setState(() {
           _model.nameModel.inputTextController?.text = teacher.displayName;
-          _model.designationModel.inputTextController?.text = teacher.designation;
+          _model.designationModel.inputTextController?.text =
+              teacher.designation;
           _model.phoneModel.inputTextController?.text = teacher.phoneNumber;
-          _model.employeeIdModel.inputTextController?.text = teacher.employeeId ?? '';
-          _model.subjectExpertiseModel.inputTextController?.text = teacher.subjectExpertise ?? '';
+          _model.employeeIdModel.inputTextController?.text =
+              teacher.employeeId ?? '';
+          _model.subjectExpertiseModel.inputTextController?.text =
+              teacher.subjectExpertise ?? '';
           _model.roleValue = teacher.role;
           _model.roleValueController?.value = teacher.role;
+          _model.assignedClassesModel.inputTextController?.text =
+              teacher.assignedClasses.join(', ');
         });
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Found existing user profile. Form populated.'),
@@ -120,15 +126,19 @@ class _AddUserWidgetState extends ConsumerState<AddUserWidget> {
     setState(() => _isSaving = true);
     try {
       await ref.read(teacherServiceProvider).createTeacher(
-        email: _model.emailModel.inputTextController!.text,
-        password: _model.passwordModel.inputTextController!.text,
-        displayName: _model.nameModel.inputTextController!.text,
-        role: _model.roleValue!,
-        designation: _model.designationModel.inputTextController!.text,
-        phoneNumber: _model.phoneModel.inputTextController!.text,
-        employeeId: _model.employeeIdModel.inputTextController!.text,
-        subjectExpertise: _model.subjectExpertiseModel.inputTextController!.text,
-      );
+            email: _model.emailModel.inputTextController!.text,
+            password: _model.passwordModel.inputTextController!.text,
+            displayName: _model.nameModel.inputTextController!.text,
+            role: _model.roleValue!,
+            designation: _model.designationModel.inputTextController!.text,
+            phoneNumber: _model.phoneModel.inputTextController!.text,
+            employeeId: _model.employeeIdModel.inputTextController!.text,
+            subjectExpertise:
+                _model.subjectExpertiseModel.inputTextController!.text,
+            assignedClasses: Teacher.parseClassList(
+              _model.assignedClassesModel.inputTextController?.text,
+            ),
+          );
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -164,23 +174,25 @@ class _AddUserWidgetState extends ConsumerState<AddUserWidget> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.lock_person_rounded, size: 64, color: FlutterFlowTheme.of(context).error),
+                Icon(Icons.lock_person_rounded,
+                    size: 64, color: FlutterFlowTheme.of(context).error),
                 const SizedBox(height: 24),
                 Text(
                   'Access Denied',
                   textAlign: TextAlign.center,
                   style: FlutterFlowTheme.of(context).headlineSmall.override(
-                    font: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.bold),
-                  ),
+                        font: GoogleFonts.plusJakartaSans(
+                            fontWeight: FontWeight.bold),
+                      ),
                 ),
                 const SizedBox(height: 12),
                 Text(
                   'You do not have the required permissions to access administrative tools. Redirecting you...',
                   textAlign: TextAlign.center,
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
-                    font: GoogleFonts.inter(),
-                    color: FlutterFlowTheme.of(context).secondaryText,
-                  ),
+                        font: GoogleFonts.inter(),
+                        color: FlutterFlowTheme.of(context).secondaryText,
+                      ),
                 ),
               ],
             ),
@@ -254,7 +266,8 @@ class _AddUserWidgetState extends ConsumerState<AddUserWidget> {
               leadingIcon: const Icon(Icons.person_outline_rounded),
               leadingIconPresent: true,
               variant: 'outlined',
-              validator: (val) => ValidationService.validateRequired(val, 'Full Name'),
+              validator: (val) =>
+                  ValidationService.validateRequired(val, 'Full Name'),
             ),
           ),
           const SizedBox(height: 12),
@@ -289,10 +302,24 @@ class _AddUserWidgetState extends ConsumerState<AddUserWidget> {
           DropDownWidget(
             label: 'User Role',
             controller: _model.roleValueController!,
-            options: const ['Teacher', 'Admin'],
+            options: ref.watch(accessControlProvider).canCreateAdmins
+                ? const ['Teacher', 'Admin']
+                : const ['Teacher'],
             onChanged: (val) => setState(() => _model.roleValue = val),
             height: 48,
             hint: 'Select Role',
+          ),
+          const SizedBox(height: 12),
+          wrapWithModel(
+            model: _model.assignedClassesModel,
+            updateCallback: () => safeSetState(() {}),
+            child: const TextFieldWidget(
+              label: 'Assigned Classes',
+              hint: 'e.g. 10A, 10B (leave empty for all classes)',
+              leadingIcon: Icon(Icons.class_outlined),
+              leadingIconPresent: true,
+              variant: 'outlined',
+            ),
           ),
           const SizedBox(height: 12),
           wrapWithModel(

@@ -56,7 +56,6 @@ export 'package:d_c_i_teacher_app/pages/exams_dashboard/exams_dashboard_widget.d
 export 'package:d_c_i_teacher_app/pages/results_dashboard/results_dashboard_widget.dart';
 export 'package:d_c_i_teacher_app/pages/my_results/my_results_widget.dart';
 export 'package:d_c_i_teacher_app/pages/my_profile/my_profile_widget.dart';
-export 'package:d_c_i_teacher_app/pages/ai_chat/ai_chat_widget.dart';
 export 'package:d_c_i_teacher_app/pages/institute_settings/institute_settings_widget.dart';
 export 'package:d_c_i_teacher_app/pages/audit_logs/audit_logs_widget.dart';
 export 'package:d_c_i_teacher_app/pages/staff_analytics/staff_analytics_widget.dart';

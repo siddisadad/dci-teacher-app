@@ -13,12 +13,12 @@ final studentClassFilterProvider = StateProvider<String?>((ref) => null);
 /// A provider that provides a debounced version of the search query
 final debouncedStudentSearchQueryProvider = StreamProvider<String>((ref) {
   final queryController = StreamController<String>();
-  
+
   // Watch the raw query and add to stream
   final sub = ref.listen(studentSearchQueryProvider, (prev, next) {
     queryController.add(next);
   });
-  
+
   ref.onDispose(() {
     sub.close();
     queryController.close();
@@ -34,27 +34,28 @@ final debouncedStudentSearchQueryProvider = StreamProvider<String>((ref) {
 final filteredStudentsProvider = Provider<AsyncValue<List<Student>>>((ref) {
   final studentsAsync = ref.watch(studentsStreamProvider);
   final classFilter = ref.watch(studentClassFilterProvider);
-  final searchQuery = ref.watch(debouncedStudentSearchQueryProvider).value ?? '';
+  final searchQuery =
+      ref.watch(debouncedStudentSearchQueryProvider).value ?? '';
 
   return studentsAsync.whenData((allStudents) {
     var filtered = allStudents;
-    
+
     if (classFilter != null && classFilter.isNotEmpty) {
       filtered = filtered.where((s) => s.className == classFilter).toList();
     }
-    
+
     if (searchQuery.trim().isNotEmpty) {
       final q = searchQuery.trim().toLowerCase();
       filtered = filtered.where((s) {
-        return s.name.toLowerCase().contains(q) || 
-               s.studentId.toLowerCase().contains(q) ||
-               s.rollNo.contains(q) ||
-               (s.parentPhone?.contains(q) ?? false) ||
-               (s.parentName?.toLowerCase().contains(q) ?? false) ||
-               s.className.toLowerCase().contains(q);
+        return s.name.toLowerCase().contains(q) ||
+            s.studentId.toLowerCase().contains(q) ||
+            s.rollNo.contains(q) ||
+            (s.parentPhone?.contains(q) ?? false) ||
+            (s.parentName?.toLowerCase().contains(q) ?? false) ||
+            s.className.toLowerCase().contains(q);
       }).toList();
     }
-    
+
     return filtered;
   });
 });
@@ -78,6 +79,7 @@ class StudentListNotifier extends Notifier<void> {
   }
 }
 
-final studentListNotifierProvider = NotifierProvider<StudentListNotifier, void>(() {
+final studentListNotifierProvider =
+    NotifierProvider<StudentListNotifier, void>(() {
   return StudentListNotifier();
 });

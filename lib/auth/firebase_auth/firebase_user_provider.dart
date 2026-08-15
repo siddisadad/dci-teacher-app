@@ -59,8 +59,7 @@ class DCITeacherAppFirebaseUser extends BaseAuthUser {
       DCITeacherAppFirebaseUser(user);
 }
 
-Stream<BaseAuthUser> dciTeacherAppFirebaseUserStream() =>
-    FirebaseAuth.instance
+Stream<BaseAuthUser> dciTeacherAppFirebaseUserStream() => FirebaseAuth.instance
         .authStateChanges()
         .debounce((user) => user == null && !loggedIn
             ? TimerStream(true, const Duration(seconds: 1))

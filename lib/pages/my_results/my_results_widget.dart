@@ -50,16 +50,21 @@ class _MyResultsWidgetState extends ConsumerState<MyResultsWidget> {
             subtitle: 'Academic Performance',
             onBackPressed: () async => context.safePop(),
             showActionIcon: true,
-            actionIcon: const Icon(Icons.picture_as_pdf_rounded, color: Colors.white),
+            actionIcon:
+                const Icon(Icons.picture_as_pdf_rounded, color: Colors.white),
             onActionPressed: () async {
               final student = studentAsync.value;
               if (student == null) return;
-              
-              final results = await ref.read(resultRepositoryProvider).getStudentResultsStream(student.id).first;
+
+              final results = await ref
+                  .read(resultRepositoryProvider)
+                  .getStudentResultsStream(student.id)
+                  .first;
               if (results.isEmpty) return;
 
               final config = ref.read(instituteInfoStreamProvider).value;
-              final instituteName = config?['name'] ?? 'Deshmukh Coaching Institute';
+              final instituteName =
+                  config?['name'] ?? 'Deshmukh Coaching Institute';
 
               await ReportCardService.generateAndPrintReportCard(
                 student: student,
@@ -71,27 +76,36 @@ class _MyResultsWidgetState extends ConsumerState<MyResultsWidget> {
           Expanded(
             child: studentAsync.when(
               data: (student) {
-                if (student == null) return const Center(child: Text('Profile not found.'));
-                
-                final resultsAsync = ref.watch(studentResultsStreamProvider(student.id));
-                
+                if (student == null)
+                  return const Center(child: Text('Profile not found.'));
+
+                final resultsAsync =
+                    ref.watch(studentResultsStreamProvider(student.id));
+
                 return resultsAsync.when(
                   data: (results) {
                     if (results.isEmpty) {
                       return const AppEmptyState(
                         icon: Icons.grade_rounded,
                         title: 'No results published',
-                        description: 'Your exam results will appear here once released.',
+                        description:
+                            'Your exam results will appear here once released.',
                       );
                     }
                     return ListView.separated(
                       padding: AppSpacing.pagePadding,
                       itemCount: results.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.md),
+                      separatorBuilder: (_, __) =>
+                          const SizedBox(height: AppSpacing.md),
                       itemBuilder: (context, index) {
                         final result = results[index];
-                        final percentage = (result.marksObtained / result.totalMarks * 100);
-                        final color = percentage >= 75 ? AppColors.success : (percentage >= 50 ? AppColors.warning : AppColors.error);
+                        final percentage =
+                            (result.marksObtained / result.totalMarks * 100);
+                        final color = percentage >= 75
+                            ? AppColors.success
+                            : (percentage >= 50
+                                ? AppColors.warning
+                                : AppColors.error);
 
                         return Container(
                           decoration: BoxDecoration(
@@ -102,19 +116,32 @@ class _MyResultsWidgetState extends ConsumerState<MyResultsWidget> {
                           ),
                           child: ListTile(
                             leading: Container(
-                              width: 40, height: 40,
-                              decoration: BoxDecoration(color: color.withAlpha(20), shape: BoxShape.circle),
-                              child: Icon(Icons.star_rounded, color: color, size: 20),
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                  color: color.withAlpha(20),
+                                  shape: BoxShape.circle),
+                              child: Icon(Icons.star_rounded,
+                                  color: color, size: 20),
                             ),
-                            title: Text(result.subject, style: AppTypography.body.copyWith(fontWeight: FontWeight.bold)),
-                            subtitle: Text('Grade: ${result.grade} • ${result.remarks}', style: AppTypography.caption),
+                            title: Text(result.subject,
+                                style: AppTypography.body
+                                    .copyWith(fontWeight: FontWeight.bold)),
+                            subtitle: Text(
+                                'Grade: ${result.grade} • ${result.remarks}',
+                                style: AppTypography.caption),
                             trailing: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Text('${result.marksObtained.toInt()}/${result.totalMarks}', 
-                                    style: AppTypography.label.copyWith(color: color, fontWeight: FontWeight.bold)),
-                                Text('${percentage.toStringAsFixed(1)}%', style: AppTypography.caption.copyWith(fontSize: 10)),
+                                Text(
+                                    '${result.marksObtained.toInt()}/${result.totalMarks}',
+                                    style: AppTypography.label.copyWith(
+                                        color: color,
+                                        fontWeight: FontWeight.bold)),
+                                Text('${percentage.toStringAsFixed(1)}%',
+                                    style: AppTypography.caption
+                                        .copyWith(fontSize: 10)),
                               ],
                             ),
                           ),
@@ -122,7 +149,8 @@ class _MyResultsWidgetState extends ConsumerState<MyResultsWidget> {
                       },
                     );
                   },
-                  loading: () => const Center(child: CircularProgressIndicator()),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
                   error: (err, _) => Center(child: Text('Error: $err')),
                 );
               },

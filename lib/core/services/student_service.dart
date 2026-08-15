@@ -13,7 +13,8 @@ class StudentService {
     final currentUser = ref.read(currentUserDataStreamProvider).value;
 
     if (!staffService.canManageStudents(currentUser)) {
-      throw Exception('Unauthorized: You do not have permission to manage students.');
+      throw Exception(
+          'Unauthorized: You do not have permission to manage students.');
     }
 
     final repository = ref.read(studentRepositoryProvider);

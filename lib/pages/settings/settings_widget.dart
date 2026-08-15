@@ -65,7 +65,8 @@ class _SettingsWidgetState extends ConsumerState<SettingsWidget> {
                       Icons.account_balance_rounded,
                       'Institute Setup',
                       'Configure name, logo, and subjects',
-                      onTap: () => context.pushNamed(InstituteSettingsWidget.routeName),
+                      onTap: () =>
+                          context.pushNamed(InstituteSettingsWidget.routeName),
                     ),
                   _buildSettingsTile(
                     Icons.history_rounded,
@@ -149,7 +150,11 @@ class _SettingsWidgetState extends ConsumerState<SettingsWidget> {
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  themeMode == ThemeMode.dark ? Icons.dark_mode_rounded : (themeMode == ThemeMode.light ? Icons.light_mode_rounded : Icons.settings_suggest_rounded),
+                  themeMode == ThemeMode.dark
+                      ? Icons.dark_mode_rounded
+                      : (themeMode == ThemeMode.light
+                          ? Icons.light_mode_rounded
+                          : Icons.settings_suggest_rounded),
                   color: AppColors.primary,
                   size: 20,
                 ),
@@ -158,9 +163,13 @@ class _SettingsWidgetState extends ConsumerState<SettingsWidget> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('App Theme', style: AppTypography.body.copyWith(fontWeight: FontWeight.bold)),
+                  Text('App Theme',
+                      style: AppTypography.body
+                          .copyWith(fontWeight: FontWeight.bold)),
                   Text(
-                    themeMode == ThemeMode.system ? 'Using system settings' : 'Currently in ${themeMode.name} mode',
+                    themeMode == ThemeMode.system
+                        ? 'Using system settings'
+                        : 'Currently in ${themeMode.name} mode',
                     style: AppTypography.caption,
                   ),
                 ],
@@ -195,7 +204,8 @@ class _SettingsWidgetState extends ConsumerState<SettingsWidget> {
               showSelectedIcon: false,
               style: ButtonStyle(
                 visualDensity: VisualDensity.compact,
-                side: WidgetStateProperty.all(BorderSide(color: theme.alternate)),
+                side:
+                    WidgetStateProperty.all(BorderSide(color: theme.alternate)),
                 backgroundColor: WidgetStateProperty.resolveWith<Color?>(
                   (Set<WidgetState> states) {
                     if (states.contains(WidgetState.selected)) {
@@ -212,7 +222,8 @@ class _SettingsWidgetState extends ConsumerState<SettingsWidget> {
                     return AppColors.textSecondary;
                   },
                 ),
-                textStyle: WidgetStateProperty.all(AppTypography.caption.copyWith(fontWeight: FontWeight.w600)),
+                textStyle: WidgetStateProperty.all(AppTypography.caption
+                    .copyWith(fontWeight: FontWeight.w600)),
               ),
             ),
           ),
@@ -238,11 +249,14 @@ class _SettingsWidgetState extends ConsumerState<SettingsWidget> {
         borderRadius: BorderRadius.circular(AppRadius.md),
         child: ListTile(
           onTap: onTap,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           leading: Icon(icon, color: AppColors.textSecondary, size: 24),
-          title: Text(title, style: AppTypography.body.copyWith(fontWeight: FontWeight.bold)),
+          title: Text(title,
+              style: AppTypography.body.copyWith(fontWeight: FontWeight.bold)),
           subtitle: Text(subtitle, style: AppTypography.caption),
-          trailing: trailing ?? Icon(Icons.chevron_right_rounded, color: theme.secondaryText),
+          trailing: trailing ??
+              Icon(Icons.chevron_right_rounded, color: theme.secondaryText),
         ),
       ),
     );

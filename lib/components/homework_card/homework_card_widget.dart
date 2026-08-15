@@ -42,7 +42,7 @@ class _HomeworkCardWidgetState extends State<HomeworkCardWidget> {
   Widget build(BuildContext context) {
     final status = widget.assignment.status;
     final theme = FlutterFlowTheme.of(context);
-    
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12.0),
@@ -57,29 +57,31 @@ class _HomeworkCardWidgetState extends State<HomeworkCardWidget> {
               await widget.onTap!();
             }
           },
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           title: Text(
             '${widget.assignment.className} - ${widget.assignment.subject}',
             style: theme.bodyLarge.override(
-                  font: GoogleFonts.plusJakartaSans(
-                    fontWeight: FontWeight.bold,
-                  ),
-                  fontWeight: FontWeight.bold,
-                ),
+              font: GoogleFonts.plusJakartaSans(
+                fontWeight: FontWeight.bold,
+              ),
+              fontWeight: FontWeight.bold,
+            ),
           ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(widget.assignment.title, style: FlutterFlowTheme.of(context).bodyMedium),
+              Text(widget.assignment.title,
+                  style: FlutterFlowTheme.of(context).bodyMedium),
               if (widget.assignment.teacher.isNotEmpty)
                 Text('Assigned by: ${widget.assignment.teacher}',
                     style: FlutterFlowTheme.of(context).bodySmall),
               Text(
                 'Due: ${widget.assignment.dueDate}',
                 style: FlutterFlowTheme.of(context).labelSmall.override(
-                  font: GoogleFonts.inter(),
-                  color: FlutterFlowTheme.of(context).primary,
-                ),
+                      font: GoogleFonts.inter(),
+                      color: FlutterFlowTheme.of(context).primary,
+                    ),
               ),
               if (widget.assignment.attachments.isNotEmpty)
                 Padding(
@@ -107,26 +109,32 @@ class _HomeworkCardWidgetState extends State<HomeworkCardWidget> {
             children: [
               if (widget.onShare != null)
                 IconButton(
-                  icon: Icon(Icons.share_rounded, color: theme.success, size: 20),
+                  icon:
+                      Icon(Icons.share_rounded, color: theme.success, size: 20),
                   onPressed: widget.onShare,
                 ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: status == 'published'
-                        ? FlutterFlowTheme.of(context).primary
-                        : FlutterFlowTheme.of(context).secondaryText,
+                          ? FlutterFlowTheme.of(context).primary
+                          : FlutterFlowTheme.of(context).secondaryText,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
                       status.toUpperCase(),
-                      style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
-                  const Icon(Icons.chevron_right_rounded, color: AppColors.textSecondary),
+                  const Icon(Icons.chevron_right_rounded,
+                      color: AppColors.textSecondary),
                 ],
               ),
             ],

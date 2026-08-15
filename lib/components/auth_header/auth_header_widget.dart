@@ -103,8 +103,9 @@ class _AuthHeaderWidgetState extends ConsumerState<AuthHeaderWidget> {
                   info?['name'] ?? 'Deshmukh Coaching Institute',
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         font: GoogleFonts.inter(
-                          fontWeight:
-                              FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                          fontWeight: FlutterFlowTheme.of(context)
+                              .bodyMedium
+                              .fontWeight,
                           fontStyle:
                               FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                         ),

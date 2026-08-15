@@ -7,6 +7,7 @@ class UserProfileWrite {
     'employee_id',
     'is_pre_provisioned',
     'created_time',
+    'assigned_classes',
   ];
 
   static Map<String, dynamic> sanitize({

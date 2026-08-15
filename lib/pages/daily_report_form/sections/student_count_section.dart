@@ -53,10 +53,11 @@ class StudentCountSection extends StatelessWidget {
                 onTap: () {
                   // In a real app, we might fetch the actual student count for the class.
                   // For now, we'll set a reasonable default or let them increment.
-                  onPresentChanged(25); 
+                  onPresentChanged(25);
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: FlutterFlowTheme.of(context).primary10,
                     borderRadius: BorderRadius.circular(20),
@@ -64,10 +65,10 @@ class StudentCountSection extends StatelessWidget {
                   child: Text(
                     'Default (25)',
                     style: FlutterFlowTheme.of(context).bodySmall.override(
-                      font: GoogleFonts.inter(fontWeight: FontWeight.bold),
-                      color: FlutterFlowTheme.of(context).primary,
-                      fontSize: 11,
-                    ),
+                          font: GoogleFonts.inter(fontWeight: FontWeight.bold),
+                          color: FlutterFlowTheme.of(context).primary,
+                          fontSize: 11,
+                        ),
                   ),
                 ),
               ),

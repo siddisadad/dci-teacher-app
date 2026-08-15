@@ -4,9 +4,11 @@ import 'package:d_c_i_teacher_app/backend/models/student.dart';
 abstract class IStudentRepository {
   Future<List<Student>> getStudentsByClass(String className);
   Future<List<Student>> getAllStudents();
-  Future<List<Student>> getStudentsPaginated(int limit, {DocumentSnapshot? lastDocument});
+  Future<List<Student>> getStudentsPaginated(int limit,
+      {DocumentSnapshot? lastDocument});
   Future<Student?> getStudentById(String id);
   Stream<List<Student>> getAllStudentsStream();
+  Stream<List<Student>> getStudentsByClassesStream(List<String> classNames);
   Future<void> updateStudent(Student student);
   Future<void> deleteStudent(String id);
   Future<void> bulkAddStudents(List<Map<String, String>> studentsData);

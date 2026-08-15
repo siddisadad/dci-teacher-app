@@ -2,7 +2,8 @@ import 'package:d_c_i_teacher_app/components/header_section/header_section_widge
 import 'package:d_c_i_teacher_app/components/button/button_widget.dart';
 import 'package:d_c_i_teacher_app/components/text_field/text_field_widget.dart';
 import 'package:d_c_i_teacher_app/flutter_flow/flutter_flow_util.dart';
-import 'package:d_c_i_teacher_app/pages/edit_profile/edit_profile_widget.dart' show EditProfileWidget;
+import 'package:d_c_i_teacher_app/pages/edit_profile/edit_profile_widget.dart'
+    show EditProfileWidget;
 import 'package:flutter/material.dart';
 
 class EditProfileModel extends FlutterFlowModel<EditProfileWidget> {
@@ -24,6 +25,8 @@ class EditProfileModel extends FlutterFlowModel<EditProfileWidget> {
   late TextFieldModel textFieldModel6;
   // Model for TextField (Employee ID).
   late TextFieldModel textFieldModel7;
+  // Model for TextField (Assigned Classes).
+  late TextFieldModel assignedClassesModel;
   // Model for Button.
   late ButtonModel buttonModel;
 
@@ -37,6 +40,7 @@ class EditProfileModel extends FlutterFlowModel<EditProfileWidget> {
     textFieldModel5 = createModel(context, () => TextFieldModel());
     textFieldModel6 = createModel(context, () => TextFieldModel());
     textFieldModel7 = createModel(context, () => TextFieldModel());
+    assignedClassesModel = createModel(context, () => TextFieldModel());
     buttonModel = createModel(context, () => ButtonModel());
   }
 
@@ -50,6 +54,7 @@ class EditProfileModel extends FlutterFlowModel<EditProfileWidget> {
     textFieldModel5.dispose();
     textFieldModel6.dispose();
     textFieldModel7.dispose();
+    assignedClassesModel.dispose();
     buttonModel.dispose();
   }
 }

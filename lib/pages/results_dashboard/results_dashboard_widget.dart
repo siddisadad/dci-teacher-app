@@ -25,10 +25,12 @@ class ResultsDashboardWidget extends ConsumerStatefulWidget {
   static String routePath = '/resultsDashboard';
 
   @override
-  ConsumerState<ResultsDashboardWidget> createState() => _ResultsDashboardWidgetState();
+  ConsumerState<ResultsDashboardWidget> createState() =>
+      _ResultsDashboardWidgetState();
 }
 
-class _ResultsDashboardWidgetState extends ConsumerState<ResultsDashboardWidget> {
+class _ResultsDashboardWidgetState
+    extends ConsumerState<ResultsDashboardWidget> {
   late ResultsDashboardModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -132,8 +134,13 @@ class _ResultsDashboardWidgetState extends ConsumerState<ResultsDashboardWidget>
       children: [
         Icon(icon, color: Colors.white.withAlpha(200), size: 20),
         const SizedBox(height: 8),
-        Text(value, style: AppTypography.title.copyWith(color: Colors.white, fontSize: 22)),
-        Text(label, style: AppTypography.caption.copyWith(color: Colors.white.withAlpha(180), fontWeight: FontWeight.w500)),
+        Text(value,
+            style: AppTypography.title
+                .copyWith(color: Colors.white, fontSize: 22)),
+        Text(label,
+            style: AppTypography.caption.copyWith(
+                color: Colors.white.withAlpha(180),
+                fontWeight: FontWeight.w500)),
       ],
     );
   }
@@ -168,7 +175,8 @@ class _ResultsDashboardWidgetState extends ConsumerState<ResultsDashboardWidget>
     );
   }
 
-  Widget _buildActionCard(BuildContext context, String title, IconData icon, Color color, VoidCallback onTap) {
+  Widget _buildActionCard(BuildContext context, String title, IconData icon,
+      Color color, VoidCallback onTap) {
     final theme = FlutterFlowTheme.of(context);
     return InkWell(
       onTap: onTap,
@@ -203,19 +211,22 @@ class _ResultsDashboardWidgetState extends ConsumerState<ResultsDashboardWidget>
     );
   }
 
-  Widget _buildRecentResultsList(BuildContext context, AsyncValue<List<Exam>> examsAsync) {
+  Widget _buildRecentResultsList(
+      BuildContext context, AsyncValue<List<Exam>> examsAsync) {
     final theme = FlutterFlowTheme.of(context);
-    
+
     return examsAsync.when(
       data: (exams) {
         // Filter exams that already happened (for which results might exist)
-        final pastExams = exams.where((e) => e.date.isBefore(DateTime.now())).toList();
-        
+        final pastExams =
+            exams.where((e) => e.date.isBefore(DateTime.now())).toList();
+
         if (pastExams.isEmpty) {
           return const AppEmptyState(
             icon: Icons.grade_rounded,
             title: 'No past exams',
-            description: 'Completed exams will appear here for result analysis.',
+            description:
+                'Completed exams will appear here for result analysis.',
           );
         }
 
@@ -244,10 +255,15 @@ class _ResultsDashboardWidgetState extends ConsumerState<ResultsDashboardWidget>
                       color: AppColors.success.withAlpha(20),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.star_rounded, color: AppColors.success, size: 20),
+                    child: const Icon(Icons.star_rounded,
+                        color: AppColors.success, size: 20),
                   ),
-                  title: Text('${exam.subject} - ${exam.className}', style: AppTypography.body.copyWith(fontWeight: FontWeight.bold)),
-                  subtitle: Text('Exam Date: ${dateTimeFormat('yMMMd', exam.date)}', style: AppTypography.caption),
+                  title: Text('${exam.subject} - ${exam.className}',
+                      style: AppTypography.body
+                          .copyWith(fontWeight: FontWeight.bold)),
+                  subtitle: Text(
+                      'Exam Date: ${dateTimeFormat('yMMMd', exam.date)}',
+                      style: AppTypography.caption),
                   trailing: const Icon(Icons.chevron_right_rounded),
                   onTap: () => context.pushNamed(
                     MeritListWidget.routeName,
@@ -264,8 +280,9 @@ class _ResultsDashboardWidgetState extends ConsumerState<ResultsDashboardWidget>
     );
   }
 
-  Future<void> _showStudentSelectionDialog(BuildContext context, WidgetRef ref) async {
-    final students = await ref.read(studentRepositoryProvider).getAllStudentsStream().first;
+  Future<void> _showStudentSelectionDialog(
+      BuildContext context, WidgetRef ref) async {
+    final students = await ref.read(studentsStreamProvider.future);
     final config = ref.read(instituteInfoStreamProvider).value;
     final instituteName = config?['name'] ?? 'Deshmukh Coaching Institute';
 
@@ -279,9 +296,9 @@ class _ResultsDashboardWidgetState extends ConsumerState<ResultsDashboardWidget>
         builder: (context, setDialogState) {
           final query = searchController.text.toLowerCase();
           final filteredStudents = students.where((s) {
-            return s.name.toLowerCase().contains(query) || 
-                   s.rollNo.toLowerCase().contains(query) ||
-                   s.className.toLowerCase().contains(query);
+            return s.name.toLowerCase().contains(query) ||
+                s.rollNo.toLowerCase().contains(query) ||
+                s.className.toLowerCase().contains(query);
           }).toList();
 
           return AlertDialog(
@@ -304,7 +321,8 @@ class _ResultsDashboardWidgetState extends ConsumerState<ResultsDashboardWidget>
                   if (filteredStudents.isEmpty)
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 24),
-                      child: Text('No students found.', style: AppTypography.caption),
+                      child: Text('No students found.',
+                          style: AppTypography.caption),
                     )
                   else
                     Flexible(
@@ -317,19 +335,30 @@ class _ResultsDashboardWidgetState extends ConsumerState<ResultsDashboardWidget>
                           return ListTile(
                             dense: true,
                             contentPadding: EdgeInsets.zero,
-                            title: Text(student.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                            subtitle: Text('${student.className} • Roll: ${student.rollNo}'),
-                            trailing: const Icon(Icons.picture_as_pdf_rounded, color: AppColors.error, size: 20),
+                            title: Text(student.name,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold)),
+                            subtitle: Text(
+                                '${student.className} • Roll: ${student.rollNo}'),
+                            trailing: const Icon(Icons.picture_as_pdf_rounded,
+                                color: AppColors.error, size: 20),
                             onTap: () async {
                               Navigator.pop(context);
-                              final results = await ref.read(resultRepositoryProvider).getStudentResultsStream(student.id).first;
+                              final results = await ref
+                                  .read(resultRepositoryProvider)
+                                  .getStudentResultsStream(student.id)
+                                  .first;
                               if (results.isEmpty) {
                                 if (context.mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No results found for this student.')));
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              'No results found for this student.')));
                                 }
                                 return;
                               }
-                              await ReportCardService.generateAndPrintReportCard(
+                              await ReportCardService
+                                  .generateAndPrintReportCard(
                                 student: student,
                                 results: results,
                                 instituteName: instituteName,
@@ -343,7 +372,9 @@ class _ResultsDashboardWidgetState extends ConsumerState<ResultsDashboardWidget>
               ),
             ),
             actions: [
-              TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+              TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel')),
             ],
           );
         },

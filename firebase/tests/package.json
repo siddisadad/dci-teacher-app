@@ -1,0 +1,11 @@
+{
+  "name": "dci-firestore-rules-tests",
+  "private": true,
+  "scripts": {
+    "test": "mocha firestore.rules.test.js --timeout 20000"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^4.0.1",
+    "mocha": "^10.8.2"
+  }
+}

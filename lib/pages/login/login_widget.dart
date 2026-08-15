@@ -51,7 +51,7 @@ class _LoginWidgetState extends ConsumerState<LoginWidget> {
     try {
       final email = _model.textFieldModel1.inputTextController!.text.trim();
       final password = _model.textFieldModel2.inputTextController!.text;
-      
+
       await ref.read(authServiceProvider).signInWithEmail(email, password);
 
       if (!mounted) return;
@@ -67,7 +67,8 @@ class _LoginWidgetState extends ConsumerState<LoginWidget> {
     final email = _model.textFieldModel1.inputTextController?.text.trim() ?? '';
     if (email.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter your email to reset password.')),
+        const SnackBar(
+            content: Text('Please enter your email to reset password.')),
       );
       return;
     }
@@ -186,7 +187,8 @@ class _LoginWidgetState extends ConsumerState<LoginWidget> {
             leadingIconPresent: true,
             obscureText: true,
             onSubmit: (_) => _handleLogin(),
-            validator: (val) => ValidationService.validateRequired(val, 'Password'),
+            validator: (val) =>
+                ValidationService.validateRequired(val, 'Password'),
             autofillHints: const [AutofillHints.password],
           ),
         ),
@@ -226,7 +228,8 @@ class _LoginWidgetState extends ConsumerState<LoginWidget> {
     return Column(
       children: [
         const SizedBox(height: 20),
-        Text('Version ${AppConstants.appVersion} (Stable)', style: FlutterFlowTheme.of(context).labelSmall),
+        Text('Version ${AppConstants.appVersion} (Stable)',
+            style: FlutterFlowTheme.of(context).labelSmall),
       ],
     );
   }

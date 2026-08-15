@@ -18,7 +18,8 @@ class NotificationsWidget extends ConsumerStatefulWidget {
   static String routePath = '/notifications';
 
   @override
-  ConsumerState<NotificationsWidget> createState() => _NotificationsWidgetState();
+  ConsumerState<NotificationsWidget> createState() =>
+      _NotificationsWidgetState();
 }
 
 class _NotificationsWidgetState extends ConsumerState<NotificationsWidget> {
@@ -64,7 +65,10 @@ class _NotificationsWidgetState extends ConsumerState<NotificationsWidget> {
   Widget _buildNotificationsList() {
     final theme = FlutterFlowTheme.of(context);
     return FutureBuilder<List<AppNotification>>(
-      future: ref.read(notificationRepositoryProvider).getNotificationsStream().first,
+      future: ref
+          .read(notificationRepositoryProvider)
+          .getNotificationsStream()
+          .first,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -83,14 +87,17 @@ class _NotificationsWidgetState extends ConsumerState<NotificationsWidget> {
         return ListView.separated(
           padding: AppSpacing.pagePadding,
           itemCount: notifications.length,
-          separatorBuilder: (context, index) => const SizedBox(height: AppSpacing.md),
+          separatorBuilder: (context, index) =>
+              const SizedBox(height: AppSpacing.md),
           itemBuilder: (context, index) {
             final item = notifications[index];
             return Dismissible(
               key: Key(item.id),
               direction: DismissDirection.endToStart,
               onDismissed: (_) {
-                ref.read(dciNotificationServiceProvider).deleteNotification(item.id);
+                ref
+                    .read(dciNotificationServiceProvider)
+                    .deleteNotification(item.id);
               },
               background: Container(
                 alignment: Alignment.centerRight,
@@ -107,15 +114,17 @@ class _NotificationsWidgetState extends ConsumerState<NotificationsWidget> {
                   boxShadow: item.isRead ? null : AppShadows.low,
                 ),
                 child: Material(
-                  color: item.isRead 
-                      ? theme.secondaryBackground 
+                  color: item.isRead
+                      ? theme.secondaryBackground
                       : theme.primary.withAlpha(15),
                   borderRadius: BorderRadius.circular(AppRadius.md),
                   clipBehavior: Clip.antiAlias,
                   child: InkWell(
                     onTap: () {
                       if (!item.isRead) {
-                        ref.read(dciNotificationServiceProvider).markAsRead(item.id);
+                        ref
+                            .read(dciNotificationServiceProvider)
+                            .markAsRead(item.id);
                       }
                     },
                     borderRadius: BorderRadius.circular(AppRadius.md),
@@ -123,8 +132,8 @@ class _NotificationsWidgetState extends ConsumerState<NotificationsWidget> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(AppRadius.md),
                         border: Border.all(
-                          color: item.isRead 
-                              ? theme.alternate 
+                          color: item.isRead
+                              ? theme.alternate
                               : theme.primary.withAlpha(50),
                           width: 1.0,
                         ),
@@ -137,19 +146,16 @@ class _NotificationsWidgetState extends ConsumerState<NotificationsWidget> {
                             width: 44,
                             height: 44,
                             decoration: BoxDecoration(
-                              color: item.isRead 
+                              color: item.isRead
                                   ? theme.primary.withAlpha(25)
                                   : theme.primary,
                               shape: BoxShape.circle,
                             ),
                             alignment: Alignment.center,
-                            child: Icon(
-                              _getIcon(item.type), 
-                              color: item.isRead 
-                                  ? theme.primary 
-                                  : Colors.white, 
-                              size: 20
-                            ),
+                            child: Icon(_getIcon(item.type),
+                                color:
+                                    item.isRead ? theme.primary : Colors.white,
+                                size: 20),
                           ),
                           const SizedBox(width: AppSpacing.md),
                           Expanded(
@@ -157,7 +163,7 @@ class _NotificationsWidgetState extends ConsumerState<NotificationsWidget> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  item.title, 
+                                  item.title,
                                   style: AppTypography.body.copyWith(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
@@ -166,7 +172,7 @@ class _NotificationsWidgetState extends ConsumerState<NotificationsWidget> {
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  item.body, 
+                                  item.body,
                                   style: AppTypography.caption.copyWith(
                                     color: theme.secondaryText,
                                     fontSize: 13,
@@ -174,9 +180,10 @@ class _NotificationsWidgetState extends ConsumerState<NotificationsWidget> {
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  item.createdAt != null 
-                                      ? dateTimeFormat('relative', item.createdAt)
-                                      : 'Just now', 
+                                  item.createdAt != null
+                                      ? dateTimeFormat(
+                                          'relative', item.createdAt)
+                                      : 'Just now',
                                   style: AppTypography.caption.copyWith(
                                     fontSize: 11,
                                     color: theme.secondaryText.withAlpha(150),
@@ -210,10 +217,14 @@ class _NotificationsWidgetState extends ConsumerState<NotificationsWidget> {
 
   IconData _getIcon(String type) {
     switch (type) {
-      case 'alert': return Icons.warning_amber_rounded;
-      case 'reminder': return Icons.alarm_rounded;
-      case 'system': return Icons.settings_suggest_rounded;
-      default: return Icons.notifications_none_rounded;
+      case 'alert':
+        return Icons.warning_amber_rounded;
+      case 'reminder':
+        return Icons.alarm_rounded;
+      case 'system':
+        return Icons.settings_suggest_rounded;
+      default:
+        return Icons.notifications_none_rounded;
     }
   }
 }

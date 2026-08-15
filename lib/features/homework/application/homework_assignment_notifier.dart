@@ -28,7 +28,8 @@ class HomeworkAssignmentState {
   }
 }
 
-class HomeworkAssignmentNotifier extends AutoDisposeAsyncNotifier<HomeworkAssignmentState> {
+class HomeworkAssignmentNotifier
+    extends AutoDisposeAsyncNotifier<HomeworkAssignmentState> {
   @override
   FutureOr<HomeworkAssignmentState> build() {
     return HomeworkAssignmentState();
@@ -36,7 +37,8 @@ class HomeworkAssignmentNotifier extends AutoDisposeAsyncNotifier<HomeworkAssign
 
   void addAttachment(String url) {
     final currentUrls = state.value!.attachmentUrls;
-    state = AsyncData(state.value!.copyWith(attachmentUrls: [...currentUrls, url]));
+    state =
+        AsyncData(state.value!.copyWith(attachmentUrls: [...currentUrls, url]));
   }
 
   void removeAttachment(String url) {
@@ -72,7 +74,9 @@ class HomeworkAssignmentNotifier extends AutoDisposeAsyncNotifier<HomeworkAssign
         teacher: teacher,
         title: title,
         description: description,
-        dueDate: dueDate != null ? dueDate.toIso8601String() : 'No Due Date', // Format properly as needed
+        dueDate: dueDate != null
+            ? dueDate.toIso8601String()
+            : 'No Due Date', // Format properly as needed
         status: status,
         attachments: state.value!.attachmentUrls,
         createdBy: user.uid,
@@ -89,6 +93,7 @@ class HomeworkAssignmentNotifier extends AutoDisposeAsyncNotifier<HomeworkAssign
   }
 }
 
-final homeworkAssignmentNotifierProvider = AsyncNotifierProvider.autoDispose<HomeworkAssignmentNotifier, HomeworkAssignmentState>(() {
+final homeworkAssignmentNotifierProvider = AsyncNotifierProvider.autoDispose<
+    HomeworkAssignmentNotifier, HomeworkAssignmentState>(() {
   return HomeworkAssignmentNotifier();
 });

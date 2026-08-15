@@ -28,7 +28,7 @@ String normalizeClassName(String? name) {
   final trimmed = name.trim();
   // Check if it already matches "Class X"
   if (RegExp(r'^Class\s+\d+$').hasMatch(trimmed)) return trimmed;
-  
+
   final match = RegExp(r'(\d+)').firstMatch(trimmed);
   if (match != null) {
     return 'Class ${match.group(1)}';

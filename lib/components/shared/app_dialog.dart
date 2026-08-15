@@ -34,7 +34,8 @@ class AppDialog extends StatelessWidget {
         content,
         style: AppTypography.body,
       ),
-      actionsPadding: const EdgeInsets.fromLTRB(AppSpacing.md, 0, AppSpacing.md, AppSpacing.md),
+      actionsPadding: const EdgeInsets.fromLTRB(
+          AppSpacing.md, 0, AppSpacing.md, AppSpacing.md),
       actions: [
         TextButton(
           onPressed: onCancel ?? () => Navigator.pop(context),

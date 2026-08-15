@@ -15,6 +15,10 @@ class Teacher {
   final DateTime? createdTime;
   final bool notificationsEnabled;
 
+  /// Class names this staff member may access. Empty = no extra restriction
+  /// (legacy users). Synced to Auth custom claims as `assigned_classes`.
+  final List<String> assignedClasses;
+
   Teacher({
     required this.uid,
     required this.email,
@@ -29,7 +33,17 @@ class Teacher {
     this.experience,
     this.createdTime,
     this.notificationsEnabled = true,
+    this.assignedClasses = const [],
   });
+
+  static List<String> parseClassList(String? raw) {
+    if (raw == null || raw.trim().isEmpty) return const [];
+    return raw
+        .split(',')
+        .map((value) => value.trim())
+        .where((value) => value.isNotEmpty)
+        .toList();
+  }
 
   factory Teacher.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>? ?? {};
@@ -47,6 +61,7 @@ class Teacher {
       experience: data['experience']?.toString(),
       createdTime: (data['created_time'] as Timestamp?)?.toDate(),
       notificationsEnabled: data['notifications_enabled'] as bool? ?? true,
+      assignedClasses: List<String>.from(data['assigned_classes'] ?? const []),
     );
   }
 
@@ -63,8 +78,11 @@ class Teacher {
       'subject_expertise': subjectExpertise,
       'qualification': qualification,
       'experience': experience,
-      'created_time': createdTime != null ? Timestamp.fromDate(createdTime!) : FieldValue.serverTimestamp(),
+      'created_time': createdTime != null
+          ? Timestamp.fromDate(createdTime!)
+          : FieldValue.serverTimestamp(),
       'notifications_enabled': notificationsEnabled,
+      'assigned_classes': assignedClasses,
     };
   }
 
@@ -82,6 +100,7 @@ class Teacher {
     String? experience,
     DateTime? createdTime,
     bool? notificationsEnabled,
+    List<String>? assignedClasses,
   }) {
     return Teacher(
       uid: uid ?? this.uid,
@@ -97,6 +116,7 @@ class Teacher {
       experience: experience ?? this.experience,
       createdTime: createdTime ?? this.createdTime,
       notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
+      assignedClasses: assignedClasses ?? this.assignedClasses,
     );
   }
 }

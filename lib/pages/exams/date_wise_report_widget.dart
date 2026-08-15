@@ -15,7 +15,8 @@ class DateWiseReportWidget extends ConsumerStatefulWidget {
   static String routePath = '/dateWiseReport';
 
   @override
-  ConsumerState<DateWiseReportWidget> createState() => _DateWiseReportWidgetState();
+  ConsumerState<DateWiseReportWidget> createState() =>
+      _DateWiseReportWidgetState();
 }
 
 class _DateWiseReportWidgetState extends ConsumerState<DateWiseReportWidget> {
@@ -54,7 +55,8 @@ class _DateWiseReportWidgetState extends ConsumerState<DateWiseReportWidget> {
             title: 'Schedule Report',
             subtitle: dateTimeFormat('yMMMd', _model.selectedDate),
             onBackPressed: () async => context.safePop(),
-            actionIcon: const Icon(Icons.calendar_month_rounded, color: Colors.white),
+            actionIcon:
+                const Icon(Icons.calendar_month_rounded, color: Colors.white),
             onActionPressed: () async => _selectDate(context),
           ),
           Expanded(
@@ -65,17 +67,22 @@ class _DateWiseReportWidgetState extends ConsumerState<DateWiseReportWidget> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.event_busy_rounded, size: 48, color: theme.secondaryText),
+                        Icon(Icons.event_busy_rounded,
+                            size: 48, color: theme.secondaryText),
                         const SizedBox(height: 12),
                         Text('No exams scheduled.', style: theme.labelSmall),
-                        TextButton(onPressed: () => _selectDate(context), child: const Text('Change Date', style: TextStyle(fontSize: 12))),
+                        TextButton(
+                            onPressed: () => _selectDate(context),
+                            child: const Text('Change Date',
+                                style: TextStyle(fontSize: 12))),
                       ],
                     ),
                   );
                 }
 
                 return ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.md, vertical: AppSpacing.sm),
                   itemCount: exams.length,
                   itemBuilder: (context, index) {
                     final exam = exams[index];
@@ -111,37 +118,59 @@ class _DateWiseReportWidgetState extends ConsumerState<DateWiseReportWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('${exam.subject} - ${exam.className}', style: AppTypography.label.copyWith(fontWeight: FontWeight.bold, fontSize: 13)),
+                Text('${exam.subject} - ${exam.className}',
+                    style: AppTypography.label
+                        .copyWith(fontWeight: FontWeight.bold, fontSize: 13)),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(color: theme.primary.withAlpha(25), borderRadius: BorderRadius.circular(4)),
-                  child: Text(exam.startTime, style: AppTypography.caption.copyWith(color: theme.primary, fontSize: 10, fontWeight: FontWeight.bold)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                      color: theme.primary.withAlpha(25),
+                      borderRadius: BorderRadius.circular(4)),
+                  child: Text(exam.startTime,
+                      style: AppTypography.caption.copyWith(
+                          color: theme.primary,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold)),
                 ),
               ],
             ),
             const SizedBox(height: 8),
-            Text('Venue: ${exam.venue}', style: AppTypography.caption.copyWith(fontSize: 10)),
-            const Padding(padding: EdgeInsets.symmetric(vertical: 4), child: Divider(height: 1)),
+            Text('Venue: ${exam.venue}',
+                style: AppTypography.caption.copyWith(fontSize: 10)),
+            const Padding(
+                padding: EdgeInsets.symmetric(vertical: 4),
+                child: Divider(height: 1)),
             resultsAsync.when(
               data: (results) {
                 if (results.isEmpty) {
-                  return const Text('Results not yet published.', style: TextStyle(fontStyle: FontStyle.italic, fontSize: 10));
+                  return const Text('Results not yet published.',
+                      style:
+                          TextStyle(fontStyle: FontStyle.italic, fontSize: 10));
                 }
                 double totalObtained = 0;
                 for (var r in results) {
                   totalObtained += r.marksObtained;
                 }
-                final avg = (totalObtained / (results.length * exam.totalMarks) * 100).toInt();
+                final avg =
+                    (totalObtained / (results.length * exam.totalMarks) * 100)
+                        .toInt();
 
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Students: ${results.length}', style: AppTypography.caption.copyWith(fontSize: 10)),
-                    Text('Avg. Score: $avg%', style: AppTypography.caption.copyWith(color: theme.primary, fontWeight: FontWeight.bold, fontSize: 10)),
+                    Text('Students: ${results.length}',
+                        style: AppTypography.caption.copyWith(fontSize: 10)),
+                    Text('Avg. Score: $avg%',
+                        style: AppTypography.caption.copyWith(
+                            color: theme.primary,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 10)),
                   ],
                 );
               },
-              loading: () => const SizedBox(height: 2, child: LinearProgressIndicator()),
+              loading: () =>
+                  const SizedBox(height: 2, child: LinearProgressIndicator()),
               error: (_, __) => const SizedBox(),
             ),
           ],

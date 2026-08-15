@@ -5,7 +5,8 @@ import 'package:d_c_i_teacher_app/components/text_field/text_field_widget.dart';
 import 'package:d_c_i_teacher_app/flutter_flow/flutter_flow_util.dart';
 import 'package:d_c_i_teacher_app/flutter_flow/form_field_controller.dart';
 import 'package:d_c_i_teacher_app/index.dart';
-import 'package:d_c_i_teacher_app/pages/daily_report_form/daily_report_form_widget.dart' show DailyReportFormWidget;
+import 'package:d_c_i_teacher_app/pages/daily_report_form/daily_report_form_widget.dart'
+    show DailyReportFormWidget;
 import 'package:flutter/material.dart';
 
 class DailyReportFormModel extends FlutterFlowModel<DailyReportFormWidget> {
@@ -52,7 +53,7 @@ class DailyReportFormModel extends FlutterFlowModel<DailyReportFormWidget> {
   void initState(BuildContext context) {
     formSectionHeaderModel1 =
         createModel(context, () => FormSectionHeaderModel());
-    
+
     // Initialize dropdown controllers
     dropdownValueController1 = FormFieldController<String>(null);
     dropdownValueController2 = FormFieldController<String>(null);

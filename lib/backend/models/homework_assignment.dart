@@ -59,7 +59,9 @@ class HomeworkAssignment {
       'attachments': attachments,
       'createdBy': createdBy,
       'createdByEmail': createdByEmail,
-      'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : FieldValue.serverTimestamp(),
+      'createdAt': createdAt != null
+          ? Timestamp.fromDate(createdAt!)
+          : FieldValue.serverTimestamp(),
     };
   }
 }

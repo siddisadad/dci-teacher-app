@@ -6,8 +6,10 @@ class NotificationRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  CollectionReference get _notificationsCollection => 
-      _firestore.collection('users').doc(_auth.currentUser?.uid).collection('notifications');
+  CollectionReference get _notificationsCollection => _firestore
+      .collection('users')
+      .doc(_auth.currentUser?.uid)
+      .collection('notifications');
 
   Stream<List<AppNotification>> getNotificationsStream() {
     final user = _auth.currentUser;

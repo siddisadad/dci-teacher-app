@@ -22,33 +22,66 @@ class AccessControl {
   }
 
   // --- Student Management ---
-  bool get canManageStudents => role == UserRole.director || role == UserRole.admin;
-  bool get canViewStudents => role != UserRole.student && role != UserRole.unknown;
+  bool get canManageStudents =>
+      role == UserRole.director || role == UserRole.admin;
+  bool get canViewStudents =>
+      role != UserRole.student && role != UserRole.unknown;
   bool get isStudent => role == UserRole.student;
 
   // --- Teacher/Staff Management ---
-  bool get canManageTeachers => role == UserRole.director || role == UserRole.admin;
-  bool get canViewFacultyList => role == UserRole.director || role == UserRole.admin;
+  bool get canManageTeachers =>
+      role == UserRole.director || role == UserRole.admin;
+  bool get canViewFacultyList =>
+      role == UserRole.director || role == UserRole.admin;
 
   // --- Attendance ---
-  bool get canMarkAttendance => role == UserRole.teacher || role == UserRole.admin || role == UserRole.director;
-  bool get canViewFullAttendanceReports => role == UserRole.director || role == UserRole.admin;
+  bool get canMarkAttendance =>
+      role == UserRole.teacher ||
+      role == UserRole.admin ||
+      role == UserRole.director;
+  bool get canViewFullAttendanceReports =>
+      role == UserRole.director || role == UserRole.admin;
 
   // --- Examination & Results ---
-  bool get canManageExams => role == UserRole.director || role == UserRole.admin;
-  bool get canEnterMarks => role == UserRole.teacher || role == UserRole.admin || role == UserRole.director;
-  bool get canViewFullResults => role == UserRole.director || role == UserRole.admin;
+  bool get canManageExams =>
+      role == UserRole.director || role == UserRole.admin;
+  bool get canEnterMarks =>
+      role == UserRole.teacher ||
+      role == UserRole.admin ||
+      role == UserRole.director;
+  bool get canViewFullResults =>
+      role == UserRole.director || role == UserRole.admin;
 
   // --- Daily Reports ---
   bool get canSubmitDailyReport => role == UserRole.teacher;
-  bool get canViewDailyReports => role != UserRole.student && role != UserRole.unknown;
+  bool get canViewDailyReports =>
+      role != UserRole.student && role != UserRole.unknown;
 
   // --- Global Reports & Analytics ---
-  bool get canViewAdminReports => role == UserRole.director || role == UserRole.admin;
+  bool get canViewAdminReports =>
+      role == UserRole.director || role == UserRole.admin;
 
   // --- Settings ---
   bool get canManageFullSettings => role == UserRole.director;
   bool get canManageLimitedSettings => role == UserRole.admin;
+
+  bool get isManager => role == UserRole.director || role == UserRole.admin;
+
+  /// Only Admin can create other Admin accounts. Directors may create Teachers.
+  bool get canCreateAdmins => role == UserRole.admin;
+
+  /// Class names this user is restricted to. Empty means unrestricted
+  /// (legacy staff, or managers).
+  List<String> get assignedClasses => user?.assignedClasses ?? const [];
+
+  bool get hasClassRestriction =>
+      role == UserRole.teacher && assignedClasses.isNotEmpty;
+
+  bool canAccessClass(String className) {
+    if (isManager) return true;
+    if (assignedClasses.isEmpty) return true;
+    return assignedClasses.contains(className);
+  }
 }
 
 final accessControlProvider = Provider<AccessControl>((ref) {

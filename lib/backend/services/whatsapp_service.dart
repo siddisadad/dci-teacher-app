@@ -1,19 +1,20 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class WhatsappService {
-  static const String _baseUrl = 'https://graph.facebook.com/v17.0';
-  static const String _phoneNumberId = String.fromEnvironment(
-    'WHATSAPP_PHONE_NUMBER_ID',
-    defaultValue: '',
-  );
-  static const String _accessToken = String.fromEnvironment(
-    'WHATSAPP_ACCESS_TOKEN',
-    defaultValue: '',
-  );
+typedef WhatsAppCallable = Future<dynamic> Function(
+  String name,
+  Map<String, dynamic> data,
+);
 
-  bool get isConfigured => _phoneNumberId.isNotEmpty && _accessToken.isNotEmpty;
+class WhatsappService {
+  WhatsappService({WhatsAppCallable? invoke}) : _invoke = invoke;
+
+  final WhatsAppCallable? _invoke;
+
+  Future<dynamic> _call(String name, Map<String, dynamic> data) {
+    if (_invoke != null) return _invoke!(name, data);
+    return FirebaseFunctions.instance.httpsCallable(name).call(data);
+  }
 
   /// Opens the WhatsApp app on the device with a pre-filled message.
   /// If [phone] is provided, it opens a direct chat with that number.
@@ -50,42 +51,15 @@ class WhatsappService {
     List<String> parameters = const [],
     String languageCode = 'en_US',
   }) async {
-    if (!isConfigured) return false;
-    final url = Uri.parse('$_baseUrl/$_phoneNumberId/messages');
-
-    final body = {
-      "messaging_product": "whatsapp",
-      "to": to,
-      "type": "template",
-      "template": {
-        "name": templateName,
-        "language": {"code": languageCode},
-        "components": [
-          if (parameters.isNotEmpty)
-            {
-              "type": "body",
-              "parameters":
-                  parameters.map((p) => {"type": "text", "text": p}).toList(),
-            }
-        ]
-      }
-    };
-
     try {
-      final response = await http.post(
-        url,
-        headers: {
-          'Authorization': 'Bearer $_accessToken',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(body),
-      );
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return true;
-      } else {
-        return false;
-      }
+      await _call('sendWhatsAppMessage', {
+        'to': to,
+        'type': 'template',
+        'templateName': templateName,
+        'parameters': parameters,
+        'languageCode': languageCode,
+      });
+      return true;
     } catch (e) {
       return false;
     }
@@ -95,32 +69,13 @@ class WhatsappService {
     required String to,
     required String message,
   }) async {
-    if (!isConfigured) return false;
-    final url = Uri.parse('$_baseUrl/$_phoneNumberId/messages');
-
-    final body = {
-      "messaging_product": "whatsapp",
-      "recipient_type": "individual",
-      "to": to,
-      "type": "text",
-      "text": {"preview_url": false, "body": message}
-    };
-
     try {
-      final response = await http.post(
-        url,
-        headers: {
-          'Authorization': 'Bearer $_accessToken',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(body),
-      );
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return true;
-      } else {
-        return false;
-      }
+      await _call('sendWhatsAppMessage', {
+        'to': to,
+        'type': 'text',
+        'message': message,
+      });
+      return true;
     } catch (e) {
       return false;
     }

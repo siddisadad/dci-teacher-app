@@ -41,7 +41,8 @@ class AppBottomNavBar extends StatelessWidget {
     );
   }
 
-  Widget _buildItem(BuildContext context, int index, IconData icon, String label) {
+  Widget _buildItem(
+      BuildContext context, int index, IconData icon, String label) {
     final isSelected = currentIndex == index;
     final color = isSelected
         ? FlutterFlowTheme.of(context).primary
@@ -65,7 +66,8 @@ class AppBottomNavBar extends StatelessWidget {
               label,
               style: FlutterFlowTheme.of(context).labelSmall.override(
                     font: GoogleFonts.inter(
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.normal,
                     ),
                     color: color,
                     fontSize: 11,
@@ -81,7 +83,8 @@ class AppBottomNavBar extends StatelessWidget {
     if (icon == Icons.home_rounded) return Icons.home_outlined;
     if (icon == Icons.description_outlined) return Icons.description_outlined;
     if (icon == Icons.event_note_outlined) return Icons.event_note_outlined;
-    if (icon == Icons.account_circle_outlined) return Icons.account_circle_outlined;
+    if (icon == Icons.account_circle_outlined)
+      return Icons.account_circle_outlined;
     return icon;
   }
 }

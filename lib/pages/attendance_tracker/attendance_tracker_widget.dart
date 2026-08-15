@@ -25,10 +25,12 @@ class AttendanceTrackerWidget extends ConsumerStatefulWidget {
   static String routePath = '/attendanceTracker';
 
   @override
-  ConsumerState<AttendanceTrackerWidget> createState() => _AttendanceTrackerWidgetState();
+  ConsumerState<AttendanceTrackerWidget> createState() =>
+      _AttendanceTrackerWidgetState();
 }
 
-class _AttendanceTrackerWidgetState extends ConsumerState<AttendanceTrackerWidget> {
+class _AttendanceTrackerWidgetState
+    extends ConsumerState<AttendanceTrackerWidget> {
   late AttendanceTrackerModel _model;
   bool _sendWhatsAppAlerts = false;
 
@@ -53,24 +55,30 @@ class _AttendanceTrackerWidgetState extends ConsumerState<AttendanceTrackerWidge
 
     return attendanceStateAsync.when(
       data: (state) => _buildScaffold(context, state, notifier),
-      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      loading: () =>
+          const Scaffold(body: Center(child: CircularProgressIndicator())),
       error: (err, stack) => Scaffold(body: Center(child: Text('Error: $err'))),
     );
   }
 
-  Widget _buildScaffold(BuildContext context, AttendanceTrackerState state, AttendanceTrackerNotifier notifier) {
+  Widget _buildScaffold(BuildContext context, AttendanceTrackerState state,
+      AttendanceTrackerNotifier notifier) {
     _syncModelWithState(state);
     final theme = FlutterFlowTheme.of(context);
-    int presentCount = state.students.where((s) => state.attendanceMap[s.id] == 'Present').length;
+    int presentCount = state.students
+        .where((s) => state.attendanceMap[s.id] == 'Present')
+        .length;
     int absentCount = state.students.length - presentCount;
-    double percentage = state.students.isEmpty ? 0 : (presentCount / state.students.length) * 100;
+    double percentage = state.students.isEmpty
+        ? 0
+        : (presentCount / state.students.length) * 100;
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-        bottomNavigationBar: state.students.isNotEmpty 
+        bottomNavigationBar: state.students.isNotEmpty
             ? AttendanceSummaryFooter(
                 presentCount: presentCount,
                 absentCount: absentCount,
@@ -89,13 +97,15 @@ class _AttendanceTrackerWidgetState extends ConsumerState<AttendanceTrackerWidge
               child: HeaderSectionWidget(
                 title: 'Daily Attendance',
                 subtitle: 'Student Log',
-                onBackPressed: () async => context.goNamed(AttendanceDashboardWidget.routeName),
+                onBackPressed: () async =>
+                    context.goNamed(AttendanceDashboardWidget.routeName),
                 showActionIcon: false,
               ),
             ),
             _buildSelectionArea(context, state, notifier),
             if (state.students.isNotEmpty) _buildSearchBar(notifier),
-            if (state.isAlreadySubmitted && state.students.isNotEmpty) _buildAlreadySubmittedWarning(theme),
+            if (state.isAlreadySubmitted && state.students.isNotEmpty)
+              _buildAlreadySubmittedWarning(theme),
             if (state.students.isNotEmpty) _buildQuickActions(notifier, theme),
             Expanded(
               child: _buildMainContent(state, notifier, theme),
@@ -121,7 +131,8 @@ class _AttendanceTrackerWidgetState extends ConsumerState<AttendanceTrackerWidge
     }
   }
 
-  Future<void> _saveAttendance(AttendanceTrackerState state, AttendanceTrackerNotifier notifier) async {
+  Future<void> _saveAttendance(
+      AttendanceTrackerState state, AttendanceTrackerNotifier notifier) async {
     if (state.selectedClass == null || state.selectedSubject == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please select Class and Subject.')),
@@ -129,7 +140,8 @@ class _AttendanceTrackerWidgetState extends ConsumerState<AttendanceTrackerWidge
       return;
     }
 
-    final success = await notifier.saveAttendance(sendWhatsApp: _sendWhatsAppAlerts);
+    final success =
+        await notifier.saveAttendance(sendWhatsApp: _sendWhatsAppAlerts);
 
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -146,7 +158,9 @@ class _AttendanceTrackerWidgetState extends ConsumerState<AttendanceTrackerWidge
   Future<void> _shareAttendanceSummary(AttendanceTrackerState state) async {
     if (state.students.isEmpty) return;
 
-    final presentCount = state.students.where((s) => state.attendanceMap[s.id] == 'Present').length;
+    final presentCount = state.students
+        .where((s) => state.attendanceMap[s.id] == 'Present')
+        .length;
     final absentCount = state.students.length - presentCount;
     final date = dateTimeFormat('yMMMd', state.selectedDate);
 
@@ -165,19 +179,22 @@ Total Students: ${state.students.length}
 
     try {
       await SharePlus.instance.share(
-        ShareParams(text: message, subject: 'Attendance Summary - ${state.selectedClass}'),
+        ShareParams(
+            text: message,
+            subject: 'Attendance Summary - ${state.selectedClass}'),
       );
     } catch (e) {
       if (mounted) ErrorHandler.show(context, e);
     }
   }
 
-  Widget _buildMainContent(AttendanceTrackerState state, AttendanceTrackerNotifier notifier, FlutterFlowTheme theme) {
+  Widget _buildMainContent(AttendanceTrackerState state,
+      AttendanceTrackerNotifier notifier, FlutterFlowTheme theme) {
     final filteredStudents = state.students.where((student) {
       if (state.searchQuery.isEmpty) return true;
       final query = state.searchQuery.toLowerCase();
-      return student.name.toLowerCase().contains(query) || 
-             student.rollNo.toLowerCase().contains(query);
+      return student.name.toLowerCase().contains(query) ||
+          student.rollNo.toLowerCase().contains(query);
     }).toList();
 
     if (state.students.isEmpty) {
@@ -186,25 +203,30 @@ Total Students: ${state.students.length}
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.school_rounded, size: 40, color: theme.primary.withAlpha(50)),
+              Icon(Icons.school_rounded,
+                  size: 40, color: theme.primary.withAlpha(50)),
               const SizedBox(height: 12),
               Text(
                 'Select Class & Subject to begin',
-                style: AppTypography.caption.copyWith(color: theme.secondaryText, fontWeight: FontWeight.bold),
+                style: AppTypography.caption.copyWith(
+                    color: theme.secondaryText, fontWeight: FontWeight.bold),
               ),
             ],
           ),
         );
       }
-      return const Center(child: Text('No students found.', style: TextStyle(fontSize: 12)));
+      return const Center(
+          child: Text('No students found.', style: TextStyle(fontSize: 12)));
     }
 
     if (filteredStudents.isEmpty) {
-      return const Center(child: Text('No matches found.', style: TextStyle(fontSize: 12)));
+      return const Center(
+          child: Text('No matches found.', style: TextStyle(fontSize: 12)));
     }
 
     return ListView.separated(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 4),
+      padding:
+          const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 4),
       itemCount: filteredStudents.length,
       separatorBuilder: (_, __) => const SizedBox(height: 6),
       itemBuilder: (context, index) {
@@ -253,37 +275,56 @@ Total Students: ${state.students.length}
         children: [
           Icon(Icons.info_outline_rounded, color: theme.warning, size: 16),
           const SizedBox(width: 8),
-          Expanded(child: Text('Attendance already marked. Updates allowed.', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: theme.primaryText))),
+          Expanded(
+              child: Text('Attendance already marked. Updates allowed.',
+                  style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: theme.primaryText))),
         ],
       ),
     );
   }
 
-  Widget _buildQuickActions(AttendanceTrackerNotifier notifier, FlutterFlowTheme theme) {
+  Widget _buildQuickActions(
+      AttendanceTrackerNotifier notifier, FlutterFlowTheme theme) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(AppSpacing.md, 0, AppSpacing.md, 8),
       child: LayoutBuilder(builder: (context, constraints) {
         if (constraints.maxWidth < 360) {
           return Column(
             children: [
-              _buildActionButton('All Present', Icons.check_circle_rounded, theme.primary, () => notifier.setAllStatus('Present'), isFullWidth: true),
+              _buildActionButton('All Present', Icons.check_circle_rounded,
+                  theme.primary, () => notifier.setAllStatus('Present'),
+                  isFullWidth: true),
               const SizedBox(height: 8),
-              _buildActionButton('All Absent', Icons.cancel_rounded, theme.secondary, () => notifier.setAllStatus('Absent'), isFullWidth: true),
+              _buildActionButton('All Absent', Icons.cancel_rounded,
+                  theme.secondary, () => notifier.setAllStatus('Absent'),
+                  isFullWidth: true),
             ],
           );
         }
         return Row(
           children: [
-            Expanded(child: _buildActionButton('All Present', Icons.check_circle_rounded, theme.primary, () => notifier.setAllStatus('Present'))),
+            Expanded(
+                child: _buildActionButton(
+                    'All Present',
+                    Icons.check_circle_rounded,
+                    theme.primary,
+                    () => notifier.setAllStatus('Present'))),
             const SizedBox(width: 12),
-            Expanded(child: _buildActionButton('All Absent', Icons.cancel_rounded, theme.secondary, () => notifier.setAllStatus('Absent'))),
+            Expanded(
+                child: _buildActionButton('All Absent', Icons.cancel_rounded,
+                    theme.secondary, () => notifier.setAllStatus('Absent'))),
           ],
         );
       }),
     );
   }
 
-  Widget _buildActionButton(String label, IconData icon, Color color, VoidCallback onTap, {bool isFullWidth = false}) {
+  Widget _buildActionButton(
+      String label, IconData icon, Color color, VoidCallback onTap,
+      {bool isFullWidth = false}) {
     return Material(
       color: color.withAlpha(20),
       borderRadius: BorderRadius.circular(8),
@@ -298,16 +339,17 @@ Total Students: ${state.students.length}
             border: Border.all(color: color.withAlpha(40)),
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center, 
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: color, size: 18), 
-              const SizedBox(width: 8), 
+              Icon(icon, color: color, size: 18),
+              const SizedBox(width: 8),
               Flexible(
                 child: Text(
-                  label, 
+                  label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 13),
+                  style: TextStyle(
+                      color: color, fontWeight: FontWeight.bold, fontSize: 13),
                 ),
               ),
             ],
@@ -338,7 +380,7 @@ Total Students: ${state.students.length}
             title: Text(
               'WhatsApp Alerts for Absentees',
               style: AppTypography.caption.copyWith(
-                fontWeight: FontWeight.bold, 
+                fontWeight: FontWeight.bold,
                 fontSize: 12,
                 height: 1.2,
               ),
@@ -350,28 +392,39 @@ Total Students: ${state.students.length}
     );
   }
 
-  Widget _buildSelectionArea(BuildContext context, AttendanceTrackerState state, AttendanceTrackerNotifier notifier) {
+  Widget _buildSelectionArea(BuildContext context, AttendanceTrackerState state,
+      AttendanceTrackerNotifier notifier) {
     final allStudentsAsync = ref.watch(studentsStreamProvider);
-    
+
     return allStudentsAsync.when(
       data: (allStudents) {
-        final dynamicClassOptions = allStudents.map((s) => s.className).where((c) => c.isNotEmpty).toSet().toList()..sort();
-        
+        final dynamicClassOptions = allStudents
+            .map((s) => s.className)
+            .where((c) => c.isNotEmpty)
+            .toSet()
+            .toList()
+          ..sort();
+
         return AttendanceSelectionSection(
           model: _model,
           classOptions: dynamicClassOptions,
           subjectOptions: state.subjectOptions,
           onClassChanged: () => notifier.setClass(_model.selectedClass),
           onDateChanged: () async {
-            final picked = await showDatePicker(context: context, initialDate: state.selectedDate, firstDate: DateTime(2024), lastDate: DateTime.now());
-            if (picked != null) { 
+            final picked = await showDatePicker(
+                context: context,
+                initialDate: state.selectedDate,
+                firstDate: DateTime(2024),
+                lastDate: DateTime.now());
+            if (picked != null) {
               notifier.setDate(picked);
             }
           },
           onSubjectChanged: () => notifier.setSubject(_model.selectedSubject),
         );
       },
-      loading: () => const SizedBox(height: 100, child: Center(child: CircularProgressIndicator())),
+      loading: () => const SizedBox(
+          height: 100, child: Center(child: CircularProgressIndicator())),
       error: (err, _) => Text('Error: $err'),
     );
   }

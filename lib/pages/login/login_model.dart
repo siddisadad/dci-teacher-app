@@ -3,7 +3,8 @@ import 'package:d_c_i_teacher_app/components/button/button_widget.dart';
 import 'package:d_c_i_teacher_app/components/text_field/text_field_widget.dart';
 import 'package:d_c_i_teacher_app/flutter_flow/flutter_flow_util.dart';
 import 'package:d_c_i_teacher_app/index.dart';
-import 'package:d_c_i_teacher_app/pages/login/login_widget.dart' show LoginWidget;
+import 'package:d_c_i_teacher_app/pages/login/login_widget.dart'
+    show LoginWidget;
 import 'package:flutter/material.dart';
 
 class LoginModel extends FlutterFlowModel<LoginWidget> {

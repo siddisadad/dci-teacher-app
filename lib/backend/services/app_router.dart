@@ -160,11 +160,6 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const MyProfileWidget(),
       ),
       GoRoute(
-        name: AIChatWidget.routeName,
-        path: AIChatWidget.routePath,
-        builder: (context, state) => const AIChatWidget(),
-      ),
-      GoRoute(
         name: EnterMarksWidget.routeName,
         path: EnterMarksWidget.routePath,
         builder: (context, state) {

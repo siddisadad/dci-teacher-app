@@ -17,7 +17,8 @@ class TodayAttendanceWidget extends ConsumerStatefulWidget {
   static String routePath = '/todayAttendance';
 
   @override
-  ConsumerState<TodayAttendanceWidget> createState() => _TodayAttendanceWidgetState();
+  ConsumerState<TodayAttendanceWidget> createState() =>
+      _TodayAttendanceWidgetState();
 }
 
 class _TodayAttendanceWidgetState extends ConsumerState<TodayAttendanceWidget> {
@@ -56,12 +57,18 @@ class _TodayAttendanceWidgetState extends ConsumerState<TodayAttendanceWidget> {
                 const SizedBox(height: 8),
                 studentsAsync.when(
                   data: (students) {
-                    final classes = students.map((s) => s.className).where((c) => c.isNotEmpty).toSet().toList()..sort();
+                    final classes = students
+                        .map((s) => s.className)
+                        .where((c) => c.isNotEmpty)
+                        .toSet()
+                        .toList()
+                      ..sort();
                     return DropDownWidget(
                       label: 'Class Filter',
                       labelPresent: false,
                       options: ['All Classes', ...classes],
-                      onChanged: (val) => setState(() => _model.selectedClass = val == 'All Classes' ? null : val),
+                      onChanged: (val) => setState(() => _model.selectedClass =
+                          val == 'All Classes' ? null : val),
                       hint: 'All Classes',
                     );
                   },
@@ -75,15 +82,19 @@ class _TodayAttendanceWidgetState extends ConsumerState<TodayAttendanceWidget> {
             child: logsAsync.when(
               data: (logs) {
                 final today = DateTime.now();
-                final todayLogs = logs.where((l) => 
-                  l.date.year == today.year && 
-                  l.date.month == today.month && 
-                  l.date.day == today.day
-                ).toList();
+                final todayLogs = logs
+                    .where((l) =>
+                        l.date.year == today.year &&
+                        l.date.month == today.month &&
+                        l.date.day == today.day)
+                    .toList();
 
                 var filtered = todayLogs.where((l) {
-                  final matchesClass = _model.selectedClass == null || l.className == _model.selectedClass;
-                  final matchesSearch = l.studentName.toLowerCase().contains(_model.searchQuery.toLowerCase());
+                  final matchesClass = _model.selectedClass == null ||
+                      l.className == _model.selectedClass;
+                  final matchesSearch = l.studentName
+                      .toLowerCase()
+                      .contains(_model.searchQuery.toLowerCase());
                   return matchesClass && matchesSearch;
                 }).toList();
 
@@ -92,16 +103,19 @@ class _TodayAttendanceWidgetState extends ConsumerState<TodayAttendanceWidget> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.event_busy_rounded, size: 48, color: theme.secondaryText),
+                        Icon(Icons.event_busy_rounded,
+                            size: 48, color: theme.secondaryText),
                         const SizedBox(height: 12),
-                        Text('No records found for today.', style: theme.labelSmall),
+                        Text('No records found for today.',
+                            style: theme.labelSmall),
                       ],
                     ),
                   );
                 }
 
                 return ListView.separated(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   itemCount: filtered.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 8),
                   itemBuilder: (context, index) {
@@ -136,7 +150,8 @@ class _TodayAttendanceWidgetState extends ConsumerState<TodayAttendanceWidget> {
           Container(
             width: 40,
             height: 40,
-            decoration: BoxDecoration(color: color.withAlpha(20), shape: BoxShape.circle),
+            decoration: BoxDecoration(
+                color: color.withAlpha(20), shape: BoxShape.circle),
             child: Icon(_getStatusIcon(log.status), color: color, size: 20),
           ),
           const SizedBox(width: 12),
@@ -144,8 +159,11 @@ class _TodayAttendanceWidgetState extends ConsumerState<TodayAttendanceWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(log.studentName, style: AppTypography.body.copyWith(fontWeight: FontWeight.bold, fontSize: 15)),
-                Text('${log.className} • ${log.subject}', style: AppTypography.caption.copyWith(fontSize: 12)),
+                Text(log.studentName,
+                    style: AppTypography.body
+                        .copyWith(fontWeight: FontWeight.bold, fontSize: 15)),
+                Text('${log.className} • ${log.subject}',
+                    style: AppTypography.caption.copyWith(fontSize: 12)),
               ],
             ),
           ),
@@ -158,7 +176,8 @@ class _TodayAttendanceWidgetState extends ConsumerState<TodayAttendanceWidget> {
             ),
             child: Text(
               log.status.toUpperCase(),
-              style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  color: color, fontSize: 10, fontWeight: FontWeight.bold),
             ),
           ),
         ],
@@ -168,19 +187,27 @@ class _TodayAttendanceWidgetState extends ConsumerState<TodayAttendanceWidget> {
 
   Color _getStatusColor(String status, FlutterFlowTheme theme) {
     switch (status) {
-      case 'Present': return theme.success;
-      case 'Absent': return theme.error;
-      case 'Leave': return theme.warning;
-      default: return theme.secondaryText;
+      case 'Present':
+        return theme.success;
+      case 'Absent':
+        return theme.error;
+      case 'Leave':
+        return theme.warning;
+      default:
+        return theme.secondaryText;
     }
   }
 
   IconData _getStatusIcon(String status) {
     switch (status) {
-      case 'Present': return Icons.check_circle_rounded;
-      case 'Absent': return Icons.cancel_rounded;
-      case 'Leave': return Icons.pause_circle_rounded;
-      default: return Icons.help_rounded;
+      case 'Present':
+        return Icons.check_circle_rounded;
+      case 'Absent':
+        return Icons.cancel_rounded;
+      case 'Leave':
+        return Icons.pause_circle_rounded;
+      default:
+        return Icons.help_rounded;
     }
   }
 }

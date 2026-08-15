@@ -11,6 +11,7 @@ void main() {
       'employee_id': 'DESHMUKH-2026-001',
       'is_pre_provisioned': true,
       'created_time': 'keep',
+      'assigned_classes': ['10A'],
       'phone_number': '9876543210',
     };
 
@@ -30,6 +31,7 @@ void main() {
       expect(result.containsKey('employee_id'), isFalse);
       expect(result.containsKey('is_pre_provisioned'), isFalse);
       expect(result.containsKey('created_time'), isFalse);
+      expect(result.containsKey('assigned_classes'), isFalse);
       expect(result['display_name'], 'Patil');
       expect(result['phone_number'], '9876543210');
     });

@@ -23,7 +23,8 @@ class AppQuickActionButton extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(AppRadius.md),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: AppSpacing.md, horizontal: AppSpacing.sm),
+        padding: const EdgeInsets.symmetric(
+            vertical: AppSpacing.md, horizontal: AppSpacing.sm),
         decoration: BoxDecoration(
           color: activeColor.withAlpha(25),
           borderRadius: BorderRadius.circular(AppRadius.md),
@@ -38,7 +39,7 @@ class AppQuickActionButton extends StatelessWidget {
             Icon(icon, color: activeColor, size: AppSize.iconLg),
             const SizedBox(height: AppSpacing.sm),
             Text(
-              title, 
+              title,
               textAlign: TextAlign.center,
               style: AppTypography.label.copyWith(
                 color: activeColor,

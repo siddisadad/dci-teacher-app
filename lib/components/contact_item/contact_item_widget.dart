@@ -68,7 +68,8 @@ class _ContactItemWidgetState extends State<ContactItemWidget> {
               ),
               alignment: Alignment.center,
               child: IconTheme(
-                data: IconThemeData(color: FlutterFlowTheme.of(context).primary, size: 16),
+                data: IconThemeData(
+                    color: FlutterFlowTheme.of(context).primary, size: 16),
                 child: widget.icon ?? const Icon(Icons.info_rounded),
               ),
             ),

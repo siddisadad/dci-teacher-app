@@ -26,9 +26,8 @@ class ExamRepository {
         .orderBy('date', descending: true)
         .limit(limit)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Exam.fromFirestore(doc))
-            .toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Exam.fromFirestore(doc)).toList());
   }
 
   Stream<List<Exam>> getExamsByTeacherStream(String teacherUid) {
@@ -36,13 +35,12 @@ class ExamRepository {
         .where('createdBy', isEqualTo: teacherUid)
         .snapshots()
         .map((snapshot) {
-          final exams = snapshot.docs
-              .map((doc) => Exam.fromFirestore(doc))
-              .toList();
-          // Local sort
-          exams.sort((a, b) => b.date.compareTo(a.date));
-          return exams;
-        });
+      final exams =
+          snapshot.docs.map((doc) => Exam.fromFirestore(doc)).toList();
+      // Local sort
+      exams.sort((a, b) => b.date.compareTo(a.date));
+      return exams;
+    });
   }
 
   Stream<List<Exam>> getExamsByDateStream(DateTime date) {
@@ -52,9 +50,8 @@ class ExamRepository {
         .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
         .where('date', isLessThan: Timestamp.fromDate(endOfDay))
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Exam.fromFirestore(doc))
-            .toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Exam.fromFirestore(doc)).toList());
   }
 
   Future<Exam?> getExamById(String id) async {
@@ -72,12 +69,11 @@ class ExamRepository {
         .where('class', isEqualTo: className)
         .snapshots()
         .map((snapshot) {
-          final exams = snapshot.docs
-              .map((doc) => Exam.fromFirestore(doc))
-              .toList();
-          // Local sort: Upcoming first
-          exams.sort((a, b) => a.date.compareTo(b.date));
-          return exams;
-        });
+      final exams =
+          snapshot.docs.map((doc) => Exam.fromFirestore(doc)).toList();
+      // Local sort: Upcoming first
+      exams.sort((a, b) => a.date.compareTo(b.date));
+      return exams;
+    });
   }
 }

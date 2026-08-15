@@ -45,7 +45,8 @@ class AuthRepository {
 
   Future<void> beginPhoneAuth({
     required String phoneNumber,
-    required void Function(String verificationId, int? forceResendingToken) codeSent,
+    required void Function(String verificationId, int? forceResendingToken)
+        codeSent,
     required void Function(FirebaseAuthException e) verificationFailed,
     required void Function(AuthCredential credential) verificationCompleted,
   }) async {
@@ -64,7 +65,8 @@ class AuthRepository {
     );
   }
 
-  Future<UserCredential> verifyOtp(String verificationId, String smsCode) async {
+  Future<UserCredential> verifyOtp(
+      String verificationId, String smsCode) async {
     final credential = PhoneAuthProvider.credential(
       verificationId: verificationId,
       smsCode: smsCode,
@@ -79,7 +81,7 @@ class AuthRepository {
   Future<void> createUserDoc(User user) async {
     final userDocRef = _firestore.collection('users').doc(user.uid);
     final doc = await userDocRef.get();
-    
+
     if (doc.exists) {
       // User document already exists (with the correct UID as ID)
       return;
@@ -95,7 +97,7 @@ class AuthRepository {
     if (preProvisionedQuery.docs.isNotEmpty) {
       final preDoc = preProvisionedQuery.docs.first;
       final preData = preDoc.data();
-      
+
       // Found a pre-provisioned doc. Copy data to the UID-based doc and remove the old one.
       await userDocRef.set({
         ...preData,
@@ -104,7 +106,7 @@ class AuthRepository {
         'is_pre_provisioned': false, // No longer pre-provisioned
         'updated_time': FieldValue.serverTimestamp(),
       });
-      
+
       // Delete the temporary pre-provisioned doc
       await preDoc.reference.delete();
       return;

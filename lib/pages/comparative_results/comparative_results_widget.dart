@@ -13,10 +13,12 @@ class ComparativeResultsWidget extends ConsumerStatefulWidget {
   static String routePath = '/comparativeResults';
 
   @override
-  ConsumerState<ComparativeResultsWidget> createState() => _ComparativeResultsWidgetState();
+  ConsumerState<ComparativeResultsWidget> createState() =>
+      _ComparativeResultsWidgetState();
 }
 
-class _ComparativeResultsWidgetState extends ConsumerState<ComparativeResultsWidget> {
+class _ComparativeResultsWidgetState
+    extends ConsumerState<ComparativeResultsWidget> {
   @override
   void initState() {
     super.initState();
@@ -41,7 +43,8 @@ class _ComparativeResultsWidgetState extends ConsumerState<ComparativeResultsWid
             child: resultsAsync.when(
               data: (results) {
                 if (results.isEmpty) {
-                  return const Center(child: Text('No results available for comparison.'));
+                  return const Center(
+                      child: Text('No results available for comparison.'));
                 }
                 return SingleChildScrollView(
                   padding: AppSpacing.pagePadding,
@@ -70,15 +73,18 @@ class _ComparativeResultsWidgetState extends ConsumerState<ComparativeResultsWid
   }
 
   Widget _buildSectionTitle(String title) {
-    return Text(title, style: AppTypography.section.copyWith(fontWeight: FontWeight.bold));
+    return Text(title,
+        style: AppTypography.section.copyWith(fontWeight: FontWeight.bold));
   }
 
-  Widget _buildSubjectBenchmarking(BuildContext context, List<dynamic> results) {
+  Widget _buildSubjectBenchmarking(
+      BuildContext context, List<dynamic> results) {
     final theme = FlutterFlowTheme.of(context);
     final Map<String, List<double>> subjectScores = {};
     for (var r in results) {
       final percentage = (r.marksObtained / r.totalMarks) * 100;
-      subjectScores[r.subject] = (subjectScores[r.subject] ?? [])..add(percentage);
+      subjectScores[r.subject] = (subjectScores[r.subject] ?? [])
+        ..add(percentage);
     }
 
     final subjects = subjectScores.keys.toList()..sort();
@@ -101,7 +107,8 @@ class _ComparativeResultsWidgetState extends ConsumerState<ComparativeResultsWid
               Container(
                 width: 48,
                 height: 48,
-                decoration: BoxDecoration(color: theme.primary.withAlpha(20), shape: BoxShape.circle),
+                decoration: BoxDecoration(
+                    color: theme.primary.withAlpha(20), shape: BoxShape.circle),
                 child: Icon(Icons.book_rounded, color: theme.primary, size: 20),
               ),
               const SizedBox(width: 16),
@@ -109,7 +116,9 @@ class _ComparativeResultsWidgetState extends ConsumerState<ComparativeResultsWid
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(subject, style: AppTypography.body.copyWith(fontWeight: FontWeight.bold)),
+                    Text(subject,
+                        style: AppTypography.body
+                            .copyWith(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(4),
@@ -117,14 +126,19 @@ class _ComparativeResultsWidgetState extends ConsumerState<ComparativeResultsWid
                         value: avg / 100,
                         minHeight: 6,
                         backgroundColor: theme.alternate,
-                        valueColor: AlwaysStoppedAnimation<Color>(theme.primary),
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(theme.primary),
                       ),
                     ),
                   ],
                 ),
               ),
               const SizedBox(width: 16),
-              Text('${avg.toInt()}%', style: TextStyle(fontWeight: FontWeight.bold, color: theme.primary, fontSize: 16)),
+              Text('${avg.toInt()}%',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: theme.primary,
+                      fontSize: 16)),
             ],
           ),
         );
@@ -137,7 +151,8 @@ class _ComparativeResultsWidgetState extends ConsumerState<ComparativeResultsWid
     final Map<String, List<double>> classScores = {};
     for (var r in results) {
       final percentage = (r.marksObtained / r.totalMarks) * 100;
-      classScores[r.className] = (classScores[r.className] ?? [])..add(percentage);
+      classScores[r.className] = (classScores[r.className] ?? [])
+        ..add(percentage);
     }
 
     final classes = classScores.keys.toList()..sort();
@@ -153,28 +168,46 @@ class _ComparativeResultsWidgetState extends ConsumerState<ComparativeResultsWid
         children: classes.map((className) {
           final scores = classScores[className]!;
           final avg = scores.reduce((a, b) => a + b) / scores.length;
-          final color = avg >= 75 ? AppColors.success : (avg >= 50 ? AppColors.warning : AppColors.error);
+          final color = avg >= 75
+              ? AppColors.success
+              : (avg >= 50 ? AppColors.warning : AppColors.error);
 
           return Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child: Row(
               children: [
-                Expanded(flex: 3, child: Text(className, style: AppTypography.caption.copyWith(fontWeight: FontWeight.bold))),
+                Expanded(
+                    flex: 3,
+                    child: Text(className,
+                        style: AppTypography.caption
+                            .copyWith(fontWeight: FontWeight.bold))),
                 Expanded(
                   flex: 7,
                   child: Stack(
                     alignment: Alignment.centerLeft,
                     children: [
-                      Container(height: 12, decoration: BoxDecoration(color: theme.alternate, borderRadius: BorderRadius.circular(6))),
+                      Container(
+                          height: 12,
+                          decoration: BoxDecoration(
+                              color: theme.alternate,
+                              borderRadius: BorderRadius.circular(6))),
                       FractionallySizedBox(
                         widthFactor: (avg / 100).clamp(0.0, 1.0),
-                        child: Container(height: 12, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(6))),
+                        child: Container(
+                            height: 12,
+                            decoration: BoxDecoration(
+                                color: color,
+                                borderRadius: BorderRadius.circular(6))),
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(width: 12),
-                SizedBox(width: 40, child: Text('${avg.toInt()}%', style: AppTypography.caption.copyWith(fontWeight: FontWeight.bold, color: color))),
+                SizedBox(
+                    width: 40,
+                    child: Text('${avg.toInt()}%',
+                        style: AppTypography.caption.copyWith(
+                            fontWeight: FontWeight.bold, color: color))),
               ],
             ),
           );

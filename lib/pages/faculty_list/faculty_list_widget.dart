@@ -81,11 +81,13 @@ class _FacultyListWidgetState extends ConsumerState<FacultyListWidget> {
                   }).toList();
 
                   if (filteredUsers.isEmpty) {
-                    return const Center(child: Text('No faculty members found.'));
+                    return const Center(
+                        child: Text('No faculty members found.'));
                   }
 
                   return ListView.separated(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     itemCount: filteredUsers.length,
                     separatorBuilder: (_, __) => const SizedBox(height: 12),
                     itemBuilder: (context, index) {
@@ -134,14 +136,17 @@ class _FacultyListWidgetState extends ConsumerState<FacultyListWidget> {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(22),
-              child: user.photoUrl.isNotEmpty 
-                ? CachedNetworkImage(imageUrl: user.photoUrl, fit: BoxFit.cover)
-                : const Icon(Icons.person_rounded, color: AppColors.primary, size: 24),
+              child: user.photoUrl.isNotEmpty
+                  ? CachedNetworkImage(
+                      imageUrl: user.photoUrl, fit: BoxFit.cover)
+                  : const Icon(Icons.person_rounded,
+                      color: AppColors.primary, size: 24),
             ),
           ),
           title: Text(
             user.displayName,
-            style: AppTypography.body.copyWith(fontWeight: FontWeight.bold, fontSize: 16),
+            style: AppTypography.body
+                .copyWith(fontWeight: FontWeight.bold, fontSize: 16),
           ),
           subtitle: Text(
             '${user.role} • ${user.email}',
@@ -152,7 +157,8 @@ class _FacultyListWidgetState extends ConsumerState<FacultyListWidget> {
             children: [
               if (canEdit)
                 IconButton(
-                  icon: Icon(Icons.edit_rounded, color: theme.primary, size: 20),
+                  icon:
+                      Icon(Icons.edit_rounded, color: theme.primary, size: 20),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   onPressed: () => context.pushNamed(
@@ -161,7 +167,8 @@ class _FacultyListWidgetState extends ConsumerState<FacultyListWidget> {
                   ),
                 ),
               if (canEdit) const SizedBox(width: 8),
-              const Icon(Icons.chevron_right_rounded, color: AppColors.textSecondary),
+              const Icon(Icons.chevron_right_rounded,
+                  color: AppColors.textSecondary),
             ],
           ),
         ),

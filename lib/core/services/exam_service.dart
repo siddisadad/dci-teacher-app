@@ -30,7 +30,7 @@ class ExamService {
   Future<void> deleteExam(String examId) async {
     final currentUser = ref.read(currentUserDataStreamProvider).value;
     if (currentUser?.role != 'Admin') {
-       throw Exception('Unauthorized: Only Admins can delete exams.');
+      throw Exception('Unauthorized: Only Admins can delete exams.');
     }
 
     final repository = ref.read(examRepositoryProvider);

@@ -20,7 +20,7 @@
       "collectionGroup": "homework_assignments",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "className", "order": "ASCENDING" },
+        { "fieldPath": "class", "order": "ASCENDING" },
         { "fieldPath": "status", "order": "ASCENDING" }
       ]
     },

@@ -63,7 +63,9 @@ class ExamResult {
       'grade': grade,
       'remarks': remarks,
       'recordedBy': recordedBy,
-      'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : FieldValue.serverTimestamp(),
+      'createdAt': createdAt != null
+          ? Timestamp.fromDate(createdAt!)
+          : FieldValue.serverTimestamp(),
     };
   }
 

@@ -31,17 +31,23 @@ class AppCard extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: AppRadius.card,
-            border: border != null ? Border.fromBorderSide(border!) : Border.all(
-              color: FlutterFlowTheme.of(context).alternate,
-              width: 1,
-            ),
-            boxShadow: (elevation != 0) ? (elevation != null ? [
-              BoxShadow(
-                blurRadius: elevation!,
-                color: Colors.black.withAlpha(15),
-                offset: const Offset(0, 4),
-              )
-            ] : AppShadows.low) : null,
+            border: border != null
+                ? Border.fromBorderSide(border!)
+                : Border.all(
+                    color: FlutterFlowTheme.of(context).alternate,
+                    width: 1,
+                  ),
+            boxShadow: (elevation != 0)
+                ? (elevation != null
+                    ? [
+                        BoxShadow(
+                          blurRadius: elevation!,
+                          color: Colors.black.withAlpha(15),
+                          offset: const Offset(0, 4),
+                        )
+                      ]
+                    : AppShadows.low)
+                : null,
           ),
           child: InkWell(
             onTap: onTap,

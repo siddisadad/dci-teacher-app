@@ -29,7 +29,8 @@ class AuditRepository {
     });
   }
 
-  Future<void> logError(dynamic error, {StackTrace? stackTrace, String? context}) async {
+  Future<void> logError(dynamic error,
+      {StackTrace? stackTrace, String? context}) async {
     final user = _auth.currentUser;
     await _firestore.collection('error_logs').add({
       'error': error.toString(),
@@ -40,16 +41,19 @@ class AuditRepository {
     });
   }
 
-  Stream<List<Map<String, dynamic>>> getAuditLogs({String? userId, int limit = 50}) {
+  Stream<List<Map<String, dynamic>>> getAuditLogs(
+      {String? userId, int limit = 50}) {
     Query query = _firestore.collection('audit_logs');
     if (userId != null) {
       query = query.where('userId', isEqualTo: userId);
     }
-    
+
     return query
         .orderBy('timestamp', descending: true)
         .limit(limit)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => {'id': doc.id, ...doc.data() as Map<String, dynamic>}).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => {'id': doc.id, ...doc.data() as Map<String, dynamic>})
+            .toList());
   }
 }

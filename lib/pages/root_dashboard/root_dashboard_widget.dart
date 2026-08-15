@@ -15,7 +15,7 @@ class RootDashboardWidget extends ConsumerWidget {
     return userAsync.when(
       data: (userData) {
         if (userData == null) return const LoginWidget();
-        
+
         final role = userData.role.trim().toLowerCase();
         return switch (role) {
           'admin' => const HomeDashboardWidget(),
@@ -35,7 +35,8 @@ class RootDashboardWidget extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.error_outline_rounded, color: Colors.red, size: 48),
+              const Icon(Icons.error_outline_rounded,
+                  color: Colors.red, size: 48),
               const SizedBox(height: 16),
               const Text('Error loading dashboard'),
               const SizedBox(height: 8),

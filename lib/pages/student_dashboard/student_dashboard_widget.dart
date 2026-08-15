@@ -18,10 +18,12 @@ class StudentDashboardWidget extends ConsumerStatefulWidget {
   static String routePath = '/studentDashboard';
 
   @override
-  ConsumerState<StudentDashboardWidget> createState() => _StudentDashboardWidgetState();
+  ConsumerState<StudentDashboardWidget> createState() =>
+      _StudentDashboardWidgetState();
 }
 
-class _StudentDashboardWidgetState extends ConsumerState<StudentDashboardWidget> {
+class _StudentDashboardWidgetState
+    extends ConsumerState<StudentDashboardWidget> {
   late StudentDashboardModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -44,11 +46,13 @@ class _StudentDashboardWidgetState extends ConsumerState<StudentDashboardWidget>
     return studentAsync.when(
       data: (student) {
         if (student == null) {
-          return const Scaffold(body: Center(child: Text('Student profile not found.')));
+          return const Scaffold(
+              body: Center(child: Text('Student profile not found.')));
         }
         return _buildDashboard(context, student);
       },
-      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      loading: () =>
+          const Scaffold(body: Center(child: CircularProgressIndicator())),
       error: (err, _) => Scaffold(body: Center(child: Text('Error: $err'))),
     );
   }
@@ -67,11 +71,15 @@ class _StudentDashboardWidgetState extends ConsumerState<StudentDashboardWidget>
                 children: [
                   _buildSummaryCards(context, student),
                   const SizedBox(height: AppSpacing.xl),
-                  Text('Quick Actions', style: AppTypography.section.copyWith(fontWeight: FontWeight.bold)),
+                  Text('Quick Actions',
+                      style: AppTypography.section
+                          .copyWith(fontWeight: FontWeight.bold)),
                   const SizedBox(height: AppSpacing.md),
                   _buildQuickActions(context),
                   const SizedBox(height: AppSpacing.xl),
-                  Text('Learning Center', style: AppTypography.section.copyWith(fontWeight: FontWeight.bold)),
+                  Text('Learning Center',
+                      style: AppTypography.section
+                          .copyWith(fontWeight: FontWeight.bold)),
                   const SizedBox(height: AppSpacing.md),
                   _buildLearningCenter(context, student),
                   const SizedBox(height: AppSpacing.xl),
@@ -110,13 +118,16 @@ class _StudentDashboardWidgetState extends ConsumerState<StudentDashboardWidget>
                 decoration: BoxDecoration(
                   color: Colors.white.withAlpha(50),
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white.withAlpha(100), width: 2),
+                  border:
+                      Border.all(color: Colors.white.withAlpha(100), width: 2),
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(30),
-                  child: student.photoUrl != null && student.photoUrl!.isNotEmpty
-                      ? Image.network(student.photoUrl!, fit: BoxFit.cover)
-                      : const Icon(Icons.person_rounded, color: Colors.white, size: 30),
+                  child:
+                      student.photoUrl != null && student.photoUrl!.isNotEmpty
+                          ? Image.network(student.photoUrl!, fit: BoxFit.cover)
+                          : const Icon(Icons.person_rounded,
+                              color: Colors.white, size: 30),
                 ),
               ),
               const SizedBox(width: 16),
@@ -126,7 +137,8 @@ class _StudentDashboardWidgetState extends ConsumerState<StudentDashboardWidget>
                   children: [
                     Text('Hello, ${student.name.split(' ').first}',
                         style: theme.titleMedium.override(
-                            font: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.bold),
+                            font: GoogleFonts.plusJakartaSans(
+                                fontWeight: FontWeight.bold),
                             color: Colors.white,
                             fontSize: 22)),
                     Text('${student.className} • Roll No: ${student.rollNo}',
@@ -141,7 +153,8 @@ class _StudentDashboardWidgetState extends ConsumerState<StudentDashboardWidget>
                 borderRadius: 12.0,
                 buttonSize: 40.0,
                 fillColor: theme.onPrimary15,
-                icon: const Icon(Icons.logout_rounded, color: Colors.white, size: 24.0),
+                icon: const Icon(Icons.logout_rounded,
+                    color: Colors.white, size: 24.0),
                 onPressed: () async {
                   await ref.read(authServiceProvider).signOut();
                   if (context.mounted) context.goNamed(LoginWidget.routeName);
@@ -155,9 +168,11 @@ class _StudentDashboardWidgetState extends ConsumerState<StudentDashboardWidget>
   }
 
   Widget _buildSummaryCards(BuildContext context, Student student) {
-    final attendanceAsync = ref.watch(studentAttendanceHistoryProvider(student.id));
+    final attendanceAsync =
+        ref.watch(studentAttendanceHistoryProvider(student.id));
     final examsAsync = ref.watch(studentExamsStreamProvider(student.className));
-    final homeworkAsync = ref.watch(studentHomeworkStreamProvider(student.className));
+    final homeworkAsync =
+        ref.watch(studentHomeworkStreamProvider(student.className));
     final resultsAsync = ref.watch(studentResultsStreamProvider(student.id));
 
     return GridView.count(
@@ -187,7 +202,10 @@ class _StudentDashboardWidgetState extends ConsumerState<StudentDashboardWidget>
           context,
           'Upcoming Exams',
           examsAsync.when(
-            data: (exams) => exams.where((e) => e.date.isAfter(DateTime.now())).length.toString(),
+            data: (exams) => exams
+                .where((e) => e.date.isAfter(DateTime.now()))
+                .length
+                .toString(),
             loading: () => '...',
             error: (_, __) => '0',
           ),
@@ -209,7 +227,9 @@ class _StudentDashboardWidgetState extends ConsumerState<StudentDashboardWidget>
           context,
           'Latest Result',
           resultsAsync.when(
-            data: (res) => res.isNotEmpty ? '${res.first.marksObtained.toInt()}/${res.first.totalMarks}' : 'N/A',
+            data: (res) => res.isNotEmpty
+                ? '${res.first.marksObtained.toInt()}/${res.first.totalMarks}'
+                : 'N/A',
             loading: () => '...',
             error: (_, __) => 'N/A',
           ),
@@ -220,7 +240,8 @@ class _StudentDashboardWidgetState extends ConsumerState<StudentDashboardWidget>
     );
   }
 
-  Widget _buildMetricCard(BuildContext context, String title, String value, IconData icon, Color color) {
+  Widget _buildMetricCard(BuildContext context, String title, String value,
+      IconData icon, Color color) {
     final theme = FlutterFlowTheme.of(context);
     return Container(
       padding: const EdgeInsets.all(12),
@@ -246,15 +267,36 @@ class _StudentDashboardWidgetState extends ConsumerState<StudentDashboardWidget>
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _buildActionButton(context, 'Homework', Icons.book_rounded, AppColors.primary, () => context.pushNamed(MyHomeworkWidget.routeName)),
-        _buildActionButton(context, 'Results', Icons.assessment_rounded, AppColors.success, () => context.pushNamed(MyResultsWidget.routeName)),
-        _buildActionButton(context, 'Attendance', Icons.fact_check_rounded, AppColors.info, () => context.pushNamed(MyAttendanceHistoryWidget.routeName)),
-        _buildActionButton(context, 'Notices', Icons.campaign_rounded, AppColors.secondary, () => context.pushNamed(AnnouncementsFeedWidget.routeName)),
+        _buildActionButton(
+            context,
+            'Homework',
+            Icons.book_rounded,
+            AppColors.primary,
+            () => context.pushNamed(MyHomeworkWidget.routeName)),
+        _buildActionButton(
+            context,
+            'Results',
+            Icons.assessment_rounded,
+            AppColors.success,
+            () => context.pushNamed(MyResultsWidget.routeName)),
+        _buildActionButton(
+            context,
+            'Attendance',
+            Icons.fact_check_rounded,
+            AppColors.info,
+            () => context.pushNamed(MyAttendanceHistoryWidget.routeName)),
+        _buildActionButton(
+            context,
+            'Notices',
+            Icons.campaign_rounded,
+            AppColors.secondary,
+            () => context.pushNamed(AnnouncementsFeedWidget.routeName)),
       ],
     );
   }
 
-  Widget _buildActionButton(BuildContext context, String label, IconData icon, Color color, VoidCallback onTap) {
+  Widget _buildActionButton(BuildContext context, String label, IconData icon,
+      Color color, VoidCallback onTap) {
     return Column(
       children: [
         InkWell(
@@ -272,7 +314,9 @@ class _StudentDashboardWidgetState extends ConsumerState<StudentDashboardWidget>
           ),
         ),
         const SizedBox(height: 8),
-        Text(label, style: AppTypography.caption.copyWith(fontWeight: FontWeight.bold, fontSize: 11)),
+        Text(label,
+            style: AppTypography.caption
+                .copyWith(fontWeight: FontWeight.bold, fontSize: 11)),
       ],
     );
   }
@@ -286,14 +330,17 @@ class _StudentDashboardWidgetState extends ConsumerState<StudentDashboardWidget>
         _buildSectionTitle('Upcoming Tests'),
         examsAsync.when(
           data: (exams) {
-            final upcoming = exams.where((e) => e.date.isAfter(DateTime.now())).toList();
-            if (upcoming.isEmpty) return _buildEmptyState('No upcoming tests scheduled.');
+            final upcoming =
+                exams.where((e) => e.date.isAfter(DateTime.now())).toList();
+            if (upcoming.isEmpty)
+              return _buildEmptyState('No upcoming tests scheduled.');
             return ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: upcoming.length.clamp(0, 3),
               separatorBuilder: (_, __) => const SizedBox(height: 8),
-              itemBuilder: (context, index) => _buildExamTile(context, upcoming[index]),
+              itemBuilder: (context, index) =>
+                  _buildExamTile(context, upcoming[index]),
             );
           },
           loading: () => const LinearProgressIndicator(),
@@ -303,13 +350,15 @@ class _StudentDashboardWidgetState extends ConsumerState<StudentDashboardWidget>
         _buildSectionTitle('Recent Performance'),
         resultsAsync.when(
           data: (results) {
-            if (results.isEmpty) return _buildEmptyState('No results available yet.');
+            if (results.isEmpty)
+              return _buildEmptyState('No results available yet.');
             return ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: results.length.clamp(0, 3),
               separatorBuilder: (_, __) => const SizedBox(height: 8),
-              itemBuilder: (context, index) => _buildResultTile(context, results[index]),
+              itemBuilder: (context, index) =>
+                  _buildResultTile(context, results[index]),
             );
           },
           loading: () => const LinearProgressIndicator(),
@@ -323,7 +372,8 @@ class _StudentDashboardWidgetState extends ConsumerState<StudentDashboardWidget>
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Text(title.toUpperCase(),
-          style: AppTypography.caption.copyWith(fontWeight: FontWeight.bold, letterSpacing: 1, fontSize: 10)),
+          style: AppTypography.caption.copyWith(
+              fontWeight: FontWeight.bold, letterSpacing: 1, fontSize: 10)),
     );
   }
 
@@ -347,20 +397,27 @@ class _StudentDashboardWidgetState extends ConsumerState<StudentDashboardWidget>
         children: [
           Container(
             padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(color: AppColors.info.withAlpha(20), shape: BoxShape.circle),
-            child: const Icon(Icons.event_note_rounded, color: AppColors.info, size: 18),
+            decoration: BoxDecoration(
+                color: AppColors.info.withAlpha(20), shape: BoxShape.circle),
+            child: const Icon(Icons.event_note_rounded,
+                color: AppColors.info, size: 18),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(exam.subject, style: AppTypography.body.copyWith(fontWeight: FontWeight.bold, fontSize: 14)),
-                Text(dateTimeFormat('yMMMd', exam.date), style: AppTypography.caption.copyWith(fontSize: 11)),
+                Text(exam.subject,
+                    style: AppTypography.body
+                        .copyWith(fontWeight: FontWeight.bold, fontSize: 14)),
+                Text(dateTimeFormat('yMMMd', exam.date),
+                    style: AppTypography.caption.copyWith(fontSize: 11)),
               ],
             ),
           ),
-          Text(exam.startTime, style: AppTypography.caption.copyWith(fontWeight: FontWeight.bold, color: theme.primary)),
+          Text(exam.startTime,
+              style: AppTypography.caption
+                  .copyWith(fontWeight: FontWeight.bold, color: theme.primary)),
         ],
       ),
     );
@@ -369,7 +426,9 @@ class _StudentDashboardWidgetState extends ConsumerState<StudentDashboardWidget>
   Widget _buildResultTile(BuildContext context, dynamic result) {
     final theme = FlutterFlowTheme.of(context);
     final percentage = (result.marksObtained / result.totalMarks * 100);
-    final color = percentage >= 75 ? AppColors.success : (percentage >= 50 ? AppColors.warning : AppColors.error);
+    final color = percentage >= 75
+        ? AppColors.success
+        : (percentage >= 50 ? AppColors.warning : AppColors.error);
 
     return Container(
       padding: const EdgeInsets.all(12),
@@ -382,7 +441,8 @@ class _StudentDashboardWidgetState extends ConsumerState<StudentDashboardWidget>
         children: [
           Container(
             padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(color: color.withAlpha(20), shape: BoxShape.circle),
+            decoration: BoxDecoration(
+                color: color.withAlpha(20), shape: BoxShape.circle),
             child: Icon(Icons.grade_rounded, color: color, size: 18),
           ),
           const SizedBox(width: 12),
@@ -390,13 +450,17 @@ class _StudentDashboardWidgetState extends ConsumerState<StudentDashboardWidget>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(result.subject, style: AppTypography.body.copyWith(fontWeight: FontWeight.bold, fontSize: 14)),
-                Text('Grade: ${result.grade}', style: AppTypography.caption.copyWith(fontSize: 11)),
+                Text(result.subject,
+                    style: AppTypography.body
+                        .copyWith(fontWeight: FontWeight.bold, fontSize: 14)),
+                Text('Grade: ${result.grade}',
+                    style: AppTypography.caption.copyWith(fontSize: 11)),
               ],
             ),
           ),
           Text('${result.marksObtained.toInt()}/${result.totalMarks}',
-              style: AppTypography.label.copyWith(fontWeight: FontWeight.bold, color: color)),
+              style: AppTypography.label
+                  .copyWith(fontWeight: FontWeight.bold, color: color)),
         ],
       ),
     );

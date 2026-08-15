@@ -45,7 +45,8 @@ class _AbsentListWidgetState extends ConsumerState<AbsentListWidget> {
             subtitle: dateTimeFormat('yMMMd', _model.selectedDate),
             onBackPressed: () async => context.safePop(),
             showActionIcon: true,
-            actionIcon: const Icon(Icons.calendar_month_rounded, color: Colors.white),
+            actionIcon:
+                const Icon(Icons.calendar_month_rounded, color: Colors.white),
             onActionPressed: () async {
               final picked = await showDatePicker(
                 context: context,
@@ -60,11 +61,17 @@ class _AbsentListWidgetState extends ConsumerState<AbsentListWidget> {
             padding: const EdgeInsets.all(16),
             child: studentsAsync.when(
               data: (students) {
-                final classes = students.map((s) => s.className).where((c) => c.isNotEmpty).toSet().toList()..sort();
+                final classes = students
+                    .map((s) => s.className)
+                    .where((c) => c.isNotEmpty)
+                    .toSet()
+                    .toList()
+                  ..sort();
                 return DropDownWidget(
                   label: 'Filter by Class',
                   options: ['All Classes', ...classes],
-                  onChanged: (val) => setState(() => _model.selectedClass = val == 'All Classes' ? null : val),
+                  onChanged: (val) => setState(() =>
+                      _model.selectedClass = val == 'All Classes' ? null : val),
                   hint: 'All Classes',
                 );
               },
@@ -75,15 +82,17 @@ class _AbsentListWidgetState extends ConsumerState<AbsentListWidget> {
           Expanded(
             child: logsAsync.when(
               data: (logs) {
-                final dateLogs = logs.where((l) => 
-                  l.date.year == _model.selectedDate.year && 
-                  l.date.month == _model.selectedDate.month && 
-                  l.date.day == _model.selectedDate.day &&
-                  l.status == 'Absent'
-                ).toList();
+                final dateLogs = logs
+                    .where((l) =>
+                        l.date.year == _model.selectedDate.year &&
+                        l.date.month == _model.selectedDate.month &&
+                        l.date.day == _model.selectedDate.day &&
+                        l.status == 'Absent')
+                    .toList();
 
                 var filtered = dateLogs.where((l) {
-                  return _model.selectedClass == null || l.className == _model.selectedClass;
+                  return _model.selectedClass == null ||
+                      l.className == _model.selectedClass;
                 }).toList();
 
                 if (filtered.isEmpty) {
@@ -91,16 +100,19 @@ class _AbsentListWidgetState extends ConsumerState<AbsentListWidget> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.check_circle_outline_rounded, size: 48, color: theme.success),
+                        Icon(Icons.check_circle_outline_rounded,
+                            size: 48, color: theme.success),
                         const SizedBox(height: 12),
-                        Text('No students absent on this day.', style: theme.labelSmall),
+                        Text('No students absent on this day.',
+                            style: theme.labelSmall),
                       ],
                     ),
                   );
                 }
 
                 return ListView.separated(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   itemCount: filtered.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 8),
                   itemBuilder: (context, index) {
@@ -118,9 +130,11 @@ class _AbsentListWidgetState extends ConsumerState<AbsentListWidget> {
     );
   }
 
-  Widget _buildAbsentTile(BuildContext context, StudentAttendance log, AsyncValue<List<Student>> studentsAsync) {
+  Widget _buildAbsentTile(BuildContext context, StudentAttendance log,
+      AsyncValue<List<Student>> studentsAsync) {
     final theme = FlutterFlowTheme.of(context);
-    final student = studentsAsync.value?.firstWhereOrNull((s) => s.id == log.studentId);
+    final student =
+        studentsAsync.value?.firstWhereOrNull((s) => s.id == log.studentId);
     final phone = student?.parentPhone ?? 'No Phone';
 
     return Container(
@@ -136,7 +150,8 @@ class _AbsentListWidgetState extends ConsumerState<AbsentListWidget> {
           Container(
             width: 40,
             height: 40,
-            decoration: BoxDecoration(color: theme.error.withAlpha(20), shape: BoxShape.circle),
+            decoration: BoxDecoration(
+                color: theme.error.withAlpha(20), shape: BoxShape.circle),
             child: Icon(Icons.person_off_rounded, color: theme.error, size: 20),
           ),
           const SizedBox(width: 12),
@@ -144,28 +159,35 @@ class _AbsentListWidgetState extends ConsumerState<AbsentListWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(log.studentName, style: AppTypography.body.copyWith(fontWeight: FontWeight.bold, fontSize: 15)),
-                Text('${log.className} • Subject: ${log.subject}', style: AppTypography.caption.copyWith(fontSize: 12)),
+                Text(log.studentName,
+                    style: AppTypography.body
+                        .copyWith(fontWeight: FontWeight.bold, fontSize: 15)),
+                Text('${log.className} • Subject: ${log.subject}',
+                    style: AppTypography.caption.copyWith(fontSize: 12)),
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    Icon(Icons.phone_rounded, size: 12, color: theme.secondaryText),
+                    Icon(Icons.phone_rounded,
+                        size: 12, color: theme.secondaryText),
                     const SizedBox(width: 4),
-                    Text(phone, style: AppTypography.caption.copyWith(fontSize: 11, fontWeight: FontWeight.w600)),
+                    Text(phone,
+                        style: AppTypography.caption.copyWith(
+                            fontSize: 11, fontWeight: FontWeight.w600)),
                   ],
                 ),
               ],
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.call_rounded, color: AppColors.success, size: 20),
+            icon: const Icon(Icons.call_rounded,
+                color: AppColors.success, size: 20),
             onPressed: () async {
-              if (student?.parentPhone != null && student!.parentPhone!.isNotEmpty) {
+              if (student?.parentPhone != null &&
+                  student!.parentPhone!.isNotEmpty) {
                 await launchURL('tel:${student.parentPhone}');
               } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Parent phone number not available.'))
-                );
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text('Parent phone number not available.')));
               }
             },
           ),

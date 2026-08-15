@@ -51,7 +51,7 @@ class _StudentCounterWidgetState extends State<StudentCounterWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = FlutterFlowTheme.of(context);
-    
+
     return Container(
       decoration: BoxDecoration(
         color: theme.secondaryBackground,

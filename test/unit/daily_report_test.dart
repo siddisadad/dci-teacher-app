@@ -72,7 +72,10 @@ void main() {
     when(() => mockReportRepo.getLastReport())
         .thenAnswer((_) async => lastReport);
     when(() => mockUserRepo.getTeachers()).thenAnswer((_) async => []);
-    when(() => mockStudentRepo.getAllStudents()).thenAnswer((_) async => []);
+    when(() => mockUserRepo.getUserStream())
+        .thenAnswer((_) => Stream.value(null));
+    when(() => mockStudentRepo.getAllStudentsStream())
+        .thenAnswer((_) => Stream.value([]));
     when(() => mockUserRepo.getAllUserSubjects()).thenAnswer((_) async => []);
 
     final notifier = container.read(dailyReportNotifierProvider.notifier);
@@ -90,7 +93,10 @@ void main() {
 
   test('setCounts updates present and absent values', () async {
     when(() => mockUserRepo.getTeachers()).thenAnswer((_) async => []);
-    when(() => mockStudentRepo.getAllStudents()).thenAnswer((_) async => []);
+    when(() => mockUserRepo.getUserStream())
+        .thenAnswer((_) => Stream.value(null));
+    when(() => mockStudentRepo.getAllStudentsStream())
+        .thenAnswer((_) => Stream.value([]));
     when(() => mockUserRepo.getAllUserSubjects()).thenAnswer((_) async => []);
     when(() => mockReportRepo.getLastReport()).thenAnswer((_) async => null);
 

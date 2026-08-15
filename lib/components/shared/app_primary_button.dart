@@ -27,13 +27,14 @@ class AppPrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveColor = color ?? (variant == 'primary' ? AppColors.primary : Colors.transparent);
+    final effectiveColor = color ??
+        (variant == 'primary' ? AppColors.primary : Colors.transparent);
     final effectiveHeight = height ?? AppSize.buttonHeight;
 
     return SizedBox(
       width: width ?? (fullWidth ? double.infinity : null),
       height: effectiveHeight,
-      child: variant == 'primary' 
+      child: variant == 'primary'
           ? ElevatedButton(
               onPressed: isLoading ? null : onPressed,
               style: _getButtonStyle(effectiveColor),
@@ -88,7 +89,8 @@ class AppPrimaryButton extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         if (icon != null) Icon(icon, size: 20),
-        if (icon != null && text.isNotEmpty) const SizedBox(width: AppSpacing.sm),
+        if (icon != null && text.isNotEmpty)
+          const SizedBox(width: AppSpacing.sm),
         if (text.isNotEmpty)
           Flexible(
             child: Text(

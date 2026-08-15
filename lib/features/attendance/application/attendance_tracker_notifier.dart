@@ -55,12 +55,13 @@ class AttendanceTrackerState {
   }
 }
 
-class AttendanceTrackerNotifier extends AutoDisposeAsyncNotifier<AttendanceTrackerState> {
+class AttendanceTrackerNotifier
+    extends AutoDisposeAsyncNotifier<AttendanceTrackerState> {
   @override
   FutureOr<AttendanceTrackerState> build() async {
     final userRepo = ref.read(userRepositoryProvider);
     final subjects = await userRepo.getAllUserSubjects();
-    
+
     return AttendanceTrackerState(
       selectedDate: DateTime.now(),
       subjectOptions: subjects..sort(),
@@ -78,10 +79,10 @@ class AttendanceTrackerNotifier extends AutoDisposeAsyncNotifier<AttendanceTrack
     state = const AsyncLoading();
     try {
       final repository = ref.read(studentRepositoryProvider);
-      final students = className != null 
+      final students = className != null
           ? await repository.getStudentsByClass(className)
           : <Student>[];
-      
+
       final Map<String, String> newMap = {};
       for (final s in students) {
         newMap[s.id] = 'Present';
@@ -92,7 +93,7 @@ class AttendanceTrackerNotifier extends AutoDisposeAsyncNotifier<AttendanceTrack
         students: students,
         attendanceMap: newMap,
       ));
-      
+
       await checkExistingAttendance();
     } catch (e, stack) {
       state = AsyncError(e, stack);
@@ -116,7 +117,7 @@ class AttendanceTrackerNotifier extends AutoDisposeAsyncNotifier<AttendanceTrack
     final Map<String, String> newMap = Map.from(currentState.attendanceMap);
     final currentStatus = newMap[studentId] ?? 'Present';
     newMap[studentId] = currentStatus == 'Present' ? 'Absent' : 'Present';
-    
+
     state = AsyncData(currentState.copyWith(attendanceMap: newMap));
   }
 
@@ -141,11 +142,9 @@ class AttendanceTrackerNotifier extends AutoDisposeAsyncNotifier<AttendanceTrack
     }
 
     try {
-      final exists = await ref.read(attendanceRepositoryProvider).checkAttendanceExists(
-        className, 
-        subject, 
-        date
-      );
+      final exists = await ref
+          .read(attendanceRepositoryProvider)
+          .checkAttendanceExists(className, subject, date);
       state = AsyncData(state.value!.copyWith(isAlreadySubmitted: exists));
     } catch (e) {
       // Silently fail for check
@@ -157,7 +156,8 @@ class AttendanceTrackerNotifier extends AutoDisposeAsyncNotifier<AttendanceTrack
     if (user == null) return false;
 
     final currentState = state.value!;
-    if (currentState.selectedClass == null || currentState.selectedSubject == null) return false;
+    if (currentState.selectedClass == null ||
+        currentState.selectedSubject == null) return false;
 
     state = AsyncData(currentState.copyWith(isSaving: true));
     try {
@@ -175,9 +175,9 @@ class AttendanceTrackerNotifier extends AutoDisposeAsyncNotifier<AttendanceTrack
       }).toList();
 
       await ref.read(attendanceServiceProvider).recordAttendance(
-        attendanceList: attendanceList,
-        sendWhatsApp: sendWhatsApp,
-      );
+            attendanceList: attendanceList,
+            sendWhatsApp: sendWhatsApp,
+          );
 
       state = AsyncData(state.value!.copyWith(isSaving: false));
       return true;
@@ -188,6 +188,7 @@ class AttendanceTrackerNotifier extends AutoDisposeAsyncNotifier<AttendanceTrack
   }
 }
 
-final attendanceTrackerNotifierProvider = AsyncNotifierProvider.autoDispose<AttendanceTrackerNotifier, AttendanceTrackerState>(() {
+final attendanceTrackerNotifierProvider = AsyncNotifierProvider.autoDispose<
+    AttendanceTrackerNotifier, AttendanceTrackerState>(() {
   return AttendanceTrackerNotifier();
 });

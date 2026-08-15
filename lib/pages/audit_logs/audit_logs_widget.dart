@@ -42,7 +42,9 @@ class _AuditLogsWidgetState extends ConsumerState<AuditLogsWidget> {
             child: logsAsync.when(
               data: (logs) {
                 if (logs.isEmpty) {
-                  return Center(child: Text('No activity logs found.', style: theme.labelSmall));
+                  return Center(
+                      child: Text('No activity logs found.',
+                          style: theme.labelSmall));
                 }
                 return ListView.separated(
                   padding: AppSpacing.pagePadding,
@@ -80,7 +82,8 @@ class _AuditLogsWidgetState extends ConsumerState<AuditLogsWidget> {
         children: [
           Container(
             padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(color: theme.primary.withAlpha(20), shape: BoxShape.circle),
+            decoration: BoxDecoration(
+                color: theme.primary.withAlpha(20), shape: BoxShape.circle),
             child: Icon(_getModuleIcon(module), color: theme.primary, size: 16),
           ),
           const SizedBox(width: 12),
@@ -91,17 +94,26 @@ class _AuditLogsWidgetState extends ConsumerState<AuditLogsWidget> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(module, style: AppTypography.caption.copyWith(fontWeight: FontWeight.bold, fontSize: 10, color: theme.primary)),
+                    Text(module,
+                        style: AppTypography.caption.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 10,
+                            color: theme.primary)),
                     Text(
-                      timestamp != null ? dateTimeFormat('relative', timestamp) : '...',
+                      timestamp != null
+                          ? dateTimeFormat('relative', timestamp)
+                          : '...',
                       style: AppTypography.caption.copyWith(fontSize: 10),
                     ),
                   ],
                 ),
                 const SizedBox(height: 4),
-                Text(log['action'] ?? 'Unknown action', style: AppTypography.body.copyWith(fontWeight: FontWeight.bold, fontSize: 14)),
+                Text(log['action'] ?? 'Unknown action',
+                    style: AppTypography.body
+                        .copyWith(fontWeight: FontWeight.bold, fontSize: 14)),
                 const SizedBox(height: 8),
-                Text('By: ${log['userEmail'] ?? 'anonymous'}', style: AppTypography.caption.copyWith(fontSize: 11)),
+                Text('By: ${log['userEmail'] ?? 'anonymous'}',
+                    style: AppTypography.caption.copyWith(fontSize: 11)),
               ],
             ),
           ),

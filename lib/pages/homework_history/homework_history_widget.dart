@@ -16,7 +16,8 @@ class HomeworkHistoryWidget extends ConsumerStatefulWidget {
   static String routePath = '/homeworkHistory';
 
   @override
-  ConsumerState<HomeworkHistoryWidget> createState() => _HomeworkHistoryWidgetState();
+  ConsumerState<HomeworkHistoryWidget> createState() =>
+      _HomeworkHistoryWidgetState();
 }
 
 class _HomeworkHistoryWidgetState extends ConsumerState<HomeworkHistoryWidget> {
@@ -54,7 +55,8 @@ Check the app for details and attachments!
       await whatsappService.launchWhatsapp(message: message);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error sharing: $e')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Error sharing: $e')));
       }
     }
   }
@@ -74,43 +76,48 @@ Check the app for details and attachments!
           ),
           Expanded(
             child: ref.watch(homeworkStreamProvider).when(
-              data: (assignments) {
-                if (assignments.isEmpty) {
-                  return AppEmptyState(
-                    icon: Icons.edit_note_rounded,
-                    title: 'No homework yet',
-                    description: 'Start assigning tasks to your students.',
-                    actionLabel: 'Assign Homework',
-                    onActionPressed: () => context.pushNamed(HomeworkAssignmentWidget.routeName),
-                  );
-                }
-                return ListView.separated(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  itemCount: assignments.length,
-                  separatorBuilder: (context, index) => const SizedBox(height: 8),
-                  itemBuilder: (context, index) {
-                    final assignment = assignments[index];
-                    
-                    return wrapWithModel(
-                      model: createModel(context, () => HomeworkCardModel()),
-                      updateCallback: () => safeSetState(() {}),
-                      child: HomeworkCardWidget(
-                        assignment: assignment,
-                        onTap: () async {
-                          context.pushNamed(
-                            'HomeworkDetails',
-                            extra: {'assignment': assignment},
-                          );
-                        },
-                        onShare: () => _shareHomework(assignment),
-                      ),
+                  data: (assignments) {
+                    if (assignments.isEmpty) {
+                      return AppEmptyState(
+                        icon: Icons.edit_note_rounded,
+                        title: 'No homework yet',
+                        description: 'Start assigning tasks to your students.',
+                        actionLabel: 'Assign Homework',
+                        onActionPressed: () => context
+                            .pushNamed(HomeworkAssignmentWidget.routeName),
+                      );
+                    }
+                    return ListView.separated(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
+                      itemCount: assignments.length,
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 8),
+                      itemBuilder: (context, index) {
+                        final assignment = assignments[index];
+
+                        return wrapWithModel(
+                          model:
+                              createModel(context, () => HomeworkCardModel()),
+                          updateCallback: () => safeSetState(() {}),
+                          child: HomeworkCardWidget(
+                            assignment: assignment,
+                            onTap: () async {
+                              context.pushNamed(
+                                'HomeworkDetails',
+                                extra: {'assignment': assignment},
+                              );
+                            },
+                            onShare: () => _shareHomework(assignment),
+                          ),
+                        );
+                      },
                     );
                   },
-                );
-              },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Center(child: Text('Error: $err')),
-            ),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (err, stack) => Center(child: Text('Error: $err')),
+                ),
           ),
         ],
       ),

@@ -25,7 +25,8 @@ class StudentProfileWidget extends ConsumerStatefulWidget {
   static String routePath = '/studentProfile';
 
   @override
-  ConsumerState<StudentProfileWidget> createState() => _StudentProfileWidgetState();
+  ConsumerState<StudentProfileWidget> createState() =>
+      _StudentProfileWidgetState();
 }
 
 class _StudentProfileWidgetState extends ConsumerState<StudentProfileWidget> {
@@ -57,7 +58,8 @@ class _StudentProfileWidgetState extends ConsumerState<StudentProfileWidget> {
             children: [
               ProfileHeaderWidget(
                 name: widget.student.name,
-                designation: 'Roll No: ${widget.student.rollNo} • ${widget.student.className}',
+                designation:
+                    'Roll No: ${widget.student.rollNo} • ${widget.student.className}',
                 photoUrl: widget.student.photoUrl,
                 onBackPressed: () async => context.safePop(),
               ),
@@ -70,30 +72,41 @@ class _StudentProfileWidgetState extends ConsumerState<StudentProfileWidget> {
                     const SizedBox(height: 24),
                     _buildSectionHeader(context, 'Student Information'),
                     ProfileInfoTileWidget(
-                      icon: Icon(Icons.badge_rounded, color: FlutterFlowTheme.of(context).primary, size: 20),
+                      icon: Icon(Icons.badge_rounded,
+                          color: FlutterFlowTheme.of(context).primary,
+                          size: 20),
                       label: 'Student ID',
                       value: widget.student.studentId,
                     ),
                     ProfileInfoTileWidget(
-                      icon: Icon(Icons.class_rounded, color: FlutterFlowTheme.of(context).primary, size: 20),
+                      icon: Icon(Icons.class_rounded,
+                          color: FlutterFlowTheme.of(context).primary,
+                          size: 20),
                       label: 'Class',
                       value: widget.student.className,
                     ),
-                    if (widget.student.section != null && widget.student.section!.isNotEmpty)
+                    if (widget.student.section != null &&
+                        widget.student.section!.isNotEmpty)
                       ProfileInfoTileWidget(
-                        icon: Icon(Icons.grid_view_rounded, color: FlutterFlowTheme.of(context).primary, size: 20),
+                        icon: Icon(Icons.grid_view_rounded,
+                            color: FlutterFlowTheme.of(context).primary,
+                            size: 20),
                         label: 'Section',
                         value: widget.student.section!,
                       ),
                     const SizedBox(height: 24),
                     _buildSectionHeader(context, 'Parent / Contact Details'),
                     ProfileInfoTileWidget(
-                      icon: Icon(Icons.person_outline_rounded, color: FlutterFlowTheme.of(context).primary, size: 20),
+                      icon: Icon(Icons.person_outline_rounded,
+                          color: FlutterFlowTheme.of(context).primary,
+                          size: 20),
                       label: 'Parent Name',
                       value: widget.student.parentName ?? 'Not Provided',
                     ),
                     ProfileInfoTileWidget(
-                      icon: Icon(Icons.phone_rounded, color: FlutterFlowTheme.of(context).primary, size: 20),
+                      icon: Icon(Icons.phone_rounded,
+                          color: FlutterFlowTheme.of(context).primary,
+                          size: 20),
                       label: 'Parent Phone',
                       value: widget.student.parentPhone ?? 'Not Provided',
                     ),
@@ -129,12 +142,14 @@ class _StudentProfileWidgetState extends ConsumerState<StudentProfileWidget> {
                 Text(
                   '94%',
                   style: theme.titleLarge.override(
-                    font: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.bold),
+                    font: GoogleFonts.plusJakartaSans(
+                        fontWeight: FontWeight.bold),
                     color: AppColors.success,
                     fontSize: 20,
                   ),
                 ),
-                Text('Attendance', style: theme.labelSmall.copyWith(fontSize: 10)),
+                Text('Attendance',
+                    style: theme.labelSmall.copyWith(fontSize: 10)),
               ],
             ),
           ),
@@ -153,12 +168,14 @@ class _StudentProfileWidgetState extends ConsumerState<StudentProfileWidget> {
                 Text(
                   'A+',
                   style: theme.titleLarge.override(
-                    font: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.bold),
+                    font: GoogleFonts.plusJakartaSans(
+                        fontWeight: FontWeight.bold),
                     color: theme.primary,
                     fontSize: 20,
                   ),
                 ),
-                Text('Last Grade', style: theme.labelSmall.copyWith(fontSize: 10)),
+                Text('Last Grade',
+                    style: theme.labelSmall.copyWith(fontSize: 10)),
               ],
             ),
           ),
@@ -173,16 +190,17 @@ class _StudentProfileWidgetState extends ConsumerState<StudentProfileWidget> {
       child: Text(
         title,
         style: FlutterFlowTheme.of(context).titleMedium.override(
-          font: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.bold),
-          fontWeight: FontWeight.bold,
-        ),
+              font: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.bold),
+              fontWeight: FontWeight.bold,
+            ),
       ),
     );
   }
 
   Widget _buildAttendanceList(BuildContext context) {
     final theme = FlutterFlowTheme.of(context);
-    final attendanceAsync = ref.watch(studentAttendanceHistoryProvider(widget.student.studentId));
+    final attendanceAsync =
+        ref.watch(studentAttendanceHistoryProvider(widget.student.studentId));
 
     return Container(
       decoration: BoxDecoration(
@@ -201,13 +219,17 @@ class _StudentProfileWidgetState extends ConsumerState<StudentProfileWidget> {
                 Text(
                   'Recent Logs',
                   style: theme.bodyMedium.override(
-                        font: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.bold),
-                        fontWeight: FontWeight.bold,
-                      ),
+                    font: GoogleFonts.plusJakartaSans(
+                        fontWeight: FontWeight.bold),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 Text(
                   'View All',
-                  style: TextStyle(color: theme.primary, fontSize: 12, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: theme.primary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -218,7 +240,9 @@ class _StudentProfileWidgetState extends ConsumerState<StudentProfileWidget> {
               if (logs.isEmpty) {
                 return const Padding(
                   padding: EdgeInsets.all(16.0),
-                  child: Center(child: Text('No records.', style: TextStyle(fontSize: 11))),
+                  child: Center(
+                      child:
+                          Text('No records.', style: TextStyle(fontSize: 11))),
                 );
               }
               return ListView.separated(
@@ -226,7 +250,8 @@ class _StudentProfileWidgetState extends ConsumerState<StudentProfileWidget> {
                 physics: const NeverScrollableScrollPhysics(),
                 padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                 itemCount: logs.length > 3 ? 3 : logs.length,
-                separatorBuilder: (_, __) => const Divider(height: 1, indent: 8, endIndent: 8),
+                separatorBuilder: (_, __) =>
+                    const Divider(height: 1, indent: 8, endIndent: 8),
                 itemBuilder: (context, index) {
                   final log = logs[index];
                   return ListTile(
@@ -245,7 +270,8 @@ class _StudentProfileWidgetState extends ConsumerState<StudentProfileWidget> {
               padding: EdgeInsets.all(16.0),
               child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
             ),
-            error: (err, stack) => Text('Error: $err', style: const TextStyle(fontSize: 10)),
+            error: (err, stack) =>
+                Text('Error: $err', style: const TextStyle(fontSize: 10)),
           ),
         ],
       ),
@@ -307,7 +333,8 @@ class _StudentProfileWidgetState extends ConsumerState<StudentProfileWidget> {
                 foregroundColor: Colors.white,
                 minimumSize: const Size(0, 48),
                 elevation: 0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppRadius.md)),
               ),
             ),
           ),
@@ -323,7 +350,8 @@ class _StudentProfileWidgetState extends ConsumerState<StudentProfileWidget> {
               foregroundColor: AppColors.primary,
               minimumSize: const Size(0, 48),
               side: const BorderSide(color: AppColors.primary),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppRadius.md)),
             ),
           ),
         ),

@@ -66,14 +66,16 @@ class _InfoSectionWidgetState extends State<InfoSectionWidget> {
               children: [
                 if (widget.icon != null)
                   IconTheme(
-                    data: IconThemeData(color: FlutterFlowTheme.of(context).primary, size: 20),
+                    data: IconThemeData(
+                        color: FlutterFlowTheme.of(context).primary, size: 20),
                     child: widget.icon!,
                   ),
                 const SizedBox(width: 10),
                 Text(
                   widget.title,
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
-                        font: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.bold),
+                        font: GoogleFonts.plusJakartaSans(
+                            fontWeight: FontWeight.bold),
                         fontSize: 15,
                       ),
                 ),

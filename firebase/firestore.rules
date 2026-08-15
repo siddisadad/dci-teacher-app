@@ -9,12 +9,29 @@ service cloud.firestore {
       return /databases/$(database)/documents/users/$(request.auth.uid);
     }
 
+    function studentDocPath() {
+      return /databases/$(database)/documents/students/$(request.auth.uid);
+    }
+
     function role() {
       return isAuthenticated() && 'role' in request.auth.token
         ? request.auth.token.role
         : (isAuthenticated() && exists(userDocPath())
             ? get(userDocPath()).data.role
             : '');
+    }
+
+    function assignedClasses() {
+      return isAuthenticated() && 'assigned_classes' in request.auth.token
+        ? request.auth.token.assigned_classes
+        : (isAuthenticated() && exists(userDocPath())
+            && 'assigned_classes' in get(userDocPath()).data
+              ? get(userDocPath()).data.assigned_classes
+              : []);
+    }
+
+    function studentClass() {
+      return exists(studentDocPath()) ? get(studentDocPath()).data.class : '';
     }
 
     function isOwner(userId) {
@@ -41,17 +58,27 @@ service cloud.firestore {
       return isManager() || isTeacher();
     }
 
+    function teacherCanReadClass(className) {
+      return isTeacher() && (
+        assignedClasses() == null
+        || assignedClasses().size() == 0
+        || className in assignedClasses()
+      );
+    }
+
+    function canReadClass(className) {
+      return isManager() || teacherCanReadClass(className);
+    }
+
     function unchanged(fields) {
       return !request.resource.data.diff(resource.data).affectedKeys().hasAny(fields);
     }
 
-    // User profiles. Owners may edit their own profile but cannot change
-    // privileged fields (role, ids, email). Managers may write any field.
     match /users/{userId} {
       allow read: if isOwner(userId) || isStaff();
       allow create: if isManager();
       allow update: if isManager()
-        || (isOwner(userId) && unchanged(['role', 'uid', 'email', 'employee_id', 'is_pre_provisioned']));
+        || (isOwner(userId) && unchanged(['role', 'uid', 'email', 'employee_id', 'is_pre_provisioned', 'assigned_classes']));
       allow delete: if isAdmin();
 
       match /notifications/{notificationId} {
@@ -75,7 +102,7 @@ service cloud.firestore {
     }
 
     match /student_attendance/{logId} {
-      allow read: if (isStaff() && (resource.data.markedBy == request.auth.uid || isManager()))
+      allow read: if (isStaff() && (resource.data.markedBy == request.auth.uid || canReadClass(resource.data.class)))
         || (isAuthenticated() && resource.data.studentId == request.auth.uid);
       allow create: if isStaff() && request.resource.data.markedBy == request.auth.uid;
       allow update, delete: if isStaff()
@@ -84,16 +111,18 @@ service cloud.firestore {
 
     match /homework_assignments/{assignmentId} {
       allow read: if isStaff()
-        || (isAuthenticated() && resource.data.status == 'published');
+        || (isAuthenticated()
+            && resource.data.status == 'published'
+            && resource.data.class == studentClass());
       allow create: if isStaff() && request.resource.data.createdBy == request.auth.uid;
       allow update, delete: if isStaff()
         && (resource.data.createdBy == request.auth.uid || isAdmin());
     }
 
-    // Students: staff can list/read all. A student may only read their own
-    // record (doc id is the Auth uid). Parent-contact PII stays off student clients.
     match /students/{studentId} {
-      allow read: if isStaff() || (isAuthenticated() && studentId == request.auth.uid);
+      allow read: if isManager()
+        || teacherCanReadClass(resource.data.class)
+        || (isAuthenticated() && studentId == request.auth.uid);
       allow write: if isManager();
     }
 
@@ -113,7 +142,8 @@ service cloud.firestore {
     }
 
     match /exams/{examId} {
-      allow read: if isAuthenticated();
+      allow read: if isStaff()
+        || (isAuthenticated() && resource.data.class == studentClass());
       allow create: if isStaff() && request.resource.data.createdBy == request.auth.uid;
       allow update, delete: if isStaff()
         && (resource.data.createdBy == request.auth.uid || isManager());

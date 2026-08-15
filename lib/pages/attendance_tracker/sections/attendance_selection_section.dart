@@ -28,22 +28,24 @@ class AttendanceSelectionSection extends StatelessWidget {
   Widget build(BuildContext context) {
     // Ensure controllers are synchronized with current options
     // Only clear if classOptions is NOT empty (meaning data has loaded)
-    if (classOptions.isNotEmpty && 
-        model.selectedClass != null && 
+    if (classOptions.isNotEmpty &&
+        model.selectedClass != null &&
         !classOptions.contains(model.selectedClass)) {
       model.selectedClass = null;
       model.classDropdownController?.value = null;
     }
-    
+
     final bool isLoadingClasses = classOptions.isEmpty;
-    final List<String> effectiveClassOptions = isLoadingClasses ? <String>['Loading Classes...'] : classOptions;
-    
-    final List<String> effectiveSubjectOptions = subjectOptions.isEmpty 
-        ? <String>['English', 'Marathi', 'Math', 'Science'] 
+    final List<String> effectiveClassOptions =
+        isLoadingClasses ? <String>['Loading Classes...'] : classOptions;
+
+    final List<String> effectiveSubjectOptions = subjectOptions.isEmpty
+        ? <String>['English', 'Marathi', 'Math', 'Science']
         : subjectOptions;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.md, 4),
+      padding: const EdgeInsets.fromLTRB(
+          AppSpacing.md, AppSpacing.sm, AppSpacing.md, 4),
       child: LayoutBuilder(builder: (context, constraints) {
         if (constraints.maxWidth < 400) {
           // Stack them for small screens
@@ -54,7 +56,8 @@ class AttendanceSelectionSection extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: _buildClassDropDown(isLoadingClasses, effectiveClassOptions),
+                    child: _buildClassDropDown(
+                        isLoadingClasses, effectiveClassOptions),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
@@ -75,7 +78,8 @@ class AttendanceSelectionSection extends StatelessWidget {
             const SizedBox(width: 8),
             Expanded(
               flex: 2,
-              child: _buildClassDropDown(isLoadingClasses, effectiveClassOptions),
+              child:
+                  _buildClassDropDown(isLoadingClasses, effectiveClassOptions),
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -102,15 +106,16 @@ class AttendanceSelectionSection extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(Icons.calendar_today_rounded, size: 14, color: FlutterFlowTheme.of(context).primary),
+            Icon(Icons.calendar_today_rounded,
+                size: 14, color: FlutterFlowTheme.of(context).primary),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
                 dateTimeFormat('yMMMd', model.selectedDate),
                 style: FlutterFlowTheme.of(context).bodySmall.override(
-                  font: GoogleFonts.inter(),
-                  fontSize: 12,
-                ),
+                      font: GoogleFonts.inter(),
+                      fontSize: 12,
+                    ),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
               ),

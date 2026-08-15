@@ -58,7 +58,9 @@ class _HomeworkDetailsWidgetState extends State<HomeworkDetailsWidget> {
                 children: [
                   _buildHeaderCard(context),
                   const SizedBox(height: 24),
-                  Text('Description', style: AppTypography.section.copyWith(fontWeight: FontWeight.bold)),
+                  Text('Description',
+                      style: AppTypography.section
+                          .copyWith(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 12),
                   Container(
                     width: double.infinity,
@@ -69,15 +71,20 @@ class _HomeworkDetailsWidgetState extends State<HomeworkDetailsWidget> {
                       border: Border.all(color: theme.alternate),
                     ),
                     child: Text(
-                      a.description.isNotEmpty ? a.description : 'No description provided.',
+                      a.description.isNotEmpty
+                          ? a.description
+                          : 'No description provided.',
                       style: AppTypography.body,
                     ),
                   ),
                   const SizedBox(height: 24),
                   if (a.attachments.isNotEmpty) ...[
-                    Text('Attachments', style: AppTypography.section.copyWith(fontWeight: FontWeight.bold)),
+                    Text('Attachments',
+                        style: AppTypography.section
+                            .copyWith(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 12),
-                    ...a.attachments.map((url) => _buildAttachmentTile(context, url)),
+                    ...a.attachments
+                        .map((url) => _buildAttachmentTile(context, url)),
                   ],
                   const SizedBox(height: 32),
                 ],
@@ -92,7 +99,7 @@ class _HomeworkDetailsWidgetState extends State<HomeworkDetailsWidget> {
   Widget _buildHeaderCard(BuildContext context) {
     final theme = FlutterFlowTheme.of(context);
     final a = widget.assignment;
-    
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -108,15 +115,21 @@ class _HomeworkDetailsWidgetState extends State<HomeworkDetailsWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
-                  color: (a.status == 'published' ? AppColors.success : AppColors.warning).withAlpha(20),
+                  color: (a.status == 'published'
+                          ? AppColors.success
+                          : AppColors.warning)
+                      .withAlpha(20),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
                   a.status.toUpperCase(),
                   style: TextStyle(
-                    color: a.status == 'published' ? AppColors.success : AppColors.warning,
+                    color: a.status == 'published'
+                        ? AppColors.success
+                        : AppColors.warning,
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
                   ),
@@ -146,7 +159,8 @@ class _HomeworkDetailsWidgetState extends State<HomeworkDetailsWidget> {
           const SizedBox(height: 8),
           Row(
             children: [
-              _buildInfoItem(context, Icons.school_rounded, 'Class', a.className),
+              _buildInfoItem(
+                  context, Icons.school_rounded, 'Class', a.className),
               const SizedBox(width: 24),
               _buildInfoItem(context, Icons.book_rounded, 'Subject', a.subject),
             ],
@@ -156,7 +170,8 @@ class _HomeworkDetailsWidgetState extends State<HomeworkDetailsWidget> {
     );
   }
 
-  Widget _buildInfoItem(BuildContext context, IconData icon, String label, String value) {
+  Widget _buildInfoItem(
+      BuildContext context, IconData icon, String label, String value) {
     return Row(
       children: [
         Icon(icon, size: 16, color: FlutterFlowTheme.of(context).secondaryText),
@@ -165,7 +180,9 @@ class _HomeworkDetailsWidgetState extends State<HomeworkDetailsWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(label, style: AppTypography.caption.copyWith(fontSize: 10)),
-            Text(value, style: AppTypography.body.copyWith(fontWeight: FontWeight.bold, fontSize: 14)),
+            Text(value,
+                style: AppTypography.body
+                    .copyWith(fontWeight: FontWeight.bold, fontSize: 14)),
           ],
         ),
       ],
@@ -175,7 +192,7 @@ class _HomeworkDetailsWidgetState extends State<HomeworkDetailsWidget> {
   Widget _buildAttachmentTile(BuildContext context, String url) {
     final theme = FlutterFlowTheme.of(context);
     final fileName = url.split('%2F').last.split('?').first;
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
@@ -191,7 +208,8 @@ class _HomeworkDetailsWidgetState extends State<HomeworkDetailsWidget> {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        trailing: Icon(Icons.open_in_new_rounded, size: 18, color: theme.secondaryText),
+        trailing: Icon(Icons.open_in_new_rounded,
+            size: 18, color: theme.secondaryText),
         onTap: () => launchURL(url),
       ),
     );

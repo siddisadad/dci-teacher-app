@@ -1,5 +1,6 @@
 import 'package:d_c_i_teacher_app/flutter_flow/flutter_flow_util.dart';
-import 'package:d_c_i_teacher_app/components/text_field/text_field_widget.dart' show TextFieldWidget;
+import 'package:d_c_i_teacher_app/components/text_field/text_field_widget.dart'
+    show TextFieldWidget;
 import 'package:flutter/material.dart';
 
 class TextFieldModel extends FlutterFlowModel<TextFieldWidget> {

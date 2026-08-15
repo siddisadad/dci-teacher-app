@@ -15,10 +15,12 @@ class TeacherWiseReportWidget extends ConsumerStatefulWidget {
   static String routePath = '/teacherWiseReport';
 
   @override
-  ConsumerState<TeacherWiseReportWidget> createState() => _TeacherWiseReportWidgetState();
+  ConsumerState<TeacherWiseReportWidget> createState() =>
+      _TeacherWiseReportWidgetState();
 }
 
-class _TeacherWiseReportWidgetState extends ConsumerState<TeacherWiseReportWidget> {
+class _TeacherWiseReportWidgetState
+    extends ConsumerState<TeacherWiseReportWidget> {
   late TeacherWiseReportModel _model;
 
   @override
@@ -50,17 +52,21 @@ class _TeacherWiseReportWidgetState extends ConsumerState<TeacherWiseReportWidge
                   label: 'Faculty Member',
                   options: users.map((u) => u.uid).toList(),
                   optionLabels: users.map((u) => u.displayName).toList(),
-                  onChanged: (val) => setState(() => _model.selectedTeacherUid = val),
+                  onChanged: (val) =>
+                      setState(() => _model.selectedTeacherUid = val),
                   hint: 'Select Teacher',
                 );
               },
               loading: () => const LinearProgressIndicator(),
-              error: (err, _) => Text('Error loading teachers: $err', style: const TextStyle(fontSize: 10)),
+              error: (err, _) => Text('Error loading teachers: $err',
+                  style: const TextStyle(fontSize: 10)),
             ),
           ),
           Expanded(
             child: _model.selectedTeacherUid == null
-                ? Center(child: Text('Select a teacher to view details.', style: theme.labelSmall))
+                ? Center(
+                    child: Text('Select a teacher to view details.',
+                        style: theme.labelSmall))
                 : _buildReport(context, _model.selectedTeacherUid!),
           ),
         ],
@@ -83,32 +89,50 @@ class _TeacherWiseReportWidgetState extends ConsumerState<TeacherWiseReportWidge
               return resultsAsync.when(
                 data: (results) {
                   if (exams.isEmpty) {
-                    return Center(child: Padding(
+                    return Center(
+                        child: Padding(
                       padding: const EdgeInsets.only(top: 40),
-                      child: Text('No exams conducted.', style: theme.labelSmall),
+                      child:
+                          Text('No exams conducted.', style: theme.labelSmall),
                     ));
                   }
-                  
+
                   double totalObtained = 0;
                   int totalMax = 0;
                   for (var r in results) {
                     totalObtained += r.marksObtained;
                     totalMax += r.totalMarks;
                   }
-                  final avgPerformance = totalMax == 0 ? 0 : ((totalObtained / totalMax) * 100).toInt();
+                  final avgPerformance = totalMax == 0
+                      ? 0
+                      : ((totalObtained / totalMax) * 100).toInt();
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         children: [
-                          _buildMiniStatCard(context, 'Exams', exams.length.toString(), Icons.assignment_rounded, theme.primary),
+                          _buildMiniStatCard(
+                              context,
+                              'Exams',
+                              exams.length.toString(),
+                              Icons.assignment_rounded,
+                              theme.primary),
                           const SizedBox(width: 12),
-                          _buildMiniStatCard(context, 'Avg.', '$avgPerformance%', Icons.trending_up_rounded, AppColors.success),
+                          _buildMiniStatCard(
+                              context,
+                              'Avg.',
+                              '$avgPerformance%',
+                              Icons.trending_up_rounded,
+                              AppColors.success),
                         ],
                       ),
                       const SizedBox(height: 16),
-                      Text('EXAMS LIST', style: AppTypography.caption.copyWith(fontWeight: FontWeight.bold, letterSpacing: 1, fontSize: 10)),
+                      Text('EXAMS LIST',
+                          style: AppTypography.caption.copyWith(
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1,
+                              fontSize: 10)),
                       const SizedBox(height: 8),
                       ListView.builder(
                         shrinkWrap: true,
@@ -116,12 +140,19 @@ class _TeacherWiseReportWidgetState extends ConsumerState<TeacherWiseReportWidge
                         itemCount: exams.length,
                         itemBuilder: (context, index) {
                           final exam = exams[index];
-                          final examResults = results.where((r) => r.examId == exam.id).toList();
+                          final examResults = results
+                              .where((r) => r.examId == exam.id)
+                              .toList();
                           double examObtained = 0;
                           for (var r in examResults) {
                             examObtained += r.marksObtained;
                           }
-                          final examAvg = examResults.isEmpty ? 0 : (examObtained / (examResults.length * exam.totalMarks) * 100).toInt();
+                          final examAvg = examResults.isEmpty
+                              ? 0
+                              : (examObtained /
+                                      (examResults.length * exam.totalMarks) *
+                                      100)
+                                  .toInt();
 
                           return Container(
                             margin: const EdgeInsets.only(bottom: 8),
@@ -135,9 +166,20 @@ class _TeacherWiseReportWidgetState extends ConsumerState<TeacherWiseReportWidge
                               borderRadius: BorderRadius.circular(8),
                               child: ListTile(
                                 dense: true,
-                                title: Text('${exam.subject} - ${exam.className}', style: AppTypography.label.copyWith(fontSize: 13, fontWeight: FontWeight.bold)),
-                                subtitle: Text(dateTimeFormat('yMMMd', exam.date), style: AppTypography.caption.copyWith(fontSize: 10)),
-                                trailing: Text('$examAvg%', style: TextStyle(fontWeight: FontWeight.bold, color: theme.primary, fontSize: 12)),
+                                title: Text(
+                                    '${exam.subject} - ${exam.className}',
+                                    style: AppTypography.label.copyWith(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold)),
+                                subtitle: Text(
+                                    dateTimeFormat('yMMMd', exam.date),
+                                    style: AppTypography.caption
+                                        .copyWith(fontSize: 10)),
+                                trailing: Text('$examAvg%',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: theme.primary,
+                                        fontSize: 12)),
                               ),
                             ),
                           );
@@ -158,7 +200,8 @@ class _TeacherWiseReportWidgetState extends ConsumerState<TeacherWiseReportWidge
     );
   }
 
-  Widget _buildMiniStatCard(BuildContext context, String label, String value, IconData icon, Color color) {
+  Widget _buildMiniStatCard(BuildContext context, String label, String value,
+      IconData icon, Color color) {
     final theme = FlutterFlowTheme.of(context);
     return Expanded(
       child: Container(
@@ -172,15 +215,22 @@ class _TeacherWiseReportWidgetState extends ConsumerState<TeacherWiseReportWidge
           children: [
             Container(
               padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(color: color.withAlpha(25), shape: BoxShape.circle),
+              decoration: BoxDecoration(
+                  color: color.withAlpha(25), shape: BoxShape.circle),
               child: Icon(icon, size: 16, color: color),
             ),
             const SizedBox(width: 12),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(value, style: AppTypography.label.copyWith(fontSize: 16, color: theme.primaryText, fontWeight: FontWeight.bold)),
-                Text(label, style: AppTypography.caption.copyWith(fontSize: 10, color: theme.secondaryText)),
+                Text(value,
+                    style: AppTypography.label.copyWith(
+                        fontSize: 16,
+                        color: theme.primaryText,
+                        fontWeight: FontWeight.bold)),
+                Text(label,
+                    style: AppTypography.caption
+                        .copyWith(fontSize: 10, color: theme.secondaryText)),
               ],
             ),
           ],

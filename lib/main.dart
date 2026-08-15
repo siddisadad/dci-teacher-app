@@ -35,7 +35,8 @@ void main() async {
   // Initialize Crashlytics
   if (!kIsWeb) {
     try {
-      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+      FlutterError.onError =
+          FirebaseCrashlytics.instance.recordFlutterFatalError;
     } catch (e) {
       debugPrint('Crashlytics initialization failed: $e');
     }
@@ -81,7 +82,6 @@ class MyAppState extends ConsumerState<MyApp> {
     super.initState();
     userStream = dciTeacherAppFirebaseUserStream()
       ..listen((user) => safeSetState(() => currentUser = user));
-    jwtTokenStream.listen((_) {});
   }
 
   void setThemeMode(ThemeMode mode) => safeSetState(() {

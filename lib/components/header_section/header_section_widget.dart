@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 export 'package:d_c_i_teacher_app/components/header_section/header_section_model.dart';
 
 class HeaderSectionWidget extends ConsumerWidget {
@@ -59,7 +58,8 @@ class HeaderSectionWidget extends ConsumerWidget {
             boxShadow: AppShadows.low,
           ),
           child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(16.0, 44.0, 16.0, 16.0),
+            padding:
+                const EdgeInsetsDirectional.fromSTEB(16.0, 44.0, 16.0, 16.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,18 +99,25 @@ class HeaderSectionWidget extends ConsumerWidget {
                                   title ?? 'Assign Homework',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: FlutterFlowTheme.of(context).titleMedium.override(
-                                        font: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.bold),
-                                        color: FlutterFlowTheme.of(context).onPrimary,
+                                  style: FlutterFlowTheme.of(context)
+                                      .titleMedium
+                                      .override(
+                                        font: GoogleFonts.plusJakartaSans(
+                                            fontWeight: FontWeight.bold),
+                                        color: FlutterFlowTheme.of(context)
+                                            .onPrimary,
                                       ),
                                 ),
                                 Text(
                                   subtitle ?? instituteName,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: FlutterFlowTheme.of(context).labelSmall.override(
+                                  style: FlutterFlowTheme.of(context)
+                                      .labelSmall
+                                      .override(
                                         font: GoogleFonts.inter(),
-                                        color: FlutterFlowTheme.of(context).onPrimary80,
+                                        color: FlutterFlowTheme.of(context)
+                                            .onPrimary80,
                                         fontSize: 12,
                                       ),
                                 ),
@@ -164,7 +171,8 @@ class HeaderSectionWidget extends ConsumerWidget {
   }
 
   Widget _buildSyncIndicator(WidgetRef ref) {
-    final status = ref.watch(connectivityStatusProvider).value ?? ConnectivityStatus.online;
+    final status = ref.watch(connectivityStatusProvider).value ??
+        ConnectivityStatus.online;
     final isOnline = status == ConnectivityStatus.online;
 
     return Padding(
@@ -174,7 +182,9 @@ class HeaderSectionWidget extends ConsumerWidget {
         child: Container(
           padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
-            color: isOnline ? Colors.white.withAlpha(20) : AppColors.secondary.withAlpha(40),
+            color: isOnline
+                ? Colors.white.withAlpha(20)
+                : AppColors.secondary.withAlpha(40),
             shape: BoxShape.circle,
           ),
           child: Icon(

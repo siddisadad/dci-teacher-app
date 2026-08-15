@@ -41,32 +41,39 @@ class _ExamsWidgetState extends ConsumerState<ExamsWidget> {
   Future<void> _deleteExam(Exam exam) async {
     final theme = FlutterFlowTheme.of(context);
     final confirm = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Delete Exam', style: AppTypography.section),
-        content: Text('Are you sure you want to delete the ${exam.subject} exam for ${exam.className}?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text('Cancel', style: TextStyle(color: theme.secondaryText)),
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Delete Exam', style: AppTypography.section),
+            content: Text(
+                'Are you sure you want to delete the ${exam.subject} exam for ${exam.className}?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: Text('Cancel',
+                    style: TextStyle(color: theme.secondaryText)),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: Text('Delete',
+                    style: TextStyle(
+                        color: theme.error, fontWeight: FontWeight.bold)),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text('Delete', style: TextStyle(color: theme.error, fontWeight: FontWeight.bold)),
-          ),
-        ],
-      ),
-    ) ?? false;
+        ) ??
+        false;
 
     if (confirm) {
       try {
         await ref.read(examServiceProvider).deleteExam(exam.id);
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Exam deleted successfully.')));
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Exam deleted successfully.')));
         }
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('Error: $e')));
         }
       }
     }
@@ -81,12 +88,15 @@ class _ExamsWidgetState extends ConsumerState<ExamsWidget> {
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: theme.primaryBackground,
-      floatingActionButton: isAdmin ? FloatingActionButton(
-        onPressed: () => context.pushNamed(AddExamWidget.routeName),
-        backgroundColor: theme.primary,
-        elevation: 4,
-        child: const Icon(Icons.add_rounded, color: Colors.white, size: 28),
-      ) : null,
+      floatingActionButton: isAdmin
+          ? FloatingActionButton(
+              onPressed: () => context.pushNamed(AddExamWidget.routeName),
+              backgroundColor: theme.primary,
+              elevation: 4,
+              child:
+                  const Icon(Icons.add_rounded, color: Colors.white, size: 28),
+            )
+          : null,
       body: Column(
         children: [
           HeaderSectionWidget(
@@ -97,31 +107,35 @@ class _ExamsWidgetState extends ConsumerState<ExamsWidget> {
           ),
           Expanded(
             child: ref.watch(examsStreamProvider).when(
-              data: (exams) {
-                if (exams.isEmpty) {
-                  return AppEmptyState(
-                    icon: Icons.assignment_rounded,
-                    title: 'No exams scheduled',
-                    description: 'Keep track of all tests and exams here.',
-                    actionLabel: isAdmin ? 'Schedule First Exam' : null,
-                    onActionPressed: isAdmin ? () => context.pushNamed(AddExamWidget.routeName) : null,
-                  );
-                }
-                return ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  itemCount: exams.length,
-                  itemBuilder: (context, index) {
-                    final exam = exams[index];
-                    return ExamCardWidget(
-                      exam: exam,
-                      onDelete: isAdmin ? () => _deleteExam(exam) : null,
+                  data: (exams) {
+                    if (exams.isEmpty) {
+                      return AppEmptyState(
+                        icon: Icons.assignment_rounded,
+                        title: 'No exams scheduled',
+                        description: 'Keep track of all tests and exams here.',
+                        actionLabel: isAdmin ? 'Schedule First Exam' : null,
+                        onActionPressed: isAdmin
+                            ? () => context.pushNamed(AddExamWidget.routeName)
+                            : null,
+                      );
+                    }
+                    return ListView.builder(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      itemCount: exams.length,
+                      itemBuilder: (context, index) {
+                        final exam = exams[index];
+                        return ExamCardWidget(
+                          exam: exam,
+                          onDelete: isAdmin ? () => _deleteExam(exam) : null,
+                        );
+                      },
                     );
                   },
-                );
-              },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Center(child: Text('Error: $err')),
-            ),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (err, stack) => Center(child: Text('Error: $err')),
+                ),
           ),
         ],
       ),

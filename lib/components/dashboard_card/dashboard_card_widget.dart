@@ -64,7 +64,7 @@ class _DashboardCardWidgetState extends State<DashboardCardWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = FlutterFlowTheme.of(context);
-    
+
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
@@ -116,7 +116,8 @@ class _DashboardCardWidgetState extends State<DashboardCardWidget> {
                               color: theme.primary,
                               size: 20,
                             ),
-                            child: widget.icon ?? const Icon(Icons.apps_rounded),
+                            child:
+                                widget.icon ?? const Icon(Icons.apps_rounded),
                           ),
                         ),
                       ),

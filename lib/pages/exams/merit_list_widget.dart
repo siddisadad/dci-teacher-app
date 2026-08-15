@@ -55,11 +55,15 @@ class _MeritListWidgetState extends ConsumerState<MeritListWidget> {
             showActionIcon: true,
             actionIcon: const Icon(Icons.print_rounded, color: Colors.white),
             onActionPressed: () async {
-              final results = await ref.read(resultRepositoryProvider).getExamResultsStream(widget.exam.id).first;
+              final results = await ref
+                  .read(resultRepositoryProvider)
+                  .getExamResultsStream(widget.exam.id)
+                  .first;
               if (results.isEmpty) return;
-              
+
               final config = ref.read(instituteInfoStreamProvider).value;
-              final instituteName = config?['name'] ?? 'Deshmukh Coaching Institute';
+              final instituteName =
+                  config?['name'] ?? 'Deshmukh Coaching Institute';
 
               await ReportCardService.generateAndPrintMeritList(
                 examTitle: widget.exam.subject,
@@ -89,11 +93,14 @@ class _MeritListWidgetState extends ConsumerState<MeritListWidget> {
                 }
 
                 final filteredResults = results.where((r) {
-                  return r.studentName.toLowerCase().contains(_searchQuery.toLowerCase());
+                  return r.studentName
+                      .toLowerCase()
+                      .contains(_searchQuery.toLowerCase());
                 }).toList();
 
                 if (filteredResults.isEmpty) {
-                  return const Center(child: Text('No matching results found.'));
+                  return const Center(
+                      child: Text('No matching results found.'));
                 }
 
                 return ListView.builder(
@@ -119,12 +126,15 @@ class _MeritListWidgetState extends ConsumerState<MeritListWidget> {
                         child: ListTile(
                           dense: true,
                           visualDensity: VisualDensity.compact,
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
                           leading: Container(
                             width: 32,
                             height: 32,
                             decoration: BoxDecoration(
-                              color: isTop3 ? theme.secondary : theme.primary.withAlpha(20),
+                              color: isTop3
+                                  ? theme.secondary
+                                  : theme.primary.withAlpha(20),
                               shape: BoxShape.circle,
                             ),
                             alignment: Alignment.center,
@@ -137,9 +147,10 @@ class _MeritListWidgetState extends ConsumerState<MeritListWidget> {
                               ),
                             ),
                           ),
-                          title: Text(result.studentName, 
+                          title: Text(
+                            result.studentName,
                             style: AppTypography.label.copyWith(
-                              fontWeight: FontWeight.bold, 
+                              fontWeight: FontWeight.bold,
                               fontSize: 15,
                               color: theme.primaryText,
                             ),
@@ -147,8 +158,9 @@ class _MeritListWidgetState extends ConsumerState<MeritListWidget> {
                           subtitle: Padding(
                             padding: const EdgeInsets.only(top: 2.0),
                             child: Text(
-                              'Grade: ${result.grade} ${result.remarks.isNotEmpty ? "• ${result.remarks}" : ""}', 
-                              style: AppTypography.caption.copyWith(fontSize: 12),
+                              'Grade: ${result.grade} ${result.remarks.isNotEmpty ? "• ${result.remarks}" : ""}',
+                              style:
+                                  AppTypography.caption.copyWith(fontSize: 12),
                             ),
                           ),
                           trailing: Column(
@@ -158,8 +170,8 @@ class _MeritListWidgetState extends ConsumerState<MeritListWidget> {
                               Text(
                                 '${result.marksObtained.toInt()}/${result.totalMarks}',
                                 style: AppTypography.label.copyWith(
-                                  color: theme.primary, 
-                                  fontWeight: FontWeight.bold, 
+                                  color: theme.primary,
+                                  fontWeight: FontWeight.bold,
                                   fontSize: 15,
                                 ),
                               ),

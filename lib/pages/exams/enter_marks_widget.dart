@@ -35,12 +35,16 @@ class _EnterMarksWidgetState extends ConsumerState<EnterMarksWidget> {
     super.initState();
     _model = createModel(context, () => EnterMarksModel());
     _model.searchController ??= TextEditingController();
-    
+
     // Pre-fill existing results if any
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final existingResults = await ref.read(resultRepositoryProvider).getExamResultsStream(widget.exam.id).first;
+      final existingResults = await ref
+          .read(resultRepositoryProvider)
+          .getExamResultsStream(widget.exam.id)
+          .first;
       for (var result in existingResults) {
-        _model.getMarksController(result.studentId).text = result.marksObtained.toString();
+        _model.getMarksController(result.studentId).text =
+            result.marksObtained.toString();
         _model.getRemarksController(result.studentId).text = result.remarks;
       }
       if (mounted) setState(() {});
@@ -53,18 +57,22 @@ class _EnterMarksWidgetState extends ConsumerState<EnterMarksWidget> {
     super.dispose();
   }
 
-  Future<void> _saveResults(List<Student> students, MarksEntryNotifier notifier) async {
-    final entries = students.map((s) {
-      final marksText = _model.getMarksController(s.id).text;
-      final marks = double.tryParse(marksText) ?? 0.0;
-      return (
-        studentId: s.id,
-        studentName: s.name,
-        className: s.className,
-        marks: marks,
-        remarks: _model.getRemarksController(s.id).text,
-      );
-    }).where((e) => _model.getMarksController(e.studentId).text.isNotEmpty).toList();
+  Future<void> _saveResults(
+      List<Student> students, MarksEntryNotifier notifier) async {
+    final entries = students
+        .map((s) {
+          final marksText = _model.getMarksController(s.id).text;
+          final marks = double.tryParse(marksText) ?? 0.0;
+          return (
+            studentId: s.id,
+            studentName: s.name,
+            className: s.className,
+            marks: marks,
+            remarks: _model.getRemarksController(s.id).text,
+          );
+        })
+        .where((e) => _model.getMarksController(e.studentId).text.isNotEmpty)
+        .toList();
 
     if (entries.isEmpty) return;
 
@@ -77,10 +85,12 @@ class _EnterMarksWidgetState extends ConsumerState<EnterMarksWidget> {
     );
 
     if (success && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Marks saved successfully!')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Marks saved successfully!')));
       context.safePop();
     } else if (!success && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Error saving marks.')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Error saving marks.')));
     }
   }
 
@@ -99,21 +109,26 @@ class _EnterMarksWidgetState extends ConsumerState<EnterMarksWidget> {
           HeaderSectionWidget(
             title: 'Enter Marks',
             subtitle: '${widget.exam.subject} - ${widget.exam.className}',
-            description: 'Enter student marks for ${widget.exam.subject} examination.',
+            description:
+                'Enter student marks for ${widget.exam.subject} examination.',
             onBackPressed: () async => context.safePop(),
             showActionIcon: false,
           ),
           Expanded(
             child: studentsAsync.when(
               data: (allStudents) {
-                final classStudents = allStudents.where((s) => s.className == widget.exam.className).toList();
+                final classStudents = allStudents
+                    .where((s) => s.className == widget.exam.className)
+                    .toList();
                 if (classStudents.isEmpty) {
-                  return const Center(child: Text('No students found for this class.'));
+                  return const Center(
+                      child: Text('No students found for this class.'));
                 }
 
                 final filteredStudents = classStudents.where((s) {
                   final query = _searchQuery.toLowerCase();
-                  return s.name.toLowerCase().contains(query) || s.rollNo.toLowerCase().contains(query);
+                  return s.name.toLowerCase().contains(query) ||
+                      s.rollNo.toLowerCase().contains(query);
                 }).toList();
 
                 return Column(
@@ -132,32 +147,42 @@ class _EnterMarksWidgetState extends ConsumerState<EnterMarksWidget> {
                     ),
                     Expanded(
                       child: filteredStudents.isEmpty
-                          ? const Center(child: Text('No matching students found.'))
+                          ? const Center(
+                              child: Text('No matching students found.'))
                           : ListView.separated(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
                               itemCount: filteredStudents.length,
-                              separatorBuilder: (_, __) => Divider(height: 1, color: theme.alternate),
+                              separatorBuilder: (_, __) =>
+                                  Divider(height: 1, color: theme.alternate),
                               itemBuilder: (context, index) {
                                 final student = filteredStudents[index];
                                 return Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 6.0),
                                   child: Row(
                                     children: [
                                       Expanded(
                                         flex: 3,
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            Text(student.name, 
-                                              style: AppTypography.label.copyWith(
-                                                fontWeight: FontWeight.bold, 
-                                                fontSize: 14,
-                                                color: AppColors.textPrimary
-                                              ),
+                                            Text(
+                                              student.name,
+                                              style: AppTypography.label
+                                                  .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14,
+                                                      color: AppColors
+                                                          .textPrimary),
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                             ),
-                                            Text('Roll: ${student.rollNo}', style: AppTypography.caption.copyWith(fontSize: 12)),
+                                            Text('Roll: ${student.rollNo}',
+                                                style: AppTypography.caption
+                                                    .copyWith(fontSize: 12)),
                                           ],
                                         ),
                                       ),
@@ -165,7 +190,8 @@ class _EnterMarksWidgetState extends ConsumerState<EnterMarksWidget> {
                                       Expanded(
                                         flex: 2,
                                         child: TextFieldWidget(
-                                          controller: _model.getMarksController(student.id),
+                                          controller: _model
+                                              .getMarksController(student.id),
                                           hint: '/${widget.exam.totalMarks}',
                                           labelPresent: false,
                                           variant: 'outlined',
@@ -176,7 +202,8 @@ class _EnterMarksWidgetState extends ConsumerState<EnterMarksWidget> {
                                       Expanded(
                                         flex: 3,
                                         child: TextFieldWidget(
-                                          controller: _model.getRemarksController(student.id),
+                                          controller: _model
+                                              .getRemarksController(student.id),
                                           hint: 'Remarks',
                                           labelPresent: false,
                                           variant: 'outlined',
@@ -192,10 +219,14 @@ class _EnterMarksWidgetState extends ConsumerState<EnterMarksWidget> {
                       padding: const EdgeInsets.all(16.0),
                       child: marksEntryStateAsync.when(
                         data: (state) => AppPrimaryButton(
-                          text: state.isSaving ? 'Saving...' : 'Save All Results',
+                          text:
+                              state.isSaving ? 'Saving...' : 'Save All Results',
                           height: 44,
                           isLoading: state.isSaving,
-                          onPressed: state.isSaving ? null : () => _saveResults(classStudents, marksEntryNotifier),
+                          onPressed: state.isSaving
+                              ? null
+                              : () => _saveResults(
+                                  classStudents, marksEntryNotifier),
                         ),
                         loading: () => const CircularProgressIndicator(),
                         error: (err, _) => Text('Error: $err'),
@@ -205,7 +236,8 @@ class _EnterMarksWidgetState extends ConsumerState<EnterMarksWidget> {
                 );
               },
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Center(child: Text('Error loading students: $err')),
+              error: (err, stack) =>
+                  Center(child: Text('Error loading students: $err')),
             ),
           ),
         ],

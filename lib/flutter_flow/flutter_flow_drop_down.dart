@@ -137,8 +137,8 @@ class _FlutterFlowDropDownState<T> extends State<FlutterFlowDropDown<T>> {
   void initState() {
     super.initState();
     if (isMultiSelect) {
-      _listener = () =>
-          widget.onMultiSelectChanged?.call(multiSelectController.value);
+      _listener =
+          () => widget.onMultiSelectChanged?.call(multiSelectController.value);
       multiSelectController.addListener(_listener);
     } else {
       _listener = () => widget.onChanged?.call(controller.value);

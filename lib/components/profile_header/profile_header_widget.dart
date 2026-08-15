@@ -79,7 +79,8 @@ class _ProfileHeaderWidgetState extends State<ProfileHeaderWidget> {
           ),
           if (widget.showBackButton)
             Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(16.0, 44.0, 0.0, 0.0),
+              padding:
+                  const EdgeInsetsDirectional.fromSTEB(16.0, 44.0, 0.0, 0.0),
               child: FlutterFlowIconButton(
                 borderColor: Colors.transparent,
                 borderRadius: 12.0,
@@ -193,4 +194,3 @@ class _ProfileHeaderWidgetState extends State<ProfileHeaderWidget> {
     );
   }
 }
-

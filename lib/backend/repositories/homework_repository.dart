@@ -10,7 +10,8 @@ class HomeworkRepository {
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
 
-  CollectionReference get _homeworkCollection => _firestore.collection('homework_assignments');
+  CollectionReference get _homeworkCollection =>
+      _firestore.collection('homework_assignments');
 
   Future<void> saveHomework(HomeworkAssignment homework) async {
     final user = _auth.currentUser;
@@ -27,18 +28,18 @@ class HomeworkRepository {
         .where('createdBy', isEqualTo: user.uid)
         .snapshots()
         .map((snapshot) {
-          final list = snapshot.docs
-              .map((doc) => HomeworkAssignment.fromFirestore(doc))
-              .toList();
-          
-          // Local sort to avoid index
-          list.sort((a, b) {
-            if (a.createdAt == null || b.createdAt == null) return 0;
-            return b.createdAt!.compareTo(a.createdAt!);
-          });
-          
-          return list.take(limit).toList();
-        });
+      final list = snapshot.docs
+          .map((doc) => HomeworkAssignment.fromFirestore(doc))
+          .toList();
+
+      // Local sort to avoid index
+      list.sort((a, b) {
+        if (a.createdAt == null || b.createdAt == null) return 0;
+        return b.createdAt!.compareTo(a.createdAt!);
+      });
+
+      return list.take(limit).toList();
+    });
   }
 
   Future<HomeworkAssignment?> getHomeworkById(String id) async {
@@ -58,20 +59,20 @@ class HomeworkRepository {
 
   Stream<List<HomeworkAssignment>> getHomeworkByClass(String className) {
     return _homeworkCollection
-        .where('className', isEqualTo: className)
+        .where('class', isEqualTo: className)
         .where('status', isEqualTo: 'published')
         .snapshots()
         .map((snapshot) {
-          final list = snapshot.docs
-              .map((doc) => HomeworkAssignment.fromFirestore(doc))
-              .toList();
-          
-          list.sort((a, b) {
-            if (a.createdAt == null || b.createdAt == null) return 0;
-            return b.createdAt!.compareTo(a.createdAt!);
-          });
-          
-          return list;
-        });
+      final list = snapshot.docs
+          .map((doc) => HomeworkAssignment.fromFirestore(doc))
+          .toList();
+
+      list.sort((a, b) {
+        if (a.createdAt == null || b.createdAt == null) return 0;
+        return b.createdAt!.compareTo(a.createdAt!);
+      });
+
+      return list;
+    });
   }
 }

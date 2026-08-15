@@ -83,10 +83,17 @@ class AttendanceSummaryFooter extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(child: _buildSummaryItem('Present', '$presentCount', theme.success)),
-          Expanded(child: _buildSummaryItem('Absent', '$absentCount', theme.error)),
-          Expanded(child: _buildSummaryItem('Rate', '${percentage.toStringAsFixed(0)}%', theme.secondary)),
-          Expanded(child: _buildSummaryItem('Total', '${presentCount + absentCount}', theme.primary)),
+          Expanded(
+              child:
+                  _buildSummaryItem('Present', '$presentCount', theme.success)),
+          Expanded(
+              child: _buildSummaryItem('Absent', '$absentCount', theme.error)),
+          Expanded(
+              child: _buildSummaryItem('Rate',
+                  '${percentage.toStringAsFixed(0)}%', theme.secondary)),
+          Expanded(
+              child: _buildSummaryItem(
+                  'Total', '${presentCount + absentCount}', theme.primary)),
         ],
       ),
     );
@@ -96,10 +103,10 @@ class AttendanceSummaryFooter extends StatelessWidget {
     return Column(
       children: [
         Text(
-          value, 
+          value,
           style: AppTypography.body.copyWith(
-            color: color, 
-            fontWeight: FontWeight.bold, 
+            color: color,
+            fontWeight: FontWeight.bold,
             fontSize: 18,
           ),
         ),

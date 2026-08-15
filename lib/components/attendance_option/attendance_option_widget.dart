@@ -102,9 +102,8 @@ class _AttendanceOptionWidgetState extends State<AttendanceOptionWidget> {
                 style: FlutterFlowTheme.of(context).labelMedium.override(
                       font: GoogleFonts.inter(
                         fontWeight: FontWeight.bold,
-                        fontStyle: FlutterFlowTheme.of(context)
-                            .labelMedium
-                            .fontStyle,
+                        fontStyle:
+                            FlutterFlowTheme.of(context).labelMedium.fontStyle,
                       ),
                       color: valueOrDefault<Color>(
                         valueOrDefault<bool>(

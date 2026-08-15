@@ -1,7 +1,8 @@
 import 'package:d_c_i_teacher_app/components/contact_item/contact_item_widget.dart';
 import 'package:d_c_i_teacher_app/components/info_section/info_section_widget.dart';
 import 'package:d_c_i_teacher_app/flutter_flow/flutter_flow_util.dart';
-import 'package:d_c_i_teacher_app/pages/about_dci/about_dci_widget.dart' show AboutDCIWidget;
+import 'package:d_c_i_teacher_app/pages/about_dci/about_dci_widget.dart'
+    show AboutDCIWidget;
 import 'package:flutter/material.dart';
 
 class AboutDCIModel extends FlutterFlowModel<AboutDCIWidget> {

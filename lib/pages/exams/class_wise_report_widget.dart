@@ -15,7 +15,8 @@ class ClassWiseReportWidget extends ConsumerStatefulWidget {
   static String routePath = '/classWiseReport';
 
   @override
-  ConsumerState<ClassWiseReportWidget> createState() => _ClassWiseReportWidgetState();
+  ConsumerState<ClassWiseReportWidget> createState() =>
+      _ClassWiseReportWidgetState();
 }
 
 class _ClassWiseReportWidgetState extends ConsumerState<ClassWiseReportWidget> {
@@ -50,22 +51,27 @@ class _ClassWiseReportWidgetState extends ConsumerState<ClassWiseReportWidget> {
                     .map((s) => s.className)
                     .where((c) => c.isNotEmpty)
                     .toSet()
-                    .toList()..sort();
-                
+                    .toList()
+                  ..sort();
+
                 return DropDownWidget(
                   label: 'Select Class',
                   options: classOptions,
-                  onChanged: (val) => setState(() => _model.selectedClass = val),
+                  onChanged: (val) =>
+                      setState(() => _model.selectedClass = val),
                   hint: 'e.g. 10th Grade',
                 );
               },
               loading: () => const LinearProgressIndicator(),
-              error: (err, _) => Text('Error loading classes: $err', style: const TextStyle(fontSize: 10)),
+              error: (err, _) => Text('Error loading classes: $err',
+                  style: const TextStyle(fontSize: 10)),
             ),
           ),
           Expanded(
             child: _model.selectedClass == null
-                ? Center(child: Text('Select a class to view report.', style: theme.labelSmall))
+                ? Center(
+                    child: Text('Select a class to view report.',
+                        style: theme.labelSmall))
                 : _buildClassReport(context, _model.selectedClass!),
           ),
         ],
@@ -79,9 +85,12 @@ class _ClassWiseReportWidgetState extends ConsumerState<ClassWiseReportWidget> {
 
     return examsAsync.when(
       data: (exams) {
-        final classExams = exams.where((e) => e.className == className).toList();
+        final classExams =
+            exams.where((e) => e.className == className).toList();
         if (classExams.isEmpty) {
-          return Center(child: Text('No exams found for this class.', style: theme.labelSmall));
+          return Center(
+              child: Text('No exams found for this class.',
+                  style: theme.labelSmall));
         }
 
         return ListView.builder(
@@ -128,11 +137,15 @@ class _ClassWiseReportWidgetState extends ConsumerState<ClassWiseReportWidget> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(exam.subject, style: AppTypography.label.copyWith(fontSize: 15, fontWeight: FontWeight.bold)),
+                  Text(exam.subject,
+                      style: AppTypography.label
+                          .copyWith(fontSize: 15, fontWeight: FontWeight.bold)),
                   Text(
                     '${avg.toInt()}%',
                     style: TextStyle(
-                      color: avg >= 75 ? AppColors.success : (avg >= 50 ? AppColors.warning : AppColors.error),
+                      color: avg >= 75
+                          ? AppColors.success
+                          : (avg >= 50 ? AppColors.warning : AppColors.error),
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
@@ -142,9 +155,11 @@ class _ClassWiseReportWidgetState extends ConsumerState<ClassWiseReportWidget> {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  _buildMiniStat(Icons.people_rounded, '${results.length} Students'),
+                  _buildMiniStat(
+                      Icons.people_rounded, '${results.length} Students'),
                   const SizedBox(width: 16),
-                  _buildMiniStat(Icons.event_rounded, dateTimeFormat('yMMMd', exam.date)),
+                  _buildMiniStat(
+                      Icons.event_rounded, dateTimeFormat('yMMMd', exam.date)),
                 ],
               ),
               const SizedBox(height: 12),
@@ -155,7 +170,9 @@ class _ClassWiseReportWidgetState extends ConsumerState<ClassWiseReportWidget> {
                   minHeight: 6,
                   backgroundColor: theme.alternate,
                   valueColor: AlwaysStoppedAnimation<Color>(
-                    avg >= 75 ? AppColors.success : (avg >= 50 ? AppColors.warning : AppColors.error),
+                    avg >= 75
+                        ? AppColors.success
+                        : (avg >= 50 ? AppColors.warning : AppColors.error),
                   ),
                 ),
               ),
@@ -163,7 +180,8 @@ class _ClassWiseReportWidgetState extends ConsumerState<ClassWiseReportWidget> {
           ),
         );
       },
-      loading: () => const SizedBox(height: 100, child: Center(child: LinearProgressIndicator())),
+      loading: () => const SizedBox(
+          height: 100, child: Center(child: LinearProgressIndicator())),
       error: (_, __) => const SizedBox(),
     );
   }

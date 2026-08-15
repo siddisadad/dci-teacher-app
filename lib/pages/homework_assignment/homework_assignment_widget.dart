@@ -28,7 +28,8 @@ class HomeworkAssignmentWidget extends ConsumerStatefulWidget {
       _HomeworkAssignmentWidgetState();
 }
 
-class _HomeworkAssignmentWidgetState extends ConsumerState<HomeworkAssignmentWidget> {
+class _HomeworkAssignmentWidgetState
+    extends ConsumerState<HomeworkAssignmentWidget> {
   late HomeworkAssignmentModel _model;
 
   final _formKey = GlobalKey<FormState>();
@@ -75,7 +76,8 @@ class _HomeworkAssignmentWidgetState extends ConsumerState<HomeworkAssignmentWid
     }
   }
 
-  Future<void> _saveHomework(String status, HomeworkAssignmentNotifier notifier) async {
+  Future<void> _saveHomework(
+      String status, HomeworkAssignmentNotifier notifier) async {
     if (!_formKey.currentState!.validate()) return;
 
     final success = await notifier.saveHomework(
@@ -90,10 +92,13 @@ class _HomeworkAssignmentWidgetState extends ConsumerState<HomeworkAssignmentWid
 
     if (!mounted) return;
     if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(status == 'published' ? 'Homework published.' : 'Draft saved.')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+              status == 'published' ? 'Homework published.' : 'Draft saved.')));
       if (status == 'published') context.goNamed(HomeDashboardWidget.routeName);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Error saving homework.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error saving homework.')));
     }
   }
 
@@ -104,12 +109,14 @@ class _HomeworkAssignmentWidgetState extends ConsumerState<HomeworkAssignmentWid
 
     return homeworkStateAsync.when(
       data: (state) => _buildScaffold(context, state, notifier),
-      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      loading: () =>
+          const Scaffold(body: Center(child: CircularProgressIndicator())),
       error: (err, stack) => Scaffold(body: Center(child: Text('Error: $err'))),
     );
   }
 
-  Widget _buildScaffold(BuildContext context, HomeworkAssignmentState state, HomeworkAssignmentNotifier notifier) {
+  Widget _buildScaffold(BuildContext context, HomeworkAssignmentState state,
+      HomeworkAssignmentNotifier notifier) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -143,7 +150,8 @@ class _HomeworkAssignmentWidgetState extends ConsumerState<HomeworkAssignmentWid
     );
   }
 
-  Widget _buildForm(BuildContext context, HomeworkAssignmentState state, HomeworkAssignmentNotifier notifier) {
+  Widget _buildForm(BuildContext context, HomeworkAssignmentState state,
+      HomeworkAssignmentNotifier notifier) {
     final studentsAsync = ref.watch(studentsStreamProvider);
     final subjectsAsync = ref.watch(subjectsStreamProvider);
     final allUsersAsync = ref.watch(allUsersStreamProvider);
@@ -156,15 +164,28 @@ class _HomeworkAssignmentWidgetState extends ConsumerState<HomeworkAssignmentWid
           children: [
             Builder(builder: (context) {
               final classOptions = studentsAsync.maybeWhen(
-                data: (students) => students.map((s) => s.className).where((c) => c.isNotEmpty).toSet().toList()..sort(),
+                data: (students) => students
+                    .map((s) => s.className)
+                    .where((c) => c.isNotEmpty)
+                    .toSet()
+                    .toList()
+                  ..sort(),
                 orElse: () => <String>[],
               );
               final subjectOptions = subjectsAsync.maybeWhen(
-                data: (subjects) => {'English', 'Marathi', 'Math', 'Science', ...subjects}.toList()..sort(),
+                data: (subjects) => {
+                  'English',
+                  'Marathi',
+                  'Math',
+                  'Science',
+                  ...subjects
+                }.toList()
+                  ..sort(),
                 orElse: () => ['English', 'Marathi', 'Math', 'Science'],
               );
               final teacherOptions = allUsersAsync.maybeWhen(
-                data: (users) => users.map((u) => u.displayName).toSet().toList()..sort(),
+                data: (users) =>
+                    users.map((u) => u.displayName).toSet().toList()..sort(),
                 orElse: () => <String>[],
               );
 
@@ -203,7 +224,8 @@ class _HomeworkAssignmentWidgetState extends ConsumerState<HomeworkAssignmentWid
           Expanded(
             child: Text(
               'This assignment will be visible to all students in the selected class immediately after submission.',
-              style: AppTypography.caption.copyWith(color: AppColors.textPrimary),
+              style:
+                  AppTypography.caption.copyWith(color: AppColors.textPrimary),
             ),
           ),
         ],
@@ -211,7 +233,8 @@ class _HomeworkAssignmentWidgetState extends ConsumerState<HomeworkAssignmentWid
     );
   }
 
-  Widget _buildAttachmentsSection(BuildContext context, HomeworkAssignmentState state, HomeworkAssignmentNotifier notifier) {
+  Widget _buildAttachmentsSection(BuildContext context,
+      HomeworkAssignmentState state, HomeworkAssignmentNotifier notifier) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -221,7 +244,8 @@ class _HomeworkAssignmentWidgetState extends ConsumerState<HomeworkAssignmentWid
             Text(
               'Attachments',
               style: FlutterFlowTheme.of(context).bodyLarge.override(
-                    font: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.bold),
+                    font: GoogleFonts.plusJakartaSans(
+                        fontWeight: FontWeight.bold),
                     fontWeight: FontWeight.bold,
                   ),
             ),
@@ -242,7 +266,8 @@ class _HomeworkAssignmentWidgetState extends ConsumerState<HomeworkAssignmentWid
                     Text(
                       'Add File',
                       style: FlutterFlowTheme.of(context).bodySmall.override(
-                            font: GoogleFonts.inter(fontWeight: FontWeight.bold),
+                            font:
+                                GoogleFonts.inter(fontWeight: FontWeight.bold),
                             color: FlutterFlowTheme.of(context).primary,
                             fontWeight: FontWeight.bold,
                           ),
@@ -258,7 +283,9 @@ class _HomeworkAssignmentWidgetState extends ConsumerState<HomeworkAssignmentWid
             child: Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: state.attachmentUrls.map((url) => _buildFileBadge(url, notifier)).toList(),
+              children: state.attachmentUrls
+                  .map((url) => _buildFileBadge(url, notifier))
+                  .toList(),
             ),
           ),
       ],
@@ -281,7 +308,9 @@ class _HomeworkAssignmentWidgetState extends ConsumerState<HomeworkAssignmentWid
           const SizedBox(width: 8),
           Flexible(
             child: Text(
-              fileName.length > 15 ? '${fileName.substring(0, 12)}...' : fileName,
+              fileName.length > 15
+                  ? '${fileName.substring(0, 12)}...'
+                  : fileName,
               style: FlutterFlowTheme.of(context).bodySmall,
             ),
           ),
@@ -299,7 +328,8 @@ class _HomeworkAssignmentWidgetState extends ConsumerState<HomeworkAssignmentWid
     );
   }
 
-  Widget _buildHomeworkFooter(BuildContext context, HomeworkAssignmentState state, HomeworkAssignmentNotifier notifier) {
+  Widget _buildHomeworkFooter(BuildContext context,
+      HomeworkAssignmentState state, HomeworkAssignmentNotifier notifier) {
     final theme = FlutterFlowTheme.of(context);
     return Container(
       decoration: BoxDecoration(
@@ -315,7 +345,9 @@ class _HomeworkAssignmentWidgetState extends ConsumerState<HomeworkAssignmentWid
               text: 'Save Draft',
               variant: 'outline',
               isLoading: state.isSaving,
-              onPressed: state.isSaving ? null : () => _saveHomework('draft', notifier),
+              onPressed: state.isSaving
+                  ? null
+                  : () => _saveHomework('draft', notifier),
             ),
           ),
           const SizedBox(width: AppSpacing.md),
@@ -323,7 +355,9 @@ class _HomeworkAssignmentWidgetState extends ConsumerState<HomeworkAssignmentWid
             child: AppPrimaryButton(
               text: 'Publish',
               isLoading: state.isSaving,
-              onPressed: state.isSaving ? null : () => _saveHomework('published', notifier),
+              onPressed: state.isSaving
+                  ? null
+                  : () => _saveHomework('published', notifier),
             ),
           ),
         ],

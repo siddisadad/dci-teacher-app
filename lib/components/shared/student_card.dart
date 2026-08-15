@@ -58,8 +58,10 @@ class StudentCard extends StatelessWidget {
                           spacing: 12,
                           runSpacing: 4,
                           children: [
-                            _buildInfoChip(context, 'Roll', student.rollNo, Icons.tag_rounded),
-                            _buildInfoChip(context, 'Class', student.className, Icons.class_rounded),
+                            _buildInfoChip(context, 'Roll', student.rollNo,
+                                Icons.tag_rounded),
+                            _buildInfoChip(context, 'Class', student.className,
+                                Icons.class_rounded),
                           ],
                         );
                       }),
@@ -84,7 +86,9 @@ class StudentCard extends StatelessWidget {
 
   Widget _buildAvatar(BuildContext context) {
     final theme = FlutterFlowTheme.of(context);
-    final initials = student.name.trim().isEmpty ? '?' : student.name.trim()[0].toUpperCase();
+    final initials = student.name.trim().isEmpty
+        ? '?'
+        : student.name.trim()[0].toUpperCase();
     return Container(
       width: 52,
       height: 52,
@@ -101,7 +105,8 @@ class StudentCard extends StatelessWidget {
                   fit: BoxFit.cover,
                   width: 52,
                   height: 52,
-                  placeholder: (context, url) => Container(color: theme.accent4),
+                  placeholder: (context, url) =>
+                      Container(color: theme.accent4),
                   errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
               )
@@ -117,7 +122,8 @@ class StudentCard extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoChip(BuildContext context, String label, String value, IconData icon) {
+  Widget _buildInfoChip(
+      BuildContext context, String label, String value, IconData icon) {
     final theme = FlutterFlowTheme.of(context);
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -161,7 +167,8 @@ class StudentCard extends StatelessWidget {
           ),
           Text(
             'Attend',
-            style: AppTypography.caption.copyWith(fontSize: 10, color: theme.success),
+            style: AppTypography.caption
+                .copyWith(fontSize: 10, color: theme.success),
           ),
         ],
       ),

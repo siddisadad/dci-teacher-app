@@ -17,14 +17,14 @@ class NotificationService {
 
       if (settings.authorizationStatus == AuthorizationStatus.authorized) {
         debugPrint('User granted permission');
-        
+
         // Get the token and save it to the user profile
         // We use a timeout to prevent hanging on devices without Play Services
         String? token = await _fcm.getToken().timeout(
-          const Duration(seconds: 5),
-          onTimeout: () => null,
-        );
-        
+              const Duration(seconds: 5),
+              onTimeout: () => null,
+            );
+
         if (token != null) {
           await _saveTokenToFirestore(token);
         }
@@ -36,7 +36,8 @@ class NotificationService {
       });
 
       // Handle background messages
-      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+      FirebaseMessaging.onBackgroundMessage(
+          _firebaseMessagingBackgroundHandler);
 
       // Handle foreground messages
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -44,7 +45,8 @@ class NotificationService {
         debugPrint('Message data: ${message.data}');
 
         if (message.notification != null) {
-          debugPrint('Message also contained a notification: ${message.notification}');
+          debugPrint(
+              'Message also contained a notification: ${message.notification}');
         }
       });
     } catch (e) {
@@ -62,7 +64,8 @@ class NotificationService {
     }
   }
 
-  static Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  static Future<void> _firebaseMessagingBackgroundHandler(
+      RemoteMessage message) async {
     debugPrint("Handling a background message: ${message.messageId}");
   }
 }

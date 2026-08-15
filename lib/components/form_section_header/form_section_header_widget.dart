@@ -68,8 +68,7 @@ class _FormSectionHeaderWidgetState extends State<FormSectionHeaderWidget> {
                   color: FlutterFlowTheme.of(context).primaryText,
                   letterSpacing: 0.0,
                   fontWeight: FontWeight.bold,
-                  fontStyle:
-                      FlutterFlowTheme.of(context).titleMedium.fontStyle,
+                  fontStyle: FlutterFlowTheme.of(context).titleMedium.fontStyle,
                   lineHeight: 1.35,
                 ),
           ),

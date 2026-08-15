@@ -19,10 +19,12 @@ class AttendanceReportWidget extends ConsumerStatefulWidget {
   static String routePath = '/attendanceReport';
 
   @override
-  ConsumerState<AttendanceReportWidget> createState() => _AttendanceReportWidgetState();
+  ConsumerState<AttendanceReportWidget> createState() =>
+      _AttendanceReportWidgetState();
 }
 
-class _AttendanceReportWidgetState extends ConsumerState<AttendanceReportWidget> {
+class _AttendanceReportWidgetState
+    extends ConsumerState<AttendanceReportWidget> {
   late AttendanceReportModel _model;
   String _searchQuery = '';
 
@@ -55,8 +57,10 @@ class _AttendanceReportWidgetState extends ConsumerState<AttendanceReportWidget>
             ],
           );
         },
-        loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
-        error: (err, stack) => Scaffold(body: Center(child: Text('Error loading student data: $err'))),
+        loading: () =>
+            const Scaffold(body: Center(child: CircularProgressIndicator())),
+        error: (err, stack) => Scaffold(
+            body: Center(child: Text('Error loading student data: $err'))),
       ),
     );
   }
@@ -69,17 +73,21 @@ class _AttendanceReportWidgetState extends ConsumerState<AttendanceReportWidget>
         title: 'Attendance Report',
         subtitle: 'Daily analysis per student',
         onBackPressed: () async => context.safePop(),
-        actionIcon: const Icon(Icons.ios_share_rounded, color: Colors.white, size: 24.0),
+        actionIcon: const Icon(Icons.ios_share_rounded,
+            color: Colors.white, size: 24.0),
         onActionPressed: () async {
           if (_model.selectedClass == null) {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select a class first.')));
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Please select a class first.')));
             return;
           }
           final messenger = ScaffoldMessenger.of(context);
-          final reportData = ref.read(dailyAttendanceReportProvider((
-            className: _model.selectedClass!,
-            date: _model.selectedDate ?? DateTime.now(),
-          ))).value;
+          final reportData = ref
+              .read(dailyAttendanceReportProvider((
+                className: _model.selectedClass!,
+                date: _model.selectedDate ?? DateTime.now(),
+              )))
+              .value;
 
           if (reportData != null && reportData.students.isNotEmpty) {
             final success = await ExcelService.exportAttendanceReport(
@@ -90,11 +98,13 @@ class _AttendanceReportWidgetState extends ConsumerState<AttendanceReportWidget>
             );
             if (!mounted) return;
             if (success) {
-              messenger.showSnackBar(const SnackBar(content: Text('Report exported successfully.')));
+              messenger.showSnackBar(const SnackBar(
+                  content: Text('Report exported successfully.')));
             }
           } else {
             if (mounted) {
-              messenger.showSnackBar(const SnackBar(content: Text('No data to export.')));
+              messenger.showSnackBar(
+                  const SnackBar(content: Text('No data to export.')));
             }
           }
         },
@@ -148,12 +158,16 @@ class _AttendanceReportWidgetState extends ConsumerState<AttendanceReportWidget>
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.calendar_today_rounded, size: 16, color: theme.primary),
+                    Icon(Icons.calendar_today_rounded,
+                        size: 16, color: theme.primary),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        _model.selectedDate == null ? 'Select Date' : DateFormat('yMMMd').format(_model.selectedDate!),
-                        style: AppTypography.body.copyWith(fontWeight: FontWeight.w600),
+                        _model.selectedDate == null
+                            ? 'Select Date'
+                            : DateFormat('yMMMd').format(_model.selectedDate!),
+                        style: AppTypography.body
+                            .copyWith(fontWeight: FontWeight.w600),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -172,7 +186,8 @@ class _AttendanceReportWidgetState extends ConsumerState<AttendanceReportWidget>
     if (_model.selectedClass == null) {
       return Expanded(
         child: Center(
-          child: Text('Select Class & Date to view report', style: FlutterFlowTheme.of(context).bodyMedium),
+          child: Text('Select Class & Date to view report',
+              style: FlutterFlowTheme.of(context).bodyMedium),
         ),
       );
     }
@@ -187,14 +202,16 @@ class _AttendanceReportWidgetState extends ConsumerState<AttendanceReportWidget>
         if (data.students.isEmpty) {
           return Expanded(
             child: Center(
-              child: Text('No records found for this class.', style: FlutterFlowTheme.of(context).bodyMedium),
+              child: Text('No records found for this class.',
+                  style: FlutterFlowTheme.of(context).bodyMedium),
             ),
           );
         }
 
         final filteredStudents = data.students.where((s) {
           final query = _searchQuery.toLowerCase();
-          return s.name.toLowerCase().contains(query) || s.rollNo.toLowerCase().contains(query);
+          return s.name.toLowerCase().contains(query) ||
+              s.rollNo.toLowerCase().contains(query);
         }).toList();
 
         return Expanded(
@@ -213,19 +230,23 @@ class _AttendanceReportWidgetState extends ConsumerState<AttendanceReportWidget>
                 ),
               ),
               if (filteredStudents.isEmpty)
-                const Expanded(child: Center(child: Text('No matching students found.')))
+                const Expanded(
+                    child: Center(child: Text('No matching students found.')))
               else
                 _buildReportList(context, filteredStudents, data.attendance),
             ],
           ),
         );
       },
-      loading: () => const Expanded(child: Center(child: CircularProgressIndicator())),
-      error: (err, stack) => Expanded(child: Center(child: Text('Error: $err'))),
+      loading: () =>
+          const Expanded(child: Center(child: CircularProgressIndicator())),
+      error: (err, stack) =>
+          Expanded(child: Center(child: Text('Error: $err'))),
     );
   }
 
-  Widget _buildReportList(BuildContext context, List<Student> students, List<StudentAttendance> attendance) {
+  Widget _buildReportList(BuildContext context, List<Student> students,
+      List<StudentAttendance> attendance) {
     return Expanded(
       child: ListView.separated(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
@@ -233,7 +254,8 @@ class _AttendanceReportWidgetState extends ConsumerState<AttendanceReportWidget>
         separatorBuilder: (_, __) => const SizedBox(height: 8),
         itemBuilder: (context, index) {
           final student = students[index];
-          final logs = attendance.where((l) => l.studentId == student.id).toList();
+          final logs =
+              attendance.where((l) => l.studentId == student.id).toList();
           final status = logs.isNotEmpty ? logs.first.status : 'Not Marked';
 
           return Container(
@@ -252,7 +274,10 @@ class _AttendanceReportWidgetState extends ConsumerState<AttendanceReportWidget>
                     children: [
                       Text(
                         'Roll ${student.rollNo} • ${student.name}',
-                        style: AppTypography.body.copyWith(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textPrimary),
+                        style: AppTypography.body.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: AppColors.textPrimary),
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -275,12 +300,19 @@ class _AttendanceReportWidgetState extends ConsumerState<AttendanceReportWidget>
     final theme = FlutterFlowTheme.of(context);
     Color color;
     switch (status) {
-      case 'Present': color = theme.success; break;
-      case 'Absent': color = theme.error; break;
-      case 'Leave': color = theme.warning; break;
-      default: color = theme.secondaryText;
+      case 'Present':
+        color = theme.success;
+        break;
+      case 'Absent':
+        color = theme.error;
+        break;
+      case 'Leave':
+        color = theme.warning;
+        break;
+      default:
+        color = theme.secondaryText;
     }
-        
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(

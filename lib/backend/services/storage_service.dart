@@ -17,7 +17,7 @@ class StorageService {
       final extension = p.extension(file.path);
       final fileName = '${const Uuid().v4()}$extension';
       final storageRef = _storage.ref().child('homework/${user.uid}/$fileName');
-      
+
       final uploadTask = await storageRef.putFile(file);
       return await uploadTask.ref.getDownloadURL();
     } catch (e) {

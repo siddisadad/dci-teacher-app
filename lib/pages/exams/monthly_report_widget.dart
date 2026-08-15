@@ -15,7 +15,8 @@ class MonthlyReportWidget extends ConsumerStatefulWidget {
   static String routePath = '/monthlyReport';
 
   @override
-  ConsumerState<MonthlyReportWidget> createState() => _MonthlyReportWidgetState();
+  ConsumerState<MonthlyReportWidget> createState() =>
+      _MonthlyReportWidgetState();
 }
 
 class _MonthlyReportWidgetState extends ConsumerState<MonthlyReportWidget> {
@@ -31,8 +32,18 @@ class _MonthlyReportWidgetState extends ConsumerState<MonthlyReportWidget> {
   Widget build(BuildContext context) {
     final theme = FlutterFlowTheme.of(context);
     final months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
     ];
     final years = List.generate(5, (i) => (DateTime.now().year - i).toString());
 
@@ -55,8 +66,10 @@ class _MonthlyReportWidgetState extends ConsumerState<MonthlyReportWidget> {
                   child: DropDownWidget(
                     label: 'Year',
                     options: years,
-                    controller: FormFieldController<String>(_model.selectedYear.toString()),
-                    onChanged: (val) => setState(() => _model.selectedYear = int.parse(val!)),
+                    controller: FormFieldController<String>(
+                        _model.selectedYear.toString()),
+                    onChanged: (val) =>
+                        setState(() => _model.selectedYear = int.parse(val!)),
                     height: 48,
                   ),
                 ),
@@ -66,8 +79,10 @@ class _MonthlyReportWidgetState extends ConsumerState<MonthlyReportWidget> {
                   child: DropDownWidget(
                     label: 'Month',
                     options: months,
-                    controller: FormFieldController<String>(months[_model.selectedMonth - 1]),
-                    onChanged: (val) => setState(() => _model.selectedMonth = months.indexOf(val!) + 1),
+                    controller: FormFieldController<String>(
+                        months[_model.selectedMonth - 1]),
+                    onChanged: (val) => setState(
+                        () => _model.selectedMonth = months.indexOf(val!) + 1),
                     height: 48,
                   ),
                 ),
@@ -90,12 +105,16 @@ class _MonthlyReportWidgetState extends ConsumerState<MonthlyReportWidget> {
         children: [
           _buildSummaryCard(context),
           const SizedBox(height: 20),
-          Text('SUBJECT-WISE ANALYSIS', style: AppTypography.caption.copyWith(fontWeight: FontWeight.bold, letterSpacing: 1, fontSize: 10)),
+          Text('SUBJECT-WISE ANALYSIS',
+              style: AppTypography.caption.copyWith(
+                  fontWeight: FontWeight.bold, letterSpacing: 1, fontSize: 10)),
           const SizedBox(height: 8),
-          _buildSubjectProgress(context, 'Mathematics', 0.88, AppColors.primary),
+          _buildSubjectProgress(
+              context, 'Mathematics', 0.88, AppColors.primary),
           _buildSubjectProgress(context, 'Science', 0.76, AppColors.info),
           _buildSubjectProgress(context, 'English', 0.92, AppColors.success),
-          _buildSubjectProgress(context, 'Social Studies', 0.70, AppColors.warning),
+          _buildSubjectProgress(
+              context, 'Social Studies', 0.70, AppColors.warning),
           const SizedBox(height: 24),
           _buildInsightSection(context),
         ],
@@ -124,14 +143,20 @@ class _MonthlyReportWidgetState extends ConsumerState<MonthlyReportWidget> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Overall Performance', style: AppTypography.caption.copyWith(color: Colors.white.withValues(alpha: 0.8))),
-                  Text('82.5%', style: AppTypography.title.copyWith(color: Colors.white, fontSize: 32)),
+                  Text('Overall Performance',
+                      style: AppTypography.caption.copyWith(
+                          color: Colors.white.withValues(alpha: 0.8))),
+                  Text('82.5%',
+                      style: AppTypography.title
+                          .copyWith(color: Colors.white, fontSize: 32)),
                 ],
               ),
               Container(
                 padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(color: Colors.white.withAlpha(50), shape: BoxShape.circle),
-                child: const Icon(Icons.trending_up_rounded, color: Colors.white, size: 32),
+                decoration: BoxDecoration(
+                    color: Colors.white.withAlpha(50), shape: BoxShape.circle),
+                child: const Icon(Icons.trending_up_rounded,
+                    color: Colors.white, size: 32),
               ),
             ],
           ),
@@ -152,13 +177,20 @@ class _MonthlyReportWidgetState extends ConsumerState<MonthlyReportWidget> {
   Widget _buildSimpleStat(String label, String value) {
     return Column(
       children: [
-        Text(value, style: AppTypography.label.copyWith(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
-        Text(label, style: AppTypography.caption.copyWith(color: Colors.white.withValues(alpha: 0.7), fontSize: 10)),
+        Text(value,
+            style: AppTypography.label.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 18)),
+        Text(label,
+            style: AppTypography.caption.copyWith(
+                color: Colors.white.withValues(alpha: 0.7), fontSize: 10)),
       ],
     );
   }
 
-  Widget _buildSubjectProgress(BuildContext context, String subject, double value, Color color) {
+  Widget _buildSubjectProgress(
+      BuildContext context, String subject, double value, Color color) {
     final theme = FlutterFlowTheme.of(context);
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -173,8 +205,12 @@ class _MonthlyReportWidgetState extends ConsumerState<MonthlyReportWidget> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(subject, style: AppTypography.body.copyWith(fontWeight: FontWeight.bold, fontSize: 14)),
-              Text('${(value * 100).toInt()}%', style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 14)),
+              Text(subject,
+                  style: AppTypography.body
+                      .copyWith(fontWeight: FontWeight.bold, fontSize: 14)),
+              Text('${(value * 100).toInt()}%',
+                  style: TextStyle(
+                      color: color, fontWeight: FontWeight.bold, fontSize: 14)),
             ],
           ),
           const SizedBox(height: 8),
@@ -203,13 +239,16 @@ class _MonthlyReportWidgetState extends ConsumerState<MonthlyReportWidget> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.lightbulb_outline_rounded, color: AppColors.info, size: 24),
+          const Icon(Icons.lightbulb_outline_rounded,
+              color: AppColors.info, size: 24),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('AI Insight', style: AppTypography.label.copyWith(color: AppColors.info, fontWeight: FontWeight.bold)),
+                Text('AI Insight',
+                    style: AppTypography.label.copyWith(
+                        color: AppColors.info, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
                 Text(
                   'Mathematics performance has improved by 5% since last month. Consider focusing on Science fundamentals for upcoming mid-terms.',

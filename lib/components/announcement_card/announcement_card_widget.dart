@@ -91,7 +91,8 @@ class _AnnouncementCardWidgetState extends State<AnnouncementCardWidget> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
                             color: categoryColor.withAlpha(25),
                             borderRadius: BorderRadius.circular(20),
@@ -138,7 +139,8 @@ class _AnnouncementCardWidgetState extends State<AnnouncementCardWidget> {
                       children: [
                         if (widget.onShare != null)
                           IconButton(
-                            icon: Icon(Icons.share_rounded, color: theme.success, size: 18),
+                            icon: Icon(Icons.share_rounded,
+                                color: theme.success, size: 18),
                             onPressed: widget.onShare,
                             padding: EdgeInsets.zero,
                             constraints: const BoxConstraints(),

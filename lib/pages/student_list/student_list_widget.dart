@@ -78,10 +78,11 @@ class _StudentListWidgetState extends ConsumerState<StudentListWidget> {
               children: [
                 HeaderSectionWidget(
                   title: 'Students List',
-                  subtitle: allStudents.isEmpty 
-                      ? 'No students' 
+                  subtitle: allStudents.isEmpty
+                      ? 'No students'
                       : '${allStudents.length} Students Total',
-                  onBackPressed: () async => NavigationService.navigateToHome(context),
+                  onBackPressed: () async =>
+                      NavigationService.navigateToHome(context),
                   showActionIcon: access.canManageStudents,
                   actionIcon: const Icon(
                     Icons.person_add_rounded,
@@ -92,10 +93,12 @@ class _StudentListWidgetState extends ConsumerState<StudentListWidget> {
                     NavigationService.navigateToEditStudent(context);
                   },
                 ),
-                _buildSearchAndFilter(context, dynamicClassOptions, classCounts, allStudents.length, selectedClass, notifier),
+                _buildSearchAndFilter(context, dynamicClassOptions, classCounts,
+                    allStudents.length, selectedClass, notifier),
                 if (access.canManageStudents)
                   filteredStudentsAsync.when(
-                    data: (filteredStudents) => _buildImportExportRow(context, filteredStudents),
+                    data: (filteredStudents) =>
+                        _buildImportExportRow(context, filteredStudents),
                     loading: () => const SizedBox.shrink(),
                     error: (_, __) => const SizedBox.shrink(),
                   ),
@@ -106,8 +109,10 @@ class _StudentListWidgetState extends ConsumerState<StudentListWidget> {
                       await Future.delayed(const Duration(milliseconds: 500));
                     },
                     child: filteredStudentsAsync.when(
-                      data: (filteredStudents) => _buildStudentList(context, filteredStudents, allStudents.isEmpty, notifier),
-                      loading: () => const Center(child: CircularProgressIndicator()),
+                      data: (filteredStudents) => _buildStudentList(context,
+                          filteredStudents, allStudents.isEmpty, notifier),
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
                       error: (error, stack) => _buildErrorState(context, error),
                     ),
                   ),
@@ -127,7 +132,8 @@ class _StudentListWidgetState extends ConsumerState<StudentListWidget> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.error_outline_rounded, color: AppColors.error, size: AppSize.iconXl),
+          const Icon(Icons.error_outline_rounded,
+              color: AppColors.error, size: AppSize.iconXl),
           const SizedBox(height: 16),
           Text('Data Error', style: AppTypography.section),
           const SizedBox(height: 8),
@@ -150,10 +156,12 @@ class _StudentListWidgetState extends ConsumerState<StudentListWidget> {
     );
   }
 
-  Widget _buildImportExportRow(BuildContext context, List<Student> filteredStudents) {
+  Widget _buildImportExportRow(
+      BuildContext context, List<Student> filteredStudents) {
     final access = ref.read(accessControlProvider);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 4),
+      padding:
+          const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 4),
       child: LayoutBuilder(
         builder: (context, constraints) {
           final isNarrow = constraints.maxWidth < 360;
@@ -197,10 +205,14 @@ class _StudentListWidgetState extends ConsumerState<StudentListWidget> {
                       try {
                         final data = await ExcelService.importStudents();
                         if (data.isNotEmpty) {
-                          await ref.read(studentServiceProvider).bulkImport(data);
+                          await ref
+                              .read(studentServiceProvider)
+                              .bulkImport(data);
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Imported ${data.length} students successfully!')),
+                              SnackBar(
+                                  content: Text(
+                                      'Imported ${data.length} students successfully!')),
                             );
                           }
                         }
@@ -220,7 +232,13 @@ class _StudentListWidgetState extends ConsumerState<StudentListWidget> {
     );
   }
 
-  Widget _buildSearchAndFilter(BuildContext context, List<String> classOptions, Map<String, int> classCounts, int totalCount, String? selectedClass, StudentListNotifier notifier) {
+  Widget _buildSearchAndFilter(
+      BuildContext context,
+      List<String> classOptions,
+      Map<String, int> classCounts,
+      int totalCount,
+      String? selectedClass,
+      StudentListNotifier notifier) {
     final theme = FlutterFlowTheme.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
@@ -242,19 +260,23 @@ class _StudentListWidgetState extends ConsumerState<StudentListWidget> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: ['All Classes', ...classOptions].map((className) {
-                final isSelected = (selectedClass ?? 'All Classes') == className;
-                final count = className == 'All Classes' ? totalCount : (classCounts[className] ?? 0);
-                
+                final isSelected =
+                    (selectedClass ?? 'All Classes') == className;
+                final count = className == 'All Classes'
+                    ? totalCount
+                    : (classCounts[className] ?? 0);
+
                 return Padding(
                   padding: const EdgeInsets.only(right: 6),
                   child: FilterChip(
-                    label: Text('$className ($count)', 
-                      style: TextStyle(
-                        fontSize: 11, 
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                        color: isSelected ? Colors.white : theme.primaryText
-                      )
-                    ),
+                    label: Text('$className ($count)',
+                        style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                            color:
+                                isSelected ? Colors.white : theme.primaryText)),
                     selected: isSelected,
                     onSelected: (selected) {
                       notifier.updateClassFilter(className);
@@ -262,7 +284,8 @@ class _StudentListWidgetState extends ConsumerState<StudentListWidget> {
                     backgroundColor: theme.secondaryBackground,
                     selectedColor: AppColors.primary,
                     checkmarkColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -280,7 +303,8 @@ class _StudentListWidgetState extends ConsumerState<StudentListWidget> {
     );
   }
 
-  Widget _buildStudentList(BuildContext context, List<Student> students, bool isDatabaseEmpty, StudentListNotifier notifier) {
+  Widget _buildStudentList(BuildContext context, List<Student> students,
+      bool isDatabaseEmpty, StudentListNotifier notifier) {
     if (isDatabaseEmpty) {
       return AppEmptyState(
         icon: Icons.people_outline_rounded,
@@ -307,7 +331,8 @@ class _StudentListWidgetState extends ConsumerState<StudentListWidget> {
     }
 
     return ListView.separated(
-      padding: const EdgeInsets.fromLTRB(AppSpacing.md, 0, AppSpacing.md, AppSpacing.xl),
+      padding: const EdgeInsets.fromLTRB(
+          AppSpacing.md, 0, AppSpacing.md, AppSpacing.xl),
       itemCount: students.length,
       separatorBuilder: (context, index) => const SizedBox(height: 6),
       itemBuilder: (context, index) {
@@ -315,7 +340,8 @@ class _StudentListWidgetState extends ConsumerState<StudentListWidget> {
         return CompactStudentCard(
           student: student,
           onTap: () async {
-            NavigationService.navigateToStudentProfile(context, student: student);
+            NavigationService.navigateToStudentProfile(context,
+                student: student);
           },
         );
       },

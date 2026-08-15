@@ -47,7 +47,9 @@ class StudentAttendance {
       'status': status,
       'date': Timestamp.fromDate(date),
       'markedBy': markedBy,
-      'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : FieldValue.serverTimestamp(),
+      'createdAt': createdAt != null
+          ? Timestamp.fromDate(createdAt!)
+          : FieldValue.serverTimestamp(),
     };
   }
 }

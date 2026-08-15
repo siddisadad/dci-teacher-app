@@ -1,4 +1,4 @@
-import 'package:d_c_i_teacher_app/auth/firebase_auth/auth_util.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:d_c_i_teacher_app/backend/models/exam.dart';
 import 'package:d_c_i_teacher_app/backend/providers/service_providers.dart';
 import 'package:d_c_i_teacher_app/backend/providers/repository_providers.dart';
@@ -43,8 +43,11 @@ class _AddExamWidgetState extends ConsumerState<AddExamWidget> {
   }
 
   Future<void> _saveExam() async {
-    if (!_formKey.currentState!.validate() || _model.selectedClass == null || _model.selectedSubject == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please fill all required fields.')));
+    if (!_formKey.currentState!.validate() ||
+        _model.selectedClass == null ||
+        _model.selectedSubject == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please fill all required fields.')));
       return;
     }
 
@@ -57,21 +60,27 @@ class _AddExamWidgetState extends ConsumerState<AddExamWidget> {
         date: _model.selectedDate!,
         startTime: _model.startTime!.format(context),
         endTime: _model.endTime!.format(context),
-        totalMarks: int.tryParse(_model.totalMarksModel.inputTextController?.text ?? '100') ?? 100,
-        passingMarks: int.tryParse(_model.passingMarksModel.inputTextController?.text ?? '35') ?? 35,
+        totalMarks: int.tryParse(
+                _model.totalMarksModel.inputTextController?.text ?? '100') ??
+            100,
+        passingMarks: int.tryParse(
+                _model.passingMarksModel.inputTextController?.text ?? '35') ??
+            35,
         venue: _model.venueModel.inputTextController?.text ?? '',
         description: _model.descriptionModel.inputTextController?.text ?? '',
-        createdBy: currentUserUid,
+        createdBy: FirebaseAuth.instance.currentUser?.uid ?? '',
       );
 
       await ref.read(examServiceProvider).scheduleExam(exam);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Exam scheduled successfully!')));
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Exam scheduled successfully!')));
         context.safePop();
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     } finally {
       if (mounted) setState(() => _isSaving = false);
@@ -114,8 +123,11 @@ class _AddExamWidgetState extends ConsumerState<AddExamWidget> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(left: 4, bottom: 6),
-                              child: Text('Class', style: AppTypography.label.copyWith(color: theme.secondaryText)),
+                              padding:
+                                  const EdgeInsets.only(left: 4, bottom: 6),
+                              child: Text('Class',
+                                  style: AppTypography.label
+                                      .copyWith(color: theme.secondaryText)),
                             ),
                             studentsAsync.when(
                               data: (students) {
@@ -123,23 +135,30 @@ class _AddExamWidgetState extends ConsumerState<AddExamWidget> {
                                     .map((s) => s.className)
                                     .where((c) => c.isNotEmpty)
                                     .toSet()
-                                    .toList()..sort();
-                                
+                                    .toList()
+                                  ..sort();
+
                                 return DropDownWidget(
                                   label: 'Class',
                                   labelPresent: false,
                                   controller: _model.classDropdownController!,
-                                  options: options.isEmpty ? ['No Classes'] : options,
-                                  onChanged: (val) => setState(() => _model.selectedClass = val),
+                                  options: options.isEmpty
+                                      ? ['No Classes']
+                                      : options,
+                                  onChanged: (val) => setState(
+                                      () => _model.selectedClass = val),
                                   height: 48.0,
                                   hint: 'Select...',
                                 );
                               },
                               loading: () => const SizedBox(
                                 height: 48.0,
-                                child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                                child: Center(
+                                    child: CircularProgressIndicator(
+                                        strokeWidth: 2)),
                               ),
-                              error: (_, __) => const Text('Error', style: TextStyle(fontSize: 10)),
+                              error: (_, __) => const Text('Error',
+                                  style: TextStyle(fontSize: 10)),
                             ),
                           ],
                         ),
@@ -147,31 +166,42 @@ class _AddExamWidgetState extends ConsumerState<AddExamWidget> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(left: 4, bottom: 6),
-                              child: Text('Subject', style: AppTypography.label.copyWith(color: theme.secondaryText)),
+                              padding:
+                                  const EdgeInsets.only(left: 4, bottom: 6),
+                              child: Text('Subject',
+                                  style: AppTypography.label
+                                      .copyWith(color: theme.secondaryText)),
                             ),
                             subjectsAsync.when(
                               data: (subjects) {
                                 final options = {
-                                  'English', 'Marathi', 'Math', 'Science',
+                                  'English',
+                                  'Marathi',
+                                  'Math',
+                                  'Science',
                                   ...subjects,
-                                }.toList()..sort();
+                                }.toList()
+                                  ..sort();
 
                                 return DropDownWidget(
                                   label: 'Subject',
                                   labelPresent: false,
                                   controller: _model.subjectDropdownController!,
                                   options: options,
-                                  onChanged: (val) => setState(() => _model.selectedSubject = val),
+                                  onChanged: (val) => setState(
+                                      () => _model.selectedSubject = val),
                                   height: 48.0,
                                   hint: 'Select...',
                                 );
                               },
                               loading: () => const SizedBox(
                                 height: 48.0,
-                                child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                                child: Center(
+                                    child: CircularProgressIndicator(
+                                        strokeWidth: 2)),
                               ),
-                              error: (_, __) => const Text('Error', style: TextStyle(fontSize: 10)),
+                              error: (_, __) => const Text('Error',
+                                  style: TextStyle(fontSize: 10)),
                             ),
                           ],
                         ),
@@ -190,7 +220,8 @@ class _AddExamWidgetState extends ConsumerState<AddExamWidget> {
                             firstDate: DateTime.now(),
                             lastDate: DateTime(2030),
                           );
-                          if (picked != null) setState(() => _model.selectedDate = picked);
+                          if (picked != null)
+                            setState(() => _model.selectedDate = picked);
                         },
                       ),
                       const SizedBox(height: AppSpacing.md),
@@ -202,8 +233,11 @@ class _AddExamWidgetState extends ConsumerState<AddExamWidget> {
                           value: _model.startTime!.format(context),
                           icon: Icons.access_time_rounded,
                           onTap: () async {
-                            final picked = await showTimePicker(context: context, initialTime: _model.startTime!);
-                            if (picked != null) setState(() => _model.startTime = picked);
+                            final picked = await showTimePicker(
+                                context: context,
+                                initialTime: _model.startTime!);
+                            if (picked != null)
+                              setState(() => _model.startTime = picked);
                           },
                         ),
                         _buildSelectorTile(
@@ -212,8 +246,10 @@ class _AddExamWidgetState extends ConsumerState<AddExamWidget> {
                           value: _model.endTime!.format(context),
                           icon: Icons.access_time_filled_rounded,
                           onTap: () async {
-                            final picked = await showTimePicker(context: context, initialTime: _model.endTime!);
-                            if (picked != null) setState(() => _model.endTime = picked);
+                            final picked = await showTimePicker(
+                                context: context, initialTime: _model.endTime!);
+                            if (picked != null)
+                              setState(() => _model.endTime = picked);
                           },
                         ),
                       ]),
@@ -282,7 +318,11 @@ class _AddExamWidgetState extends ConsumerState<AddExamWidget> {
     );
   }
 
-  Widget _buildSelectorTile(BuildContext context, {required String label, required String value, required IconData icon, required VoidCallback onTap}) {
+  Widget _buildSelectorTile(BuildContext context,
+      {required String label,
+      required String value,
+      required IconData icon,
+      required VoidCallback onTap}) {
     final theme = FlutterFlowTheme.of(context);
     return InkWell(
       onTap: onTap,
@@ -300,9 +340,13 @@ class _AddExamWidgetState extends ConsumerState<AddExamWidget> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(label, style: AppTypography.label.copyWith(color: theme.secondaryText, fontSize: 13)),
+                  Text(label,
+                      style: AppTypography.label
+                          .copyWith(color: theme.secondaryText, fontSize: 13)),
                   const SizedBox(height: 8),
-                  Text(value, style: AppTypography.body.copyWith(fontWeight: FontWeight.bold)),
+                  Text(value,
+                      style: AppTypography.body
+                          .copyWith(fontWeight: FontWeight.bold)),
                 ],
               ),
             ),

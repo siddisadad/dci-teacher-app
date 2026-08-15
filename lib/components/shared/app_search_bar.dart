@@ -48,7 +48,8 @@ class AppSearchBar extends StatelessWidget {
               onChanged: onChanged,
               decoration: InputDecoration(
                 hintText: hintText,
-                hintStyle: AppTypography.caption.copyWith(color: theme.secondaryText),
+                hintStyle:
+                    AppTypography.caption.copyWith(color: theme.secondaryText),
                 border: InputBorder.none,
                 isDense: true,
                 contentPadding: const EdgeInsets.symmetric(vertical: 8),
@@ -85,7 +86,8 @@ class AppSearchBar extends StatelessWidget {
               endIndent: 8,
             ),
             IconButton(
-              icon: Icon(Icons.filter_list_rounded, color: theme.primary, size: 20),
+              icon: Icon(Icons.filter_list_rounded,
+                  color: theme.primary, size: 20),
               onPressed: onFilterTap,
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),

@@ -6,7 +6,6 @@ import 'package:d_c_i_teacher_app/flutter_flow/flutter_flow_icon_button.dart';
 import 'package:d_c_i_teacher_app/flutter_flow/flutter_flow_theme.dart';
 import 'package:d_c_i_teacher_app/flutter_flow/flutter_flow_util.dart';
 import 'package:d_c_i_teacher_app/shared/app_style.dart';
-import 'package:d_c_i_teacher_app/components/shared/app_primary_button.dart';
 import 'package:d_c_i_teacher_app/components/shared/responsive_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,7 +20,8 @@ class HomeDashboardWidget extends ConsumerStatefulWidget {
   static String routePath = '/homeDashboard';
 
   @override
-  ConsumerState<HomeDashboardWidget> createState() => _HomeDashboardWidgetState();
+  ConsumerState<HomeDashboardWidget> createState() =>
+      _HomeDashboardWidgetState();
 }
 
 class _HomeDashboardWidgetState extends ConsumerState<HomeDashboardWidget> {
@@ -63,15 +63,16 @@ class _HomeDashboardWidgetState extends ConsumerState<HomeDashboardWidget> {
                         children: [
                           _buildSectionTitle('Management Modules'),
                           const SizedBox(height: AppSpacing.md),
-                          _buildModulesGrid(context, constraints.maxWidth, isManagement: true),
-                          if (access.canViewAdminReports || access.canViewFacultyList) ...[
+                          _buildModulesGrid(context, constraints.maxWidth,
+                              isManagement: true),
+                          if (access.canViewAdminReports ||
+                              access.canViewFacultyList) ...[
                             const SizedBox(height: AppSpacing.xl),
                             _buildSectionTitle('Administrative Tools'),
                             const SizedBox(height: AppSpacing.md),
-                            _buildModulesGrid(context, constraints.maxWidth, isManagement: false),
+                            _buildModulesGrid(context, constraints.maxWidth,
+                                isManagement: false),
                           ],
-                          const SizedBox(height: AppSpacing.xl),
-                          _buildAIHelpSection(context),
                           const SizedBox(height: AppSpacing.xl),
                         ],
                       ),
@@ -96,11 +97,13 @@ class _HomeDashboardWidgetState extends ConsumerState<HomeDashboardWidget> {
   Widget _buildTopHeader(BuildContext context, bool hideActions) {
     final theme = FlutterFlowTheme.of(context);
     final userAsync = ref.watch(currentUserDataStreamProvider);
-    
+
     return userAsync.when(
       data: (Teacher? userData) {
-        final displayName = userData?.displayName ?? 
-            (currentUserDisplayName.isNotEmpty ? currentUserDisplayName : 'Deshmukh Faculty');
+        final displayName = userData?.displayName ??
+            (currentUserDisplayName.isNotEmpty
+                ? currentUserDisplayName
+                : 'Deshmukh Faculty');
 
         return Container(
           decoration: BoxDecoration(
@@ -109,10 +112,12 @@ class _HomeDashboardWidgetState extends ConsumerState<HomeDashboardWidget> {
               begin: const AlignmentDirectional(0.0, -1.0),
               end: const AlignmentDirectional(0, 1.0),
             ),
-            borderRadius: hideActions ? null : const BorderRadius.only(
-              bottomLeft: Radius.circular(32.0),
-              bottomRight: Radius.circular(32.0),
-            ),
+            borderRadius: hideActions
+                ? null
+                : const BorderRadius.only(
+                    bottomLeft: Radius.circular(32.0),
+                    bottomRight: Radius.circular(32.0),
+                  ),
             boxShadow: AppShadows.low,
           ),
           padding: const EdgeInsetsDirectional.fromSTEB(24.0, 44.0, 24.0, 24.0),
@@ -122,14 +127,19 @@ class _HomeDashboardWidgetState extends ConsumerState<HomeDashboardWidget> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Welcome back,', style: theme.bodyMedium.override(font: GoogleFonts.inter(), color: theme.onBackground80, fontSize: 13)),
+                    Text('Welcome back,',
+                        style: theme.bodyMedium.override(
+                            font: GoogleFonts.inter(),
+                            color: theme.onBackground80,
+                            fontSize: 13)),
                     const SizedBox(height: 4),
                     Text(
                       displayName,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: theme.titleMedium.override(
-                        font: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.bold),
+                        font: GoogleFonts.plusJakartaSans(
+                            fontWeight: FontWeight.bold),
                         color: theme.onBackground,
                         fontSize: 24,
                         lineHeight: 1.1,
@@ -138,16 +148,17 @@ class _HomeDashboardWidgetState extends ConsumerState<HomeDashboardWidget> {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(Icons.calendar_today_rounded, color: theme.onBackground, size: 14),
+                        Icon(Icons.calendar_today_rounded,
+                            color: theme.onBackground, size: 14),
                         const SizedBox(width: 8),
                         Flexible(
                           child: Text(
-                            dateTimeFormat('MMMMEEEEd', getCurrentTimestamp), 
+                            dateTimeFormat('MMMMEEEEd', getCurrentTimestamp),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: theme.labelSmall.override(
-                              font: GoogleFonts.inter(), 
-                              color: theme.onBackground, 
+                              font: GoogleFonts.inter(),
+                              color: theme.onBackground,
                               fontSize: 12,
                             ),
                           ),
@@ -175,8 +186,11 @@ class _HomeDashboardWidgetState extends ConsumerState<HomeDashboardWidget> {
           alignment: const AlignmentDirectional(1.0, -1.0),
           children: [
             FlutterFlowIconButton(
-              borderRadius: 12.0, buttonSize: 40.0, fillColor: theme.onPrimary15,
-              icon: Icon(Icons.notifications_none_rounded, color: theme.onPrimary, size: 24.0),
+              borderRadius: 12.0,
+              buttonSize: 40.0,
+              fillColor: theme.onPrimary15,
+              icon: Icon(Icons.notifications_none_rounded,
+                  color: theme.onPrimary, size: 24.0),
               onPressed: () => context.pushNamed(NotificationsWidget.routeName),
             ),
             _buildNotificationBadge(context),
@@ -184,7 +198,9 @@ class _HomeDashboardWidgetState extends ConsumerState<HomeDashboardWidget> {
         ),
         const SizedBox(width: 12),
         FlutterFlowIconButton(
-          borderRadius: 12.0, buttonSize: 40.0, fillColor: theme.onPrimary15,
+          borderRadius: 12.0,
+          buttonSize: 40.0,
+          fillColor: theme.onPrimary15,
           icon: Icon(Icons.logout_rounded, color: theme.onPrimary, size: 24.0),
           onPressed: () async {
             await ref.read(authServiceProvider).signOut();
@@ -198,43 +214,101 @@ class _HomeDashboardWidgetState extends ConsumerState<HomeDashboardWidget> {
   Widget _buildNotificationBadge(BuildContext context) {
     final countAsync = ref.watch(unreadNotificationsCountProvider);
     return countAsync.when(
-      data: (count) => count == 0 ? const SizedBox.shrink() : Container(
-        width: 18, height: 18, decoration: BoxDecoration(color: FlutterFlowTheme.of(context).error, shape: BoxShape.circle, border: Border.all(color: Colors.white, width: 2)),
-        alignment: Alignment.center, child: Text(count > 9 ? '9+' : count.toString(), style: const TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold)),
-      ),
+      data: (count) => count == 0
+          ? const SizedBox.shrink()
+          : Container(
+              width: 18,
+              height: 18,
+              decoration: BoxDecoration(
+                  color: FlutterFlowTheme.of(context).error,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 2)),
+              alignment: Alignment.center,
+              child: Text(count > 9 ? '9+' : count.toString(),
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 9,
+                      fontWeight: FontWeight.bold)),
+            ),
       loading: () => const SizedBox.shrink(),
       error: (_, __) => const SizedBox.shrink(),
     );
   }
 
-  Widget _buildModulesGrid(BuildContext context, double width, {required bool isManagement}) {
-    final crossAxisCount = width > 1000 ? 5 : (width > 700 ? 4 : (width > 400 ? 3 : 2));
+  Widget _buildModulesGrid(BuildContext context, double width,
+      {required bool isManagement}) {
+    final crossAxisCount =
+        width > 1000 ? 5 : (width > 700 ? 4 : (width > 400 ? 3 : 2));
     final access = ref.watch(accessControlProvider);
 
     final List<Map<String, dynamic>> modules;
     if (isManagement) {
       modules = [
         if (access.canSubmitDailyReport)
-          {'target': 'DailyReport', 'title': 'Daily Report', 'icon': Icons.assessment_rounded},
-        {'target': 'Attendance', 'title': 'Attendance', 'icon': Icons.fact_check_rounded},
-        {'target': 'Homework', 'title': 'Homework', 'icon': Icons.edit_note_rounded},
-        {'target': 'Students', 'title': 'Students', 'icon': Icons.people_rounded},
+          {
+            'target': 'DailyReport',
+            'title': 'Daily Report',
+            'icon': Icons.assessment_rounded
+          },
+        {
+          'target': 'Attendance',
+          'title': 'Attendance',
+          'icon': Icons.fact_check_rounded
+        },
+        {
+          'target': 'Homework',
+          'title': 'Homework',
+          'icon': Icons.edit_note_rounded
+        },
+        {
+          'target': 'Students',
+          'title': 'Students',
+          'icon': Icons.people_rounded
+        },
         {'target': 'Exams', 'title': 'Exams', 'icon': Icons.assignment_rounded},
         {'target': 'Results', 'title': 'Results', 'icon': Icons.grade_rounded},
-        {'target': 'Announcements', 'title': 'Announcements', 'icon': Icons.campaign_rounded},
-        {'target': 'TeacherProfile', 'title': 'My Profile', 'icon': Icons.person_rounded},
-        {'target': 'AboutDCI', 'title': 'About Institute', 'icon': Icons.info_rounded},
+        {
+          'target': 'Announcements',
+          'title': 'Announcements',
+          'icon': Icons.campaign_rounded
+        },
+        {
+          'target': 'TeacherProfile',
+          'title': 'My Profile',
+          'icon': Icons.person_rounded
+        },
+        {
+          'target': 'AboutDCI',
+          'title': 'About Institute',
+          'icon': Icons.info_rounded
+        },
       ];
     } else {
       modules = [
         if (access.canViewAdminReports)
-          {'target': 'ReportsDashboard', 'title': 'Institute Reports', 'icon': Icons.insights_rounded},
+          {
+            'target': 'ReportsDashboard',
+            'title': 'Institute Reports',
+            'icon': Icons.insights_rounded
+          },
         if (access.canViewFacultyList)
-          {'target': 'FacultyList', 'title': 'Faculty Management', 'icon': Icons.people_outline_rounded},
+          {
+            'target': 'FacultyList',
+            'title': 'Faculty Management',
+            'icon': Icons.people_outline_rounded
+          },
         if (access.canViewAdminReports) // Use this for audit logs visibility
-          {'target': 'AuditLogs', 'title': 'Audit Logs', 'icon': Icons.history_rounded},
+          {
+            'target': 'AuditLogs',
+            'title': 'Audit Logs',
+            'icon': Icons.history_rounded
+          },
         if (access.canManageFullSettings || access.canManageLimitedSettings)
-          {'target': 'InstituteSettings', 'title': 'ERP Settings', 'icon': Icons.admin_panel_settings_outlined},
+          {
+            'target': 'InstituteSettings',
+            'title': 'ERP Settings',
+            'icon': Icons.admin_panel_settings_outlined
+          },
       ];
     }
 
@@ -243,9 +317,14 @@ class _HomeDashboardWidgetState extends ConsumerState<HomeDashboardWidget> {
     return GridView.builder(
       padding: EdgeInsets.zero,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount, crossAxisSpacing: 16, mainAxisSpacing: 16, childAspectRatio: 1.2,
+        crossAxisCount: crossAxisCount,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+        childAspectRatio: 1.2,
       ),
-      itemCount: modules.length, shrinkWrap: true, physics: const NeverScrollableScrollPhysics(),
+      itemCount: modules.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         final module = modules[index];
         return DashboardCardWidget(
@@ -254,34 +333,6 @@ class _HomeDashboardWidgetState extends ConsumerState<HomeDashboardWidget> {
           icon: Icon(module['icon'] as IconData),
         );
       },
-    );
-  }
-
-  Widget _buildAIHelpSection(BuildContext context) {
-    final config = ref.watch(instituteInfoStreamProvider).value;
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      decoration: BoxDecoration(color: AppColors.primary.withAlpha(15), borderRadius: BorderRadius.circular(20), border: Border.all(color: AppColors.primary.withAlpha(30))),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.auto_awesome_rounded, color: AppColors.primary, size: 24),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(config?['ai_title'] ?? 'Deshmukh AI Assistant', style: AppTypography.body.copyWith(fontWeight: FontWeight.bold, color: AppColors.primary)),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(config?['ai_description'] ?? 'Get instant help with lesson planning, student performance analysis, or any academic queries.', style: AppTypography.caption.copyWith(color: AppColors.textPrimary)),
-          const SizedBox(height: 16),
-          AppPrimaryButton(text: 'Ask AI Assistant', width: double.infinity, onPressed: () {
-            context.pushNamed(AIChatWidget.routeName);
-          }),
-        ],
-      ),
     );
   }
 }

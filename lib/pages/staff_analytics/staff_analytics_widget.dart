@@ -13,7 +13,8 @@ class StaffAnalyticsWidget extends ConsumerStatefulWidget {
   static String routePath = '/staffAnalytics';
 
   @override
-  ConsumerState<StaffAnalyticsWidget> createState() => _StaffAnalyticsWidgetState();
+  ConsumerState<StaffAnalyticsWidget> createState() =>
+      _StaffAnalyticsWidgetState();
 }
 
 class _StaffAnalyticsWidgetState extends ConsumerState<StaffAnalyticsWidget> {
@@ -25,7 +26,8 @@ class _StaffAnalyticsWidgetState extends ConsumerState<StaffAnalyticsWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = FlutterFlowTheme.of(context);
-    final reportsAsync = ref.watch(recentReportsProvider(200)); // Larger limit for analytics
+    final reportsAsync =
+        ref.watch(recentReportsProvider(200)); // Larger limit for analytics
     final attendanceLogsAsync = ref.watch(studentAttendanceLogsProvider);
 
     return Scaffold(
@@ -48,7 +50,8 @@ class _StaffAnalyticsWidgetState extends ConsumerState<StaffAnalyticsWidget> {
                   const SizedBox(height: 12),
                   reportsAsync.when(
                     data: (reports) => _buildActivityHeatmap(context, reports),
-                    loading: () => const Center(child: CircularProgressIndicator()),
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
                     error: (err, _) => Text('Error loading reports: $err'),
                   ),
                   const SizedBox(height: 32),
@@ -56,7 +59,8 @@ class _StaffAnalyticsWidgetState extends ConsumerState<StaffAnalyticsWidget> {
                   const SizedBox(height: 12),
                   attendanceLogsAsync.when(
                     data: (logs) => _buildAttendanceConsistency(context, logs),
-                    loading: () => const Center(child: CircularProgressIndicator()),
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
                     error: (err, _) => Text('Error loading logs: $err'),
                   ),
                   const SizedBox(height: 40),
@@ -70,20 +74,31 @@ class _StaffAnalyticsWidgetState extends ConsumerState<StaffAnalyticsWidget> {
   }
 
   Widget _buildSectionTitle(String title) {
-    return Text(title, style: AppTypography.section.copyWith(fontWeight: FontWeight.bold));
+    return Text(title,
+        style: AppTypography.section.copyWith(fontWeight: FontWeight.bold));
   }
 
   Widget _buildActivityHeatmap(BuildContext context, List<dynamic> reports) {
     final theme = FlutterFlowTheme.of(context);
     // Group reports by day of week
-    final Map<int, int> weekdayCounts = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0};
+    final Map<int, int> weekdayCounts = {
+      1: 0,
+      2: 0,
+      3: 0,
+      4: 0,
+      5: 0,
+      6: 0,
+      7: 0
+    };
     for (var r in reports) {
       if (r.createdAt != null) {
-        weekdayCounts[r.createdAt!.weekday] = (weekdayCounts[r.createdAt!.weekday] ?? 0) + 1;
+        weekdayCounts[r.createdAt!.weekday] =
+            (weekdayCounts[r.createdAt!.weekday] ?? 0) + 1;
       }
     }
 
-    final maxCount = weekdayCounts.values.fold(0, (max, val) => val > max ? val : max);
+    final maxCount =
+        weekdayCounts.values.fold(0, (max, val) => val > max ? val : max);
     final days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
     return Container(
@@ -103,7 +118,9 @@ class _StaffAnalyticsWidgetState extends ConsumerState<StaffAnalyticsWidget> {
               final height = maxCount == 0 ? 0.0 : (count / maxCount) * 100.0;
               return Column(
                 children: [
-                  Text(count.toString(), style: AppTypography.caption.copyWith(fontSize: 10, fontWeight: FontWeight.bold)),
+                  Text(count.toString(),
+                      style: AppTypography.caption
+                          .copyWith(fontSize: 10, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
                   Container(
                     width: 24,
@@ -114,13 +131,16 @@ class _StaffAnalyticsWidgetState extends ConsumerState<StaffAnalyticsWidget> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Text(days[i], style: AppTypography.caption.copyWith(fontSize: 10)),
+                  Text(days[i],
+                      style: AppTypography.caption.copyWith(fontSize: 10)),
                 ],
               );
             }),
           ),
           const SizedBox(height: 16),
-          Text('Total Reports: ${reports.length}', style: AppTypography.caption.copyWith(fontWeight: FontWeight.bold)),
+          Text('Total Reports: ${reports.length}',
+              style:
+                  AppTypography.caption.copyWith(fontWeight: FontWeight.bold)),
         ],
       ),
     );
@@ -139,7 +159,8 @@ class _StaffAnalyticsWidgetState extends ConsumerState<StaffAnalyticsWidget> {
     return Column(
       children: sortedClasses.map((className) {
         final logsForClass = classLogs[className]!;
-        final presentCount = logsForClass.where((l) => l.status == 'Present').length;
+        final presentCount =
+            logsForClass.where((l) => l.status == 'Present').length;
         final percentage = (presentCount / logsForClass.length);
 
         return Container(
@@ -155,8 +176,14 @@ class _StaffAnalyticsWidgetState extends ConsumerState<StaffAnalyticsWidget> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(className, style: AppTypography.body.copyWith(fontWeight: FontWeight.bold, fontSize: 14)),
-                  Text('${(percentage * 100).toInt()}%', style: TextStyle(color: theme.primary, fontWeight: FontWeight.bold, fontSize: 14)),
+                  Text(className,
+                      style: AppTypography.body
+                          .copyWith(fontWeight: FontWeight.bold, fontSize: 14)),
+                  Text('${(percentage * 100).toInt()}%',
+                      style: TextStyle(
+                          color: theme.primary,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14)),
                 ],
               ),
               const SizedBox(height: 8),

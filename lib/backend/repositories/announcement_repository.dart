@@ -4,7 +4,8 @@ import 'package:d_c_i_teacher_app/backend/models/announcement.dart';
 class AnnouncementRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  CollectionReference get _announcementsCollection => _firestore.collection('announcements');
+  CollectionReference get _announcementsCollection =>
+      _firestore.collection('announcements');
 
   Stream<List<Announcement>> getAnnouncementsStream() {
     return _announcementsCollection

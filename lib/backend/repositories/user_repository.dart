@@ -171,6 +171,7 @@ class UserRepository implements IUserRepository {
     required String phoneNumber,
     String? employeeId,
     required String subjectExpertise,
+    List<String> assignedClasses = const [],
   }) async {
     try {
       final callable = _functions.httpsCallable('createStaffUser');
@@ -183,9 +184,25 @@ class UserRepository implements IUserRepository {
         'phoneNumber': phoneNumber.trim(),
         'employeeId': employeeId?.trim() ?? '',
         'subjectExpertise': subjectExpertise.trim(),
+        'assignedClasses': assignedClasses,
       });
     } on FirebaseFunctionsException catch (e) {
       throw Exception(e.message ?? 'Failed to create user.');
+    }
+  }
+
+  Future<Map<String, dynamic>> backfillUserClaims() async {
+    try {
+      final callable = _functions.httpsCallable('backfillUserClaims');
+      final result = await callable.call();
+      await _auth.currentUser?.getIdToken(true);
+      final data = result.data;
+      if (data is Map) {
+        return Map<String, dynamic>.from(data);
+      }
+      return const {};
+    } on FirebaseFunctionsException catch (e) {
+      throw Exception(e.message ?? 'Failed to backfill user claims.');
     }
   }
 

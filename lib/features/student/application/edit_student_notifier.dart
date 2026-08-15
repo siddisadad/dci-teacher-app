@@ -60,8 +60,11 @@ class EditStudentNotifier extends StateNotifier<EditStudentState> {
         finalId = 'STU-${const Uuid().v4().substring(0, 8).toUpperCase()}';
       }
 
-      final studentToSave = student.copyWith(id: finalId, photoUrl: state.photoUrl);
-      await ref.read(studentServiceProvider).saveStudent(studentToSave, isNew: isNew);
+      final studentToSave =
+          student.copyWith(id: finalId, photoUrl: state.photoUrl);
+      await ref
+          .read(studentServiceProvider)
+          .saveStudent(studentToSave, isNew: isNew);
       state = state.copyWith(isSaving: false);
       return true;
     } catch (e) {
@@ -83,6 +86,8 @@ class EditStudentNotifier extends StateNotifier<EditStudentState> {
   }
 }
 
-final editStudentNotifierProvider = StateNotifierProvider.autoDispose<EditStudentNotifier, EditStudentState>((ref) {
+final editStudentNotifierProvider =
+    StateNotifierProvider.autoDispose<EditStudentNotifier, EditStudentState>(
+        (ref) {
   return EditStudentNotifier(ref);
 });

@@ -85,7 +85,15 @@ final studentRepositoryProvider = Provider<StudentRepository>((ref) {
 });
 
 final studentsStreamProvider = StreamProvider<List<Student>>((ref) {
-  return ref.watch(studentRepositoryProvider).getAllStudentsStream();
+  final access = ref.watch(accessControlProvider);
+  final repo = ref.watch(studentRepositoryProvider);
+  if (access.isStudent) {
+    return Stream.value(const []);
+  }
+  if (access.hasClassRestriction) {
+    return repo.getStudentsByClassesStream(access.assignedClasses);
+  }
+  return repo.getAllStudentsStream();
 });
 
 final currentUserDataStreamProvider = StreamProvider<Teacher?>((ref) {

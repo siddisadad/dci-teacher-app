@@ -1,9 +1,9 @@
-import 'package:d_c_i_teacher_app/auth/firebase_auth/auth_util.dart';
 import 'package:d_c_i_teacher_app/backend/providers/service_providers.dart';
 import 'package:d_c_i_teacher_app/backend/models/teacher.dart';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:d_c_i_teacher_app/backend/providers/repository_providers.dart';
 import 'package:d_c_i_teacher_app/components/shared/app_primary_button.dart';
 import 'package:d_c_i_teacher_app/shared/app_style.dart';
@@ -34,7 +34,7 @@ class EditProfileWidget extends ConsumerStatefulWidget {
 class _EditProfileWidgetState extends ConsumerState<EditProfileWidget> {
   late EditProfileModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  
+
   String? _currentPhotoUrl;
   bool _isUploading = false;
 
@@ -49,11 +49,13 @@ class _EditProfileWidgetState extends ConsumerState<EditProfileWidget> {
   Future<void> _loadUserData() async {
     try {
       final currentUser = await ref.read(userRepositoryProvider).getUserData();
-      final isAdmin = currentUser?.role == 'Admin' || currentUser?.role == 'Director';
+      final isAdmin =
+          currentUser?.role == 'Admin' || currentUser?.role == 'Director';
 
       if (!isAdmin && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Access Denied: Only Admins can edit profiles.')),
+          const SnackBar(
+              content: Text('Access Denied: Only Admins can edit profiles.')),
         );
         context.safePop();
         return;
@@ -78,6 +80,8 @@ class _EditProfileWidgetState extends ConsumerState<EditProfileWidget> {
               userData.experience ?? '';
           _model.textFieldModel7.inputTextController?.text =
               userData.employeeId ?? '';
+          _model.assignedClassesModel.inputTextController?.text =
+              userData.assignedClasses.join(', ');
         });
       }
     } catch (e) {
@@ -96,14 +100,18 @@ class _EditProfileWidgetState extends ConsumerState<EditProfileWidget> {
       try {
         final service = ref.read(teacherServiceProvider);
         final file = File(result.files.single.path!);
-        
+
         await service.updateProfilePicture(
-          file, 
+          file,
           targetUid: widget.userToEdit?.uid,
         );
 
         // Fetch the updated user data to get the new URL
-        final updatedUser = await ref.read(userRepositoryProvider).getUserDataById(widget.userToEdit?.uid ?? currentUserUid);
+        final updatedUser = await ref
+            .read(userRepositoryProvider)
+            .getUserDataById(widget.userToEdit?.uid ??
+                FirebaseAuth.instance.currentUser?.uid ??
+                '');
 
         if (mounted) {
           setState(() {
@@ -129,10 +137,10 @@ class _EditProfileWidgetState extends ConsumerState<EditProfileWidget> {
     try {
       final repository = ref.read(userRepositoryProvider);
       final service = ref.read(teacherServiceProvider);
-      
+
       Teacher? currentData = widget.userToEdit;
       currentData ??= await repository.getUserData();
-      
+
       if (currentData == null) throw Exception('User data not found');
 
       final updatedTeacher = currentData.copyWith(
@@ -144,6 +152,9 @@ class _EditProfileWidgetState extends ConsumerState<EditProfileWidget> {
         subjectExpertise: _model.textFieldModel5.inputTextController?.text,
         experience: _model.textFieldModel6.inputTextController?.text,
         employeeId: _model.textFieldModel7.inputTextController?.text,
+        assignedClasses: Teacher.parseClassList(
+          _model.assignedClassesModel.inputTextController?.text,
+        ),
       );
 
       await service.updateTeacher(updatedTeacher);
@@ -191,8 +202,10 @@ class _EditProfileWidgetState extends ConsumerState<EditProfileWidget> {
                         imageUrl: _currentPhotoUrl ??
                             'https://dimg.dreamflow.cloud/v1/image/professional%20teacher%20portrait',
                         fit: BoxFit.cover,
-                        placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
-                        errorWidget: (context, url, error) => const Icon(Icons.person, size: 50),
+                        placeholder: (context, url) =>
+                            const Center(child: CircularProgressIndicator()),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.person, size: 50),
                       ),
               ),
             ),
@@ -315,6 +328,15 @@ class _EditProfileWidgetState extends ConsumerState<EditProfileWidget> {
                         child: const TextFieldWidget(
                           label: 'Employee ID',
                           hint: 'e.g. DESHMUKH-2024-001',
+                          variant: 'outlined',
+                        ),
+                      ),
+                      wrapWithModel(
+                        model: _model.assignedClassesModel,
+                        updateCallback: () => safeSetState(() {}),
+                        child: const TextFieldWidget(
+                          label: 'Assigned Classes',
+                          hint: 'e.g. 10A, 10B (empty = all classes)',
                           variant: 'outlined',
                         ),
                       ),

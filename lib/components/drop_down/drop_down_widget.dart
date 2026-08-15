@@ -78,7 +78,8 @@ class _DropDownWidgetState extends State<DropDownWidget> {
   @override
   void didUpdateWidget(DropDownWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.initialValue != oldWidget.initialValue && _localController != null) {
+    if (widget.initialValue != oldWidget.initialValue &&
+        _localController != null) {
       _localController!.value = widget.initialValue;
     }
   }
@@ -86,10 +87,10 @@ class _DropDownWidgetState extends State<DropDownWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = FlutterFlowTheme.of(context);
-    final borderColor = widget.error 
-        ? AppColors.error 
+    final borderColor = widget.error
+        ? AppColors.error
         : (_isFocused ? AppColors.primary : AppColors.outline);
-    
+
     final borderWidth = _isFocused || widget.error ? 2.0 : 1.0;
 
     return Column(
@@ -102,7 +103,11 @@ class _DropDownWidgetState extends State<DropDownWidget> {
             child: Text(
               widget.label,
               style: AppTypography.label.copyWith(
-                color: widget.error ? AppColors.error : (_isFocused ? AppColors.primary : AppColors.textSecondary),
+                color: widget.error
+                    ? AppColors.error
+                    : (_isFocused
+                        ? AppColors.primary
+                        : AppColors.textSecondary),
                 fontWeight: _isFocused ? FontWeight.bold : FontWeight.w500,
               ),
             ),
@@ -119,11 +124,12 @@ class _DropDownWidgetState extends State<DropDownWidget> {
             color: theme.primaryText,
           ),
           hintText: widget.hint,
-          icon: widget.icon ?? Icon(
-            Icons.arrow_drop_down_rounded,
-            color: _isFocused ? AppColors.primary : AppColors.textSecondary,
-            size: 24.0,
-          ),
+          icon: widget.icon ??
+              Icon(
+                Icons.arrow_drop_down_rounded,
+                color: _isFocused ? AppColors.primary : AppColors.textSecondary,
+                size: 24.0,
+              ),
           fillColor: theme.secondaryBackground,
           elevation: 2.0,
           borderColor: borderColor,

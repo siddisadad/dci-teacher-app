@@ -47,34 +47,34 @@ class _AboutDCIWidgetState extends ConsumerState<AboutDCIWidget> {
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         body: ref.watch(instituteInfoStreamProvider).when(
-          data: (info) {
-            return SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _buildTopHeader(context, info),
-                  Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        _buildMissionVision(context, info),
-                        const SizedBox(height: 24.0),
-                        _buildStatsRow(context, info),
-                        const SizedBox(height: 24.0),
-                        _buildContactInfo(context, info),
-                        const SizedBox(height: 32.0),
-                        _buildFooter(info),
-                      ],
-                    ),
+              data: (info) {
+                return SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildTopHeader(context, info),
+                      Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            _buildMissionVision(context, info),
+                            const SizedBox(height: 24.0),
+                            _buildStatsRow(context, info),
+                            const SizedBox(height: 24.0),
+                            _buildContactInfo(context, info),
+                            const SizedBox(height: 32.0),
+                            _buildFooter(info),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            );
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (err, stack) => Center(child: Text('Error: $err')),
-        ),
+                );
+              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (err, stack) => Center(child: Text('Error: $err')),
+            ),
       ),
     );
   }
@@ -110,7 +110,8 @@ class _AboutDCIWidgetState extends ConsumerState<AboutDCIWidget> {
                   Text(
                     'About Deshmukh Coaching Institute',
                     textAlign: TextAlign.center,
-                    style: AppTypography.title.copyWith(color: Colors.white, fontSize: 28),
+                    style: AppTypography.title
+                        .copyWith(color: Colors.white, fontSize: 28),
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -133,14 +134,17 @@ class _AboutDCIWidgetState extends ConsumerState<AboutDCIWidget> {
                 color: FlutterFlowTheme.of(context).secondaryBackground,
                 borderRadius: BorderRadius.circular(AppRadius.xl),
                 boxShadow: AppShadows.medium,
-                border: Border.all(color: FlutterFlowTheme.of(context).primary, width: 3),
+                border: Border.all(
+                    color: FlutterFlowTheme.of(context).primary, width: 3),
               ),
               padding: const EdgeInsets.all(16.0),
               child: CachedNetworkImage(
                 imageUrl: info?['logo_url'] ?? '',
                 fit: BoxFit.contain,
-                placeholder: (context, url) => const Center(child: CircularProgressIndicator(strokeWidth: 2)),
-                errorWidget: (context, url, error) => Image.asset('assets/images/logo.png', fit: BoxFit.contain),
+                placeholder: (context, url) => const Center(
+                    child: CircularProgressIndicator(strokeWidth: 2)),
+                errorWidget: (context, url, error) =>
+                    Image.asset('assets/images/logo.png', fit: BoxFit.contain),
               ),
             ),
           ),
@@ -177,8 +181,10 @@ class _AboutDCIWidgetState extends ConsumerState<AboutDCIWidget> {
             model: _model.infoSectionModel1,
             updateCallback: () => safeSetState(() {}),
             child: InfoSectionWidget(
-              description: info?['mission'] ?? 'To provide academic excellence.',
-              icon: Icon(Icons.rocket_launch_rounded, color: FlutterFlowTheme.of(context).primary),
+              description:
+                  info?['mission'] ?? 'To provide academic excellence.',
+              icon: Icon(Icons.rocket_launch_rounded,
+                  color: FlutterFlowTheme.of(context).primary),
               title: 'Our Mission',
             ),
           ),
@@ -196,7 +202,8 @@ class _AboutDCIWidgetState extends ConsumerState<AboutDCIWidget> {
             updateCallback: () => safeSetState(() {}),
             child: InfoSectionWidget(
               description: info?['vision'] ?? 'To be leading individuals.',
-              icon: Icon(Icons.visibility_rounded, color: FlutterFlowTheme.of(context).primary),
+              icon: Icon(Icons.visibility_rounded,
+                  color: FlutterFlowTheme.of(context).primary),
               title: 'Our Vision',
             ),
           ),
@@ -209,16 +216,20 @@ class _AboutDCIWidgetState extends ConsumerState<AboutDCIWidget> {
     final theme = FlutterFlowTheme.of(context);
     return Row(
       children: [
-        _buildStatItem(context, info?['stats_years'] ?? '10+', 'Years', theme.primary),
+        _buildStatItem(
+            context, info?['stats_years'] ?? '10+', 'Years', theme.primary),
         const SizedBox(width: AppSpacing.md),
-        _buildStatItem(context, info?['stats_students'] ?? '5k+', 'Students', theme.info),
+        _buildStatItem(
+            context, info?['stats_students'] ?? '5k+', 'Students', theme.info),
         const SizedBox(width: AppSpacing.md),
-        _buildStatItem(context, info?['stats_results'] ?? '100%', 'Results', theme.success),
+        _buildStatItem(context, info?['stats_results'] ?? '100%', 'Results',
+            theme.success),
       ],
     );
   }
 
-  Widget _buildStatItem(BuildContext context, String value, String label, Color color) {
+  Widget _buildStatItem(
+      BuildContext context, String value, String label, Color color) {
     final theme = FlutterFlowTheme.of(context);
     return Expanded(
       child: Container(
@@ -231,10 +242,11 @@ class _AboutDCIWidgetState extends ConsumerState<AboutDCIWidget> {
         ),
         child: Column(
           children: [
-            Text(value, style: AppTypography.title.copyWith(
-              color: color,
-              fontSize: 18,
-            )),
+            Text(value,
+                style: AppTypography.title.copyWith(
+                  color: color,
+                  fontSize: 18,
+                )),
             Text(label, style: AppTypography.caption.copyWith(fontSize: 10)),
           ],
         ),
@@ -247,7 +259,8 @@ class _AboutDCIWidgetState extends ConsumerState<AboutDCIWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Contact Us', style: AppTypography.section.copyWith(fontWeight: FontWeight.bold)),
+        Text('Contact Us',
+            style: AppTypography.section.copyWith(fontWeight: FontWeight.bold)),
         const SizedBox(height: AppSpacing.md),
         wrapWithModel(
           model: _model.contactItemModel1,
@@ -273,7 +286,8 @@ class _AboutDCIWidgetState extends ConsumerState<AboutDCIWidget> {
           model: _model.contactItemModel3,
           updateCallback: () => safeSetState(() {}),
           child: ContactItemWidget(
-            icon: Icon(Icons.location_on_rounded, color: theme.primary, size: 20),
+            icon:
+                Icon(Icons.location_on_rounded, color: theme.primary, size: 20),
             label: 'Office Address',
             value: info?['address'] ?? 'Main Branch, City Center',
           ),

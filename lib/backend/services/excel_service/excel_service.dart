@@ -41,7 +41,8 @@ class ExcelService {
     ]);
 
     for (final student in students) {
-      final logs = attendance.where((l) => l.studentId == student.studentId).toList();
+      final logs =
+          attendance.where((l) => l.studentId == student.studentId).toList();
       final status = logs.isNotEmpty ? logs.first.status : 'Not Marked';
       final subject = logs.isNotEmpty ? logs.first.subject : 'N/A';
 
@@ -53,15 +54,16 @@ class ExcelService {
       ]);
     }
 
-    return await _saveAndShare(excel, 'Attendance_${className}_${dateTimeFormat('yyyyMMdd', date)}.xlsx');
+    return await _saveAndShare(excel,
+        'Attendance_${className}_${dateTimeFormat('yyyyMMdd', date)}.xlsx');
   }
 
   static Future<bool> exportStudents(List<Student> students) async {
     if (students.isEmpty) return false;
-    
+
     final excel = Excel.createExcel();
     final sheet = excel['Students'];
-    
+
     if (excel.tables.containsKey('Sheet1')) {
       excel.delete('Sheet1');
     }
@@ -120,7 +122,7 @@ class ExcelService {
 
     final excel = Excel.createExcel();
     final sheet = excel['Daily Reports'];
-    
+
     if (excel.tables.containsKey('Sheet1')) {
       excel.delete('Sheet1');
     }
@@ -239,7 +241,8 @@ class ExcelService {
 
           // Auto-generate ID if missing
           if (studentId.isEmpty) {
-            studentId = 'STU-${const Uuid().v4().substring(0, 8).toUpperCase()}';
+            studentId =
+                'STU-${const Uuid().v4().substring(0, 8).toUpperCase()}';
           }
 
           // Fallback class if missing
@@ -249,7 +252,8 @@ class ExcelService {
 
           if (studentsData.any((s) => s['student_id'] == studentId)) {
             // If duplicate ID, generate a new one to ensure import succeeds
-            studentId = 'STU-${const Uuid().v4().substring(0, 8).toUpperCase()}';
+            studentId =
+                'STU-${const Uuid().v4().substring(0, 8).toUpperCase()}';
           }
 
           studentsData.add({
@@ -288,7 +292,8 @@ class ExcelService {
       if (bytes == null) return false;
 
       if (kIsWeb) {
-        await Printing.sharePdf(bytes: Uint8List.fromList(bytes), filename: fileName);
+        await Printing.sharePdf(
+            bytes: Uint8List.fromList(bytes), filename: fileName);
       } else {
         final directory = await getTemporaryDirectory();
         final path = '${directory.path}/$fileName';

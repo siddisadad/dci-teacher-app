@@ -48,3 +48,8 @@ app.*.map.json
 android/key.properties
 **/*.jks
 **/*.keystore
+
+# Firebase emulators / Node
+firebase/**/node_modules/
+firebase/**/*.log
+

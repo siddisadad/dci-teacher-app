@@ -11,7 +11,7 @@ Official teacher application for Deshmukh Coaching Institute. Flutter client wit
 
 ## Prerequisites
 
-- Flutter stable (Dart 3)
+- Flutter **3.47.0** (pinned in CI)
 - A Firebase project with Authentication (Email/Password), Firestore, Storage, and Cloud Functions (Blaze)
 - Firebase CLI (`npm i -g firebase-tools`)
 
@@ -27,7 +27,7 @@ Android and iOS Firebase config files (`google-services.json`, `GoogleService-In
 
 ## Security deploy (required)
 
-This branch tightens Firestore/Storage rules and moves staff-user creation to Cloud Functions. Deploy them before using the Add User screen:
+This branch tightens Firestore/Storage rules, blocks public Auth sign-up, and moves staff-user creation and WhatsApp Cloud API sends to Cloud Functions. Deploy them before using Add User or WhatsApp Cloud sends:
 
 ```bash
 cd firebase
@@ -37,25 +37,35 @@ firebase deploy --only firestore:rules,firestore:indexes,storage,functions
 
 Then in the Firebase console:
 
-1. **Authentication → Settings**: keep Email/Password **sign-in** enabled. There is no public sign-up screen; new accounts must be created by Admin/Director via `createStaffUser`.
-2. Confirm Firestore rules are the repo version (users cannot change their own `role`).
+1. **Authentication → Settings**: keep Email/Password **sign-in** enabled. Public sign-up is blocked by `beforeUserCreated` unless `pending_invites/{email}` exists (written by `createStaffUser`).
+2. Enable **Identity Platform** / Auth blocking functions if deploy of `beforecreated` fails. Without that, the blocking function will not run.
+3. Confirm Firestore rules are the repo version (users cannot change their own `role` or `assigned_classes`).
+4. Existing staff should **re-login** (or use Institute Settings → Backfill User Claims) so Auth tokens include `role` and `assigned_classes`.
+
+### WhatsApp Cloud API
+
+Device-share via `wa.me` does not need secrets. Cloud API sends go through the `sendWhatsAppMessage` callable. Set these environment variables / secrets on that function:
+
+- `WHATSAPP_ACCESS_TOKEN`
+- `WHATSAPP_PHONE_NUMBER_ID`
+
+Do not put those values in the Flutter client.
 
 ## Roles
 
 | Role | Students | Exams | Faculty | Settings |
 | --- | --- | --- | --- | --- |
-| Director | Manage | Manage | Manage | Full |
+| Director | Manage | Manage | Manage (cannot create Admins) | Full |
 | Admin | Manage | Manage | Manage | Limited |
-| Teacher | View / mark attendance / enter marks | Enter marks | Own profile | — |
-| Student | Own record only | Own results | — | — |
+| Teacher | View assigned classes / mark attendance / enter marks | Enter marks | Own profile | — |
+| Student | Own record only | Own class exams / own results | — | — |
+
+Teachers with a non-empty `assigned_classes` list can only read student records for those classes. An empty list keeps the previous unrestricted teacher view.
 
 ## Tests
 
 ```bash
 flutter analyze
 flutter test
+cd firebase && npm --prefix tests ci && firebase emulators:exec --only firestore "npm --prefix tests test"
 ```
-
-## WhatsApp
-
-Device-share via `wa.me` does not need secrets. Cloud API sends are **disabled** unless you pass compile-time defines (not recommended in the client). Prefer a Cloud Function with Secret Manager for production messaging.

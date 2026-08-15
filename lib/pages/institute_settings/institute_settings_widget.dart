@@ -16,16 +16,19 @@ class InstituteSettingsWidget extends ConsumerStatefulWidget {
   static String routePath = '/instituteSettings';
 
   @override
-  ConsumerState<InstituteSettingsWidget> createState() => _InstituteSettingsWidgetState();
+  ConsumerState<InstituteSettingsWidget> createState() =>
+      _InstituteSettingsWidgetState();
 }
 
-class _InstituteSettingsWidgetState extends ConsumerState<InstituteSettingsWidget> {
+class _InstituteSettingsWidgetState
+    extends ConsumerState<InstituteSettingsWidget> {
   late InstituteSettingsModel _model;
   final _nameController = TextEditingController();
   final _missionController = TextEditingController();
   final _visionController = TextEditingController();
   final _newSubjectController = TextEditingController();
   bool _isSaving = false;
+  bool _isBackfillingClaims = false;
 
   @override
   void initState() {
@@ -62,11 +65,13 @@ class _InstituteSettingsWidgetState extends ConsumerState<InstituteSettingsWidge
         'vision': _visionController.text.trim(),
       });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Institutional info updated.')));
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Institutional info updated.')));
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     } finally {
       if (mounted) setState(() => _isSaving = false);
@@ -76,17 +81,44 @@ class _InstituteSettingsWidgetState extends ConsumerState<InstituteSettingsWidge
   Future<void> _addSubject() async {
     final name = _newSubjectController.text.trim();
     if (name.isEmpty) return;
-    
+
     try {
       await ref.read(configRepositoryProvider).addSubject(name);
       _newSubjectController.clear();
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Subject added.')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Subject added.')));
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Error: $e')));
       }
+    }
+  }
+
+  Future<void> _backfillClaims() async {
+    setState(() => _isBackfillingClaims = true);
+    try {
+      final result =
+          await ref.read(userRepositoryProvider).backfillUserClaims();
+      final updated = result['updated'] ?? 0;
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Refreshed claims for $updated users. Staff should re-login if access is still stale.',
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Error: $e')));
+      }
+    } finally {
+      if (mounted) setState(() => _isBackfillingClaims = false);
     }
   }
 
@@ -118,6 +150,10 @@ class _InstituteSettingsWidgetState extends ConsumerState<InstituteSettingsWidge
                   _buildSectionHeader('Academic Configuration'),
                   const SizedBox(height: 12),
                   _buildSubjectsList(context, subjectsAsync),
+                  const SizedBox(height: 24),
+                  _buildSectionHeader('Access Claims'),
+                  const SizedBox(height: 12),
+                  _buildClaimsBackfill(context),
                   const SizedBox(height: 40),
                 ],
               ),
@@ -129,7 +165,8 @@ class _InstituteSettingsWidgetState extends ConsumerState<InstituteSettingsWidge
   }
 
   Widget _buildSectionHeader(String title) {
-    return Text(title, style: AppTypography.section.copyWith(fontWeight: FontWeight.bold));
+    return Text(title,
+        style: AppTypography.section.copyWith(fontWeight: FontWeight.bold));
   }
 
   Widget _buildGeneralForm(BuildContext context) {
@@ -176,7 +213,8 @@ class _InstituteSettingsWidgetState extends ConsumerState<InstituteSettingsWidge
     );
   }
 
-  Widget _buildSubjectsList(BuildContext context, AsyncValue<List<String>> subjectsAsync) {
+  Widget _buildSubjectsList(
+      BuildContext context, AsyncValue<List<String>> subjectsAsync) {
     final theme = FlutterFlowTheme.of(context);
     return Container(
       padding: const EdgeInsets.all(20),
@@ -188,7 +226,8 @@ class _InstituteSettingsWidgetState extends ConsumerState<InstituteSettingsWidge
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Manage Subjects', style: AppTypography.body.copyWith(fontWeight: FontWeight.bold)),
+          Text('Manage Subjects',
+              style: AppTypography.body.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 12),
           Row(
             children: [
@@ -204,7 +243,8 @@ class _InstituteSettingsWidgetState extends ConsumerState<InstituteSettingsWidge
               const SizedBox(width: 12),
               IconButton(
                 onPressed: _addSubject,
-                icon: const Icon(Icons.add_circle_rounded, color: AppColors.primary, size: 32),
+                icon: const Icon(Icons.add_circle_rounded,
+                    color: AppColors.primary, size: 32),
               ),
             ],
           ),
@@ -214,17 +254,53 @@ class _InstituteSettingsWidgetState extends ConsumerState<InstituteSettingsWidge
               return Wrap(
                 spacing: 8,
                 runSpacing: 8,
-                children: subjects.map((s) => Chip(
-                  label: Text(s, style: const TextStyle(fontSize: 12)),
-                  deleteIcon: const Icon(Icons.close_rounded, size: 14),
-                  onDeleted: () async {
-                    await ref.read(configRepositoryProvider).deleteSubject(s);
-                  },
-                )).toList(),
+                children: subjects
+                    .map((s) => Chip(
+                          label: Text(s, style: const TextStyle(fontSize: 12)),
+                          deleteIcon: const Icon(Icons.close_rounded, size: 14),
+                          onDeleted: () async {
+                            await ref
+                                .read(configRepositoryProvider)
+                                .deleteSubject(s);
+                          },
+                        ))
+                    .toList(),
               );
             },
             loading: () => const LinearProgressIndicator(),
             error: (err, _) => Text('Error: $err'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildClaimsBackfill(BuildContext context) {
+    final theme = FlutterFlowTheme.of(context);
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: theme.secondaryBackground,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: theme.alternate),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Refresh staff access',
+            style: AppTypography.body.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Pushes role and assigned-class claims to every Auth user. Existing staff should re-login after this if student lists still look wrong.',
+            style: AppTypography.caption.copyWith(color: theme.secondaryText),
+          ),
+          const SizedBox(height: 16),
+          AppPrimaryButton(
+            text: 'Backfill User Claims',
+            isLoading: _isBackfillingClaims,
+            onPressed: _backfillClaims,
           ),
         ],
       ),

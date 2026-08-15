@@ -83,6 +83,28 @@ class StudentRepository implements IStudentRepository {
   }
 
   @override
+  Stream<List<Student>> getStudentsByClassesStream(List<String> classNames) {
+    final classes = classNames
+        .map((value) => value.trim())
+        .where((value) => value.isNotEmpty)
+        .toSet()
+        .toList();
+    if (classes.isEmpty) return Stream.value(const []);
+
+    // Firestore whereIn supports at most 30 values.
+    final chunk = classes.take(30).toList();
+    return _studentsCollection
+        .where('class', whereIn: chunk)
+        .snapshots()
+        .map((snapshot) {
+      final students =
+          snapshot.docs.map((doc) => Student.fromFirestore(doc)).toList();
+      _sortStudents(students);
+      return students;
+    });
+  }
+
+  @override
   Future<void> updateStudent(Student student) async {
     await _studentsCollection
         .doc(student.id)

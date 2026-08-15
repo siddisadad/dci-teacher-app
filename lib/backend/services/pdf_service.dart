@@ -21,7 +21,8 @@ class PdfService {
                   level: 0,
                   child: pw.Text(
                     userData.displayName,
-                    style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
+                    style: pw.TextStyle(
+                        fontSize: 24, fontWeight: pw.FontWeight.bold),
                   ),
                 ),
                 pw.SizedBox(height: 20),
@@ -70,7 +71,8 @@ class PdfService {
               pw.Header(
                 level: 0,
                 child: pw.Text('Deshmukh Institute - Daily Report',
-                    style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
+                    style: pw.TextStyle(
+                        fontSize: 24, fontWeight: pw.FontWeight.bold)),
               ),
               pw.SizedBox(height: 20),
               _buildRow('Class:', report.className),
@@ -78,15 +80,21 @@ class PdfService {
               _buildRow('Teacher:', report.teacher),
               _buildRow('Date:', report.createdAt?.toString() ?? 'N/A'),
               pw.Divider(),
-              pw.Text('Content Covered', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+              pw.Text('Content Covered',
+                  style: pw.TextStyle(
+                      fontSize: 18, fontWeight: pw.FontWeight.bold)),
               _buildRow('Chapter:', report.chapter),
               _buildRow('Topics:', report.topics),
               pw.SizedBox(height: 10),
-              pw.Text('Attendance Summary', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+              pw.Text('Attendance Summary',
+                  style: pw.TextStyle(
+                      fontSize: 18, fontWeight: pw.FontWeight.bold)),
               _buildRow('Present:', report.presentCount.toString()),
               _buildRow('Absent:', report.absentCount.toString()),
               pw.SizedBox(height: 10),
-              pw.Text('Additional Info', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+              pw.Text('Additional Info',
+                  style: pw.TextStyle(
+                      fontSize: 18, fontWeight: pw.FontWeight.bold)),
               _buildRow('Homework:', report.homeworkAssigned),
               _buildRow('Remarks:', report.remarks),
             ],
@@ -95,14 +103,16 @@ class PdfService {
       ),
     );
 
-    await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => pdf.save());
+    await Printing.layoutPdf(
+        onLayout: (PdfPageFormat format) async => pdf.save());
   }
 
   static pw.Widget _buildSection(String title, List<String> items) {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
-        pw.Text(title, style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+        pw.Text(title,
+            style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
         pw.Divider(),
         ...items.map((item) => pw.Bullet(text: item)),
       ],
@@ -116,7 +126,8 @@ class PdfService {
         children: [
           pw.SizedBox(
             width: 120,
-            child: pw.Text(label, style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+            child: pw.Text(label,
+                style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
           ),
           pw.Expanded(child: pw.Text(value)),
         ],

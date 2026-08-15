@@ -17,11 +17,15 @@ class TeacherService {
     required String phoneNumber,
     String? employeeId,
     required String subjectExpertise,
+    List<String> assignedClasses = const [],
   }) async {
     final currentUser = ref.read(currentUserDataStreamProvider).value;
     if (currentUser?.role != 'Admin' && currentUser?.role != 'Director') {
       throw Exception(
           'Unauthorized: Only Admins or Directors can create new faculty profiles.');
+    }
+    if (role == 'Admin' && currentUser?.role != 'Admin') {
+      throw Exception('Only Admins can create Admin users.');
     }
 
     final repository = ref.read(userRepositoryProvider);
@@ -36,6 +40,7 @@ class TeacherService {
       phoneNumber: phoneNumber,
       employeeId: employeeId,
       subjectExpertise: subjectExpertise,
+      assignedClasses: assignedClasses,
     );
 
     await auditRepo.logAction(

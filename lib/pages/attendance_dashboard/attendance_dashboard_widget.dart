@@ -11,7 +11,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // Direct imports for the page and its model
 import 'package:d_c_i_teacher_app/pages/attendance_dashboard/attendance_dashboard_model.dart';
 
-
 class AttendanceDashboardWidget extends ConsumerStatefulWidget {
   const AttendanceDashboardWidget({super.key});
 
@@ -23,7 +22,8 @@ class AttendanceDashboardWidget extends ConsumerStatefulWidget {
       _AttendanceDashboardWidgetState();
 }
 
-class _AttendanceDashboardWidgetState extends ConsumerState<AttendanceDashboardWidget> {
+class _AttendanceDashboardWidgetState
+    extends ConsumerState<AttendanceDashboardWidget> {
   late AttendanceDashboardModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -57,54 +57,114 @@ class _AttendanceDashboardWidgetState extends ConsumerState<AttendanceDashboardW
           Expanded(
             child: SingleChildScrollView(
               physics: const NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md, vertical: AppSpacing.sm),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // Statistics Section
-                  Text('STATISTICS', style: AppTypography.caption.copyWith(fontWeight: FontWeight.bold, letterSpacing: 1, fontSize: 10)),
+                  Text('STATISTICS',
+                      style: AppTypography.caption.copyWith(
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1,
+                          fontSize: 10)),
                   const SizedBox(height: 8),
                   attendanceLogsAsync.when(
                     data: (records) {
                       final totalMarked = records.length;
-                      final presentCount = records.where((doc) => doc.status == 'Present').length;
-                      final attendanceRate = totalMarked == 0 ? 0 : ((presentCount / totalMarked) * 100).toInt();
+                      final presentCount = records
+                          .where((doc) => doc.status == 'Present')
+                          .length;
+                      final attendanceRate = totalMarked == 0
+                          ? 0
+                          : ((presentCount / totalMarked) * 100).toInt();
 
                       return Row(
                         children: [
-                          _buildMicroStat(context, 'Marked', totalMarked.toString(), Icons.people_rounded, theme.primary),
+                          _buildMicroStat(
+                              context,
+                              'Marked',
+                              totalMarked.toString(),
+                              Icons.people_rounded,
+                              theme.primary),
                           const SizedBox(width: 8),
-                          _buildMicroStat(context, 'Rate', '$attendanceRate%', Icons.trending_up_rounded, theme.success),
+                          _buildMicroStat(context, 'Rate', '$attendanceRate%',
+                              Icons.trending_up_rounded, theme.success),
                           const SizedBox(width: 8),
-                          _buildMicroStat(context, 'Absent', (totalMarked - presentCount).toString(), Icons.person_off_rounded, theme.error),
+                          _buildMicroStat(
+                              context,
+                              'Absent',
+                              (totalMarked - presentCount).toString(),
+                              Icons.person_off_rounded,
+                              theme.error),
                         ],
                       );
                     },
                     loading: () => const LinearProgressIndicator(),
-                    error: (err, stack) => Text('Error: $err', style: const TextStyle(fontSize: 10)),
+                    error: (err, stack) => Text('Error: $err',
+                        style: const TextStyle(fontSize: 10)),
                   ),
                   const SizedBox(height: 12),
 
                   // Quick Actions Grid
-                  Text('QUICK ACTIONS', style: AppTypography.caption.copyWith(fontWeight: FontWeight.bold, letterSpacing: 1, fontSize: 10)),
+                  Text('QUICK ACTIONS',
+                      style: AppTypography.caption.copyWith(
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1,
+                          fontSize: 10)),
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      _buildActionBtn(context, 'Mark Now', Icons.check_box_rounded, theme.primary, () => context.pushNamed(AttendanceTrackerWidget.routeName)),
+                      _buildActionBtn(
+                          context,
+                          'Mark Now',
+                          Icons.check_box_rounded,
+                          theme.primary,
+                          () => context
+                              .pushNamed(AttendanceTrackerWidget.routeName)),
                       const SizedBox(width: 8),
-                      _buildActionBtn(context, 'Today', Icons.today_rounded, AppColors.secondary, () => context.pushNamed(TodayAttendanceWidget.routeName)),
+                      _buildActionBtn(
+                          context,
+                          'Today',
+                          Icons.today_rounded,
+                          AppColors.secondary,
+                          () => context
+                              .pushNamed(TodayAttendanceWidget.routeName)),
                       const SizedBox(width: 8),
-                      _buildActionBtn(context, 'Absents', Icons.person_off_rounded, AppColors.error, () => context.pushNamed(AbsentListWidget.routeName)),
+                      _buildActionBtn(
+                          context,
+                          'Absents',
+                          Icons.person_off_rounded,
+                          AppColors.error,
+                          () => context.pushNamed(AbsentListWidget.routeName)),
                     ],
                   ),
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      _buildActionBtn(context, 'Monthly', Icons.calendar_month_rounded, AppColors.info, () => context.pushNamed(MonthlyAttendanceWidget.routeName)),
+                      _buildActionBtn(
+                          context,
+                          'Monthly',
+                          Icons.calendar_month_rounded,
+                          AppColors.info,
+                          () => context
+                              .pushNamed(MonthlyAttendanceWidget.routeName)),
                       const SizedBox(width: 8),
-                      _buildActionBtn(context, 'History', Icons.history_toggle_off_rounded, AppColors.primary, () => context.pushNamed(AttendanceHistoryWidget.routeName)),
+                      _buildActionBtn(
+                          context,
+                          'History',
+                          Icons.history_toggle_off_rounded,
+                          AppColors.primary,
+                          () => context
+                              .pushNamed(AttendanceHistoryWidget.routeName)),
                       const SizedBox(width: 8),
-                      _buildActionBtn(context, 'Reports', Icons.assessment_outlined, theme.success, () => context.pushNamed(AttendanceReportWidget.routeName)),
+                      _buildActionBtn(
+                          context,
+                          'Reports',
+                          Icons.assessment_outlined,
+                          theme.success,
+                          () => context
+                              .pushNamed(AttendanceReportWidget.routeName)),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -113,11 +173,20 @@ class _AttendanceDashboardWidgetState extends ConsumerState<AttendanceDashboardW
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('RECENT LOGS', style: AppTypography.caption.copyWith(fontWeight: FontWeight.bold, letterSpacing: 1, fontSize: 10)),
+                      Text('RECENT LOGS',
+                          style: AppTypography.caption.copyWith(
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1,
+                              fontSize: 10)),
                       TextButton(
-                        onPressed: () => context.pushNamed(AttendanceHistoryWidget.routeName),
-                        style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: const Size(0, 20), tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-                        child: const Text('View All', style: TextStyle(fontSize: 10)),
+                        onPressed: () => context
+                            .pushNamed(AttendanceHistoryWidget.routeName),
+                        style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            minimumSize: const Size(0, 20),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+                        child: const Text('View All',
+                            style: TextStyle(fontSize: 10)),
                       ),
                     ],
                   ),
@@ -126,12 +195,17 @@ class _AttendanceDashboardWidgetState extends ConsumerState<AttendanceDashboardW
                       if (records.isEmpty) {
                         return const Padding(
                           padding: EdgeInsets.only(top: 8),
-                          child: Text('No student logs found.', style: TextStyle(fontSize: 10), textAlign: TextAlign.center),
+                          child: Text('No student logs found.',
+                              style: TextStyle(fontSize: 10),
+                              textAlign: TextAlign.center),
                         );
                       }
                       final recentRecords = records.take(2).toList();
                       return Column(
-                        children: recentRecords.map((record) => _buildMiniLogCard(context, record, theme)).toList(),
+                        children: recentRecords
+                            .map((record) =>
+                                _buildMiniLogCard(context, record, theme))
+                            .toList(),
                       );
                     },
                     loading: () => const SizedBox(),
@@ -146,7 +220,8 @@ class _AttendanceDashboardWidgetState extends ConsumerState<AttendanceDashboardW
     );
   }
 
-  Widget _buildMicroStat(BuildContext context, String label, String value, IconData icon, Color color) {
+  Widget _buildMicroStat(BuildContext context, String label, String value,
+      IconData icon, Color color) {
     final theme = FlutterFlowTheme.of(context);
     return Expanded(
       child: Material(
@@ -162,8 +237,15 @@ class _AttendanceDashboardWidgetState extends ConsumerState<AttendanceDashboardW
             children: [
               Icon(icon, size: 14, color: color),
               const SizedBox(height: 8),
-              Text(value, style: AppTypography.label.copyWith(fontSize: 14, color: theme.primaryText, fontWeight: FontWeight.bold)),
-              Text(label, style: AppTypography.caption.copyWith(fontSize: 9, color: theme.secondaryText), overflow: TextOverflow.ellipsis),
+              Text(value,
+                  style: AppTypography.label.copyWith(
+                      fontSize: 14,
+                      color: theme.primaryText,
+                      fontWeight: FontWeight.bold)),
+              Text(label,
+                  style: AppTypography.caption
+                      .copyWith(fontSize: 9, color: theme.secondaryText),
+                  overflow: TextOverflow.ellipsis),
             ],
           ),
         ),
@@ -171,7 +253,8 @@ class _AttendanceDashboardWidgetState extends ConsumerState<AttendanceDashboardW
     );
   }
 
-  Widget _buildActionBtn(BuildContext context, String label, IconData icon, Color color, VoidCallback onTap) {
+  Widget _buildActionBtn(BuildContext context, String label, IconData icon,
+      Color color, VoidCallback onTap) {
     final theme = FlutterFlowTheme.of(context);
     return Expanded(
       child: Material(
@@ -191,7 +274,11 @@ class _AttendanceDashboardWidgetState extends ConsumerState<AttendanceDashboardW
               children: [
                 Icon(icon, size: 20, color: color),
                 const SizedBox(height: 8),
-                Text(label, style: AppTypography.caption.copyWith(fontWeight: FontWeight.bold, fontSize: 11, color: theme.primaryText)),
+                Text(label,
+                    style: AppTypography.caption.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 11,
+                        color: theme.primaryText)),
               ],
             ),
           ),
@@ -200,7 +287,8 @@ class _AttendanceDashboardWidgetState extends ConsumerState<AttendanceDashboardW
     );
   }
 
-  Widget _buildMiniLogCard(BuildContext context, StudentAttendance record, FlutterFlowTheme theme) {
+  Widget _buildMiniLogCard(
+      BuildContext context, StudentAttendance record, FlutterFlowTheme theme) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
@@ -213,7 +301,8 @@ class _AttendanceDashboardWidgetState extends ConsumerState<AttendanceDashboardW
         child: ListTile(
           dense: true,
           visualDensity: VisualDensity.compact,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           leading: Container(
             width: 32,
             height: 32,
@@ -221,20 +310,31 @@ class _AttendanceDashboardWidgetState extends ConsumerState<AttendanceDashboardW
               color: _getStatusColor(record.status, theme).withAlpha(20),
               shape: BoxShape.circle,
             ),
-            child: Icon(_getStatusIcon(record.status), color: _getStatusColor(record.status, theme), size: 14),
+            child: Icon(_getStatusIcon(record.status),
+                color: _getStatusColor(record.status, theme), size: 14),
           ),
-          title: Text(record.studentName, style: AppTypography.caption.copyWith(fontWeight: FontWeight.bold, fontSize: 13, color: theme.primaryText)),
-          subtitle: Text('${record.className} • ${dateTimeFormat('yMMMd', record.date)}', style: AppTypography.caption.copyWith(fontSize: 11)),
+          title: Text(record.studentName,
+              style: AppTypography.caption.copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                  color: theme.primaryText)),
+          subtitle: Text(
+              '${record.className} • ${dateTimeFormat('yMMMd', record.date)}',
+              style: AppTypography.caption.copyWith(fontSize: 11)),
           trailing: Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
               color: _getStatusColor(record.status, theme).withAlpha(25),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: _getStatusColor(record.status, theme).withAlpha(40)),
+              border: Border.all(
+                  color: _getStatusColor(record.status, theme).withAlpha(40)),
             ),
             child: Text(
-              record.status.toUpperCase(), 
-              style: TextStyle(color: _getStatusColor(record.status, theme), fontWeight: FontWeight.bold, fontSize: 10),
+              record.status.toUpperCase(),
+              style: TextStyle(
+                  color: _getStatusColor(record.status, theme),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 10),
             ),
           ),
           onTap: () {
@@ -247,19 +347,27 @@ class _AttendanceDashboardWidgetState extends ConsumerState<AttendanceDashboardW
 
   Color _getStatusColor(String status, FlutterFlowTheme theme) {
     switch (status) {
-      case 'Present': return theme.success;
-      case 'Absent': return theme.error;
-      case 'Leave': return theme.warning;
-      default: return theme.secondaryText;
+      case 'Present':
+        return theme.success;
+      case 'Absent':
+        return theme.error;
+      case 'Leave':
+        return theme.warning;
+      default:
+        return theme.secondaryText;
     }
   }
 
   IconData _getStatusIcon(String status) {
     switch (status) {
-      case 'Present': return Icons.check_circle_rounded;
-      case 'Absent': return Icons.cancel_rounded;
-      case 'Leave': return Icons.pause_circle_rounded;
-      default: return Icons.help_rounded;
+      case 'Present':
+        return Icons.check_circle_rounded;
+      case 'Absent':
+        return Icons.cancel_rounded;
+      case 'Leave':
+        return Icons.pause_circle_rounded;
+      default:
+        return Icons.help_rounded;
     }
   }
 }

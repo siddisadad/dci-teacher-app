@@ -326,7 +326,7 @@ class ThemeTypography extends Typography {
 class DarkModeTheme extends FlutterFlowTheme {
   late Color primary = const Color(0xFF3B82F6); // Brighter blue for dark mode
   late Color secondary = const Color(0xFFF59E0B); // Amber
-  late Color tertiary = const Color(0xFFF1F5F9); 
+  late Color tertiary = const Color(0xFFF1F5F9);
   late Color alternate = const Color(0xFF334155); // Slate 700 (Border)
   late Color primaryText = const Color(0xFFF8FAFC); // Slate 50
   late Color secondaryText = const Color(0xFF94A3B8); // Slate 400

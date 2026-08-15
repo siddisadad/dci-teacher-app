@@ -90,9 +90,7 @@ class _ProfileInfoTileWidgetState extends State<ProfileInfoTileWidget> {
                         widget.label,
                         'Email Address',
                       ),
-                      style: FlutterFlowTheme.of(context)
-                          .labelSmall
-                          .override(
+                      style: FlutterFlowTheme.of(context).labelSmall.override(
                             font: GoogleFonts.inter(
                               fontWeight: FlutterFlowTheme.of(context)
                                   .labelSmall
@@ -101,8 +99,7 @@ class _ProfileInfoTileWidgetState extends State<ProfileInfoTileWidget> {
                                   .labelSmall
                                   .fontStyle,
                             ),
-                            color:
-                                FlutterFlowTheme.of(context).secondaryText,
+                            color: FlutterFlowTheme.of(context).secondaryText,
                             letterSpacing: 0.0,
                             fontWeight: FlutterFlowTheme.of(context)
                                 .labelSmall
@@ -118,9 +115,7 @@ class _ProfileInfoTileWidgetState extends State<ProfileInfoTileWidget> {
                         widget.value,
                         'admin@deshmukhinstitute.com',
                       ),
-                      style: FlutterFlowTheme.of(context)
-                          .bodyLarge
-                          .override(
+                      style: FlutterFlowTheme.of(context).bodyLarge.override(
                             font: GoogleFonts.inter(
                               fontWeight: FontWeight.w500,
                               fontStyle: FlutterFlowTheme.of(context)

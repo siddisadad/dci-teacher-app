@@ -11,7 +11,8 @@ class DailyReportRepository implements IDailyReportRepository {
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
 
-  CollectionReference get _reportsCollection => _firestore.collection('daily_reports');
+  CollectionReference get _reportsCollection =>
+      _firestore.collection('daily_reports');
 
   @override
   Future<void> submitReport(DailyReport report) async {
@@ -32,7 +33,8 @@ class DailyReportRepository implements IDailyReportRepository {
     return doc.exists ? DailyReport.fromFirestore(doc) : null;
   }
 
-  Future<List<DailyReport>> getReports({int limit = 20, String? creatorId}) async {
+  Future<List<DailyReport>> getReports(
+      {int limit = 20, String? creatorId}) async {
     final user = _auth.currentUser;
     if (user == null) return [];
 
@@ -46,7 +48,7 @@ class DailyReportRepository implements IDailyReportRepository {
     final list = querySnapshot.docs
         .map((doc) => DailyReport.fromFirestore(doc))
         .toList();
-    
+
     list.sort((a, b) {
       if (a.createdAt == null && b.createdAt == null) return 0;
       if (a.createdAt == null) return -1;
@@ -57,7 +59,8 @@ class DailyReportRepository implements IDailyReportRepository {
   }
 
   @override
-  Stream<List<DailyReport>> getRecentReports({int limit = 3, String? creatorId}) {
+  Stream<List<DailyReport>> getRecentReports(
+      {int limit = 3, String? creatorId}) {
     final user = _auth.currentUser;
     if (user == null) return Stream.value([]);
 
@@ -66,26 +69,23 @@ class DailyReportRepository implements IDailyReportRepository {
       query = query.where('createdBy', isEqualTo: creatorId);
     }
 
-    return query
-        .limit(50) 
-        .snapshots()
-        .map((snapshot) {
-          final list = snapshot.docs
-              .map((doc) => DailyReport.fromFirestore(doc))
-              .toList();
-          
-          list.sort((a, b) {
-            if (a.createdAt == null && b.createdAt == null) return 0;
-            if (a.createdAt == null) return -1;
-            if (b.createdAt == null) return 1;
-            return b.createdAt!.compareTo(a.createdAt!);
-          });
-          return list.take(limit).toList();
-        });
+    return query.limit(50).snapshots().map((snapshot) {
+      final list =
+          snapshot.docs.map((doc) => DailyReport.fromFirestore(doc)).toList();
+
+      list.sort((a, b) {
+        if (a.createdAt == null && b.createdAt == null) return 0;
+        if (a.createdAt == null) return -1;
+        if (b.createdAt == null) return 1;
+        return b.createdAt!.compareTo(a.createdAt!);
+      });
+      return list.take(limit).toList();
+    });
   }
 
   @override
-  Future<List<DailyReport>> getReportsByDateRange(DateTime start, DateTime end) async {
+  Future<List<DailyReport>> getReportsByDateRange(
+      DateTime start, DateTime end) async {
     final user = _auth.currentUser;
     if (user == null) return [];
 
@@ -95,6 +95,8 @@ class DailyReportRepository implements IDailyReportRepository {
         .where('createdAt', isLessThan: Timestamp.fromDate(end))
         .get();
 
-    return querySnapshot.docs.map((doc) => DailyReport.fromFirestore(doc)).toList();
+    return querySnapshot.docs
+        .map((doc) => DailyReport.fromFirestore(doc))
+        .toList();
   }
 }

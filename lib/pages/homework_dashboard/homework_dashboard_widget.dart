@@ -23,10 +23,12 @@ class HomeworkDashboardWidget extends ConsumerStatefulWidget {
   static String routePath = '/homeworkDashboard';
 
   @override
-  ConsumerState<HomeworkDashboardWidget> createState() => _HomeworkDashboardWidgetState();
+  ConsumerState<HomeworkDashboardWidget> createState() =>
+      _HomeworkDashboardWidgetState();
 }
 
-class _HomeworkDashboardWidgetState extends ConsumerState<HomeworkDashboardWidget> {
+class _HomeworkDashboardWidgetState
+    extends ConsumerState<HomeworkDashboardWidget> {
   late HomeworkDashboardModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -75,7 +77,8 @@ class _HomeworkDashboardWidgetState extends ConsumerState<HomeworkDashboardWidge
                     children: [
                       Text('Recent Assignments', style: AppTypography.section),
                       TextButton(
-                        onPressed: () => context.pushNamed(HomeworkHistoryWidget.routeName),
+                        onPressed: () =>
+                            context.pushNamed(HomeworkHistoryWidget.routeName),
                         child: const Text('View All'),
                       ),
                     ],
@@ -87,7 +90,7 @@ class _HomeworkDashboardWidgetState extends ConsumerState<HomeworkDashboardWidge
             ),
           ),
           AppBottomNavBar(
-            currentIndex: -1, 
+            currentIndex: -1,
             onTap: (index) {
               final routes = [
                 HomeDashboardWidget.routeName,
@@ -103,21 +106,28 @@ class _HomeworkDashboardWidgetState extends ConsumerState<HomeworkDashboardWidge
     );
   }
 
-  Widget _buildStatsSummary(BuildContext context, AsyncValue<List<HomeworkAssignment>> homeworkAsync) {
+  Widget _buildStatsSummary(BuildContext context,
+      AsyncValue<List<HomeworkAssignment>> homeworkAsync) {
     return homeworkAsync.when(
       data: (list) {
         final active = list.where((h) => h.status == 'published').length;
         final drafts = list.where((h) => h.status == 'draft').length;
         // Simplified "Due Today" logic for placeholder
-        final dueToday = list.where((h) => h.dueDate.contains(dateTimeFormat('yMMMd', DateTime.now()))).length;
+        final dueToday = list
+            .where((h) =>
+                h.dueDate.contains(dateTimeFormat('yMMMd', DateTime.now())))
+            .length;
 
         return Row(
           children: [
-            _buildStatCard('Active', active.toString(), Icons.assignment_turned_in_rounded, AppColors.success),
+            _buildStatCard('Active', active.toString(),
+                Icons.assignment_turned_in_rounded, AppColors.success),
             const SizedBox(width: AppSpacing.md),
-            _buildStatCard('Drafts', drafts.toString(), Icons.edit_document, AppColors.warning),
+            _buildStatCard('Drafts', drafts.toString(), Icons.edit_document,
+                AppColors.warning),
             const SizedBox(width: AppSpacing.md),
-            _buildStatCard('Due Today', dueToday.toString(), Icons.today_rounded, AppColors.error),
+            _buildStatCard('Due Today', dueToday.toString(),
+                Icons.today_rounded, AppColors.error),
           ],
         );
       },
@@ -126,7 +136,8 @@ class _HomeworkDashboardWidgetState extends ConsumerState<HomeworkDashboardWidge
     );
   }
 
-  Widget _buildStatCard(String label, String value, IconData icon, Color color) {
+  Widget _buildStatCard(
+      String label, String value, IconData icon, Color color) {
     final theme = FlutterFlowTheme.of(context);
     return Expanded(
       child: Container(
@@ -142,7 +153,9 @@ class _HomeworkDashboardWidgetState extends ConsumerState<HomeworkDashboardWidge
             Icon(icon, color: color, size: 24),
             const SizedBox(height: 8),
             Text(value, style: AppTypography.title.copyWith(fontSize: 20)),
-            Text(label, style: AppTypography.caption.copyWith(fontWeight: FontWeight.w600)),
+            Text(label,
+                style: AppTypography.caption
+                    .copyWith(fontWeight: FontWeight.w600)),
           ],
         ),
       ),
@@ -175,7 +188,8 @@ class _HomeworkDashboardWidgetState extends ConsumerState<HomeworkDashboardWidge
     );
   }
 
-  Widget _buildActionBtn(BuildContext context, String label, IconData icon, Color color, VoidCallback onTap) {
+  Widget _buildActionBtn(BuildContext context, String label, IconData icon,
+      Color color, VoidCallback onTap) {
     final theme = FlutterFlowTheme.of(context);
     return Material(
       color: theme.secondaryBackground,
@@ -193,11 +207,14 @@ class _HomeworkDashboardWidgetState extends ConsumerState<HomeworkDashboardWidge
             children: [
               Container(
                 padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(color: color.withAlpha(20), shape: BoxShape.circle),
+                decoration: BoxDecoration(
+                    color: color.withAlpha(20), shape: BoxShape.circle),
                 child: Icon(icon, color: color, size: 24),
               ),
               const SizedBox(height: 12),
-              Text(label, style: AppTypography.body.copyWith(fontWeight: FontWeight.bold, fontSize: 14)),
+              Text(label,
+                  style: AppTypography.body
+                      .copyWith(fontWeight: FontWeight.bold, fontSize: 14)),
             ],
           ),
         ),
@@ -205,7 +222,8 @@ class _HomeworkDashboardWidgetState extends ConsumerState<HomeworkDashboardWidge
     );
   }
 
-  Widget _buildRecentAssignments(BuildContext context, AsyncValue<List<HomeworkAssignment>> homeworkAsync) {
+  Widget _buildRecentAssignments(BuildContext context,
+      AsyncValue<List<HomeworkAssignment>> homeworkAsync) {
     final theme = FlutterFlowTheme.of(context);
     return homeworkAsync.when(
       data: (list) {
@@ -213,7 +231,8 @@ class _HomeworkDashboardWidgetState extends ConsumerState<HomeworkDashboardWidge
           return const AppEmptyState(
             icon: Icons.edit_note_rounded,
             title: 'No assignments',
-            description: 'Create your first homework assignment to get started.',
+            description:
+                'Create your first homework assignment to get started.',
           );
         }
         final recent = list.take(5).toList();
@@ -236,24 +255,43 @@ class _HomeworkDashboardWidgetState extends ConsumerState<HomeworkDashboardWidge
                 clipBehavior: Clip.antiAlias,
                 child: ListTile(
                   leading: Container(
-                    width: 40, height: 40,
-                    decoration: BoxDecoration(color: (isDraft ? AppColors.warning : AppColors.primary).withAlpha(15), shape: BoxShape.circle),
-                    child: Icon(isDraft ? Icons.edit_document : Icons.assignment_rounded, color: isDraft ? AppColors.warning : AppColors.primary, size: 20),
-                  ),
-                  title: Text(h.title, style: AppTypography.body.copyWith(fontWeight: FontWeight.bold, fontSize: 15)),
-                  subtitle: Text('${h.subject} • ${h.className}', style: AppTypography.caption),
-                  trailing: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    width: 40,
+                    height: 40,
                     decoration: BoxDecoration(
-                      color: (isDraft ? AppColors.warning : AppColors.success).withAlpha(20),
+                        color: (isDraft ? AppColors.warning : AppColors.primary)
+                            .withAlpha(15),
+                        shape: BoxShape.circle),
+                    child: Icon(
+                        isDraft
+                            ? Icons.edit_document
+                            : Icons.assignment_rounded,
+                        color: isDraft ? AppColors.warning : AppColors.primary,
+                        size: 20),
+                  ),
+                  title: Text(h.title,
+                      style: AppTypography.body
+                          .copyWith(fontWeight: FontWeight.bold, fontSize: 15)),
+                  subtitle: Text('${h.subject} • ${h.className}',
+                      style: AppTypography.caption),
+                  trailing: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: (isDraft ? AppColors.warning : AppColors.success)
+                          .withAlpha(20),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
                       isDraft ? 'Draft' : 'Published',
-                      style: TextStyle(color: isDraft ? AppColors.warning : AppColors.success, fontSize: 10, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          color:
+                              isDraft ? AppColors.warning : AppColors.success,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
-                  onTap: () => context.pushNamed(HomeworkHistoryWidget.routeName),
+                  onTap: () =>
+                      context.pushNamed(HomeworkHistoryWidget.routeName),
                 ),
               ),
             );

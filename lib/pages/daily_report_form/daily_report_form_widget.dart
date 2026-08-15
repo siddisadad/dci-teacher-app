@@ -21,7 +21,8 @@ class DailyReportFormWidget extends ConsumerStatefulWidget {
   static String routePath = '/dailyReportForm';
 
   @override
-  ConsumerState<DailyReportFormWidget> createState() => _DailyReportFormWidgetState();
+  ConsumerState<DailyReportFormWidget> createState() =>
+      _DailyReportFormWidgetState();
 }
 
 class _DailyReportFormWidgetState extends ConsumerState<DailyReportFormWidget> {
@@ -41,7 +42,8 @@ class _DailyReportFormWidgetState extends ConsumerState<DailyReportFormWidget> {
     super.dispose();
   }
 
-  Future<void> _handleSubmit(DailyReportFormState state, DailyReportNotifier notifier) async {
+  Future<void> _handleSubmit(
+      DailyReportFormState state, DailyReportNotifier notifier) async {
     if (!_formKey.currentState!.validate()) return;
 
     final success = await notifier.submitReport(
@@ -52,10 +54,13 @@ class _DailyReportFormWidgetState extends ConsumerState<DailyReportFormWidget> {
     );
 
     if (success && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Daily report saved.')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Daily report saved.')));
       context.goNamed(HomeDashboardWidget.routeName);
     } else if (!success && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed to submit report. Please check required fields.')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content:
+              Text('Failed to submit report. Please check required fields.')));
     }
   }
 
@@ -65,16 +70,16 @@ class _DailyReportFormWidgetState extends ConsumerState<DailyReportFormWidget> {
     _model.teacherOptions = state.teacherOptions;
 
     if (_model.dropdownValue1 != state.selectedClass) {
-       _model.dropdownValue1 = state.selectedClass;
-       _model.dropdownValueController1?.value = state.selectedClass;
+      _model.dropdownValue1 = state.selectedClass;
+      _model.dropdownValueController1?.value = state.selectedClass;
     }
     if (_model.dropdownValue2 != state.selectedSubject) {
-       _model.dropdownValue2 = state.selectedSubject;
-       _model.dropdownValueController2?.value = state.selectedSubject;
+      _model.dropdownValue2 = state.selectedSubject;
+      _model.dropdownValueController2?.value = state.selectedSubject;
     }
     if (_model.dropdownValue3 != state.selectedTeacher) {
-       _model.dropdownValue3 = state.selectedTeacher;
-       _model.dropdownValueController3?.value = state.selectedTeacher;
+      _model.dropdownValue3 = state.selectedTeacher;
+      _model.dropdownValueController3?.value = state.selectedTeacher;
     }
   }
 
@@ -85,12 +90,14 @@ class _DailyReportFormWidgetState extends ConsumerState<DailyReportFormWidget> {
 
     return reportStateAsync.when(
       data: (state) => _buildScaffold(context, state, notifier),
-      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      loading: () =>
+          const Scaffold(body: Center(child: CircularProgressIndicator())),
       error: (err, stack) => Scaffold(body: Center(child: Text('Error: $err'))),
     );
   }
 
-  Widget _buildScaffold(BuildContext context, DailyReportFormState state, DailyReportNotifier notifier) {
+  Widget _buildScaffold(BuildContext context, DailyReportFormState state,
+      DailyReportNotifier notifier) {
     _syncModelWithState(state);
 
     return GestureDetector(
@@ -105,11 +112,12 @@ class _DailyReportFormWidgetState extends ConsumerState<DailyReportFormWidget> {
               child: Form(
                 key: _formKey,
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   child: Column(
                     children: [
                       ClassDetailsSection(
-                        model: _model, 
+                        model: _model,
                         onChanged: () {
                           notifier.setClass(_model.dropdownValue1);
                           notifier.setSubject(_model.dropdownValue2);
@@ -143,9 +151,12 @@ class _DailyReportFormWidgetState extends ConsumerState<DailyReportFormWidget> {
     return HeaderSectionWidget(
       title: 'Daily Report',
       subtitle: dateTimeFormat('yMMMd', getCurrentTimestamp),
-      onBackPressed: () async => context.goNamed(ReportsDashboardWidget.routeName),
-      actionIcon: const Icon(Icons.history_rounded, color: Colors.white, size: 24.0),
-      onActionPressed: () async => context.pushNamed(ReportHistoryWidget.routeName),
+      onBackPressed: () async =>
+          context.goNamed(ReportsDashboardWidget.routeName),
+      actionIcon:
+          const Icon(Icons.history_rounded, color: Colors.white, size: 24.0),
+      onActionPressed: () async =>
+          context.pushNamed(ReportHistoryWidget.routeName),
     );
   }
 
@@ -159,7 +170,9 @@ class _DailyReportFormWidgetState extends ConsumerState<DailyReportFormWidget> {
           children: [
             Icon(Icons.list_alt_rounded, color: theme.primary, size: 18.0),
             const SizedBox(width: 8),
-            Text('Topics Covered', style: AppTypography.label.copyWith(fontWeight: FontWeight.bold, color: theme.primaryText)),
+            Text('Topics Covered',
+                style: AppTypography.label.copyWith(
+                    fontWeight: FontWeight.bold, color: theme.primaryText)),
           ],
         ),
         const SizedBox(height: 8),
@@ -168,7 +181,8 @@ class _DailyReportFormWidgetState extends ConsumerState<DailyReportFormWidget> {
           focusNode: _model.textFieldModel4.inputFocusNode,
           label: 'Detailed Topics',
           labelPresent: false,
-          leadingIcon: Icon(Icons.topic_rounded, size: 20.0, color: theme.secondaryText),
+          leadingIcon:
+              Icon(Icons.topic_rounded, size: 20.0, color: theme.secondaryText),
           leadingIconPresent: true,
           hint: 'List topics taught today...',
           variant: 'outlined',
@@ -177,11 +191,13 @@ class _DailyReportFormWidgetState extends ConsumerState<DailyReportFormWidget> {
     );
   }
 
-  Widget _buildFormFooter(BuildContext context, DailyReportFormState state, DailyReportNotifier notifier) {
+  Widget _buildFormFooter(BuildContext context, DailyReportFormState state,
+      DailyReportNotifier notifier) {
     return Container(
       decoration: BoxDecoration(
         color: FlutterFlowTheme.of(context).secondaryBackground,
-        border: Border(top: BorderSide(color: FlutterFlowTheme.of(context).alternate)),
+        border: Border(
+            top: BorderSide(color: FlutterFlowTheme.of(context).alternate)),
         boxShadow: AppShadows.low,
       ),
       padding: AppSpacing.pagePadding,
@@ -205,7 +221,8 @@ class _DailyReportFormWidgetState extends ConsumerState<DailyReportFormWidget> {
     );
   }
 
-  Widget _buildRestoreButton(DailyReportNotifier notifier, DailyReportFormState state) {
+  Widget _buildRestoreButton(
+      DailyReportNotifier notifier, DailyReportFormState state) {
     final theme = FlutterFlowTheme.of(context);
     return Material(
       color: theme.primary.withAlpha(25),
@@ -216,7 +233,8 @@ class _DailyReportFormWidgetState extends ConsumerState<DailyReportFormWidget> {
           final report = state.lastReport!;
           _model.textFieldModel3.inputTextController?.text = report.chapter;
           _model.textFieldModel4.inputTextController?.text = report.topics;
-          _model.textFieldModel5.inputTextController?.text = report.homeworkAssigned;
+          _model.textFieldModel5.inputTextController?.text =
+              report.homeworkAssigned;
           _model.textFieldModel6.inputTextController?.text = report.remarks;
         },
         borderRadius: BorderRadius.circular(16),
@@ -242,16 +260,22 @@ class _DailyReportFormWidgetState extends ConsumerState<DailyReportFormWidget> {
       child: InkWell(
         onTap: () async {
           final confirm = await showDialog<bool>(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: const Text('Clear Form'),
-              content: const Text('Are you sure you want to clear all inputs?'),
-              actions: [
-                TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-                TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Clear')),
-              ],
-            ),
-          ) ?? false;
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Clear Form'),
+                  content:
+                      const Text('Are you sure you want to clear all inputs?'),
+                  actions: [
+                    TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: const Text('Cancel')),
+                    TextButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child: const Text('Clear')),
+                  ],
+                ),
+              ) ??
+              false;
           if (confirm) {
             ref.invalidate(dailyReportNotifierProvider);
             _model.textFieldModel3.inputTextController?.clear();
@@ -262,10 +286,11 @@ class _DailyReportFormWidgetState extends ConsumerState<DailyReportFormWidget> {
         },
         borderRadius: BorderRadius.circular(16),
         child: Container(
-          width: 56.0, 
+          width: 56.0,
           height: 56.0,
           alignment: Alignment.center,
-          child: Icon(Icons.delete_sweep_rounded, color: theme.error, size: 24.0),
+          child:
+              Icon(Icons.delete_sweep_rounded, color: theme.error, size: 24.0),
         ),
       ),
     );

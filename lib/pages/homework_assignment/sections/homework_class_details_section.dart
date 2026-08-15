@@ -32,7 +32,8 @@ class HomeworkClassDetailsSection extends StatelessWidget {
           context,
           model: model.formLabelModel1,
           label: 'Select Class',
-          initialValue: model.dropdownValue1 ?? (classOptions.isNotEmpty ? classOptions.last : ''),
+          initialValue: model.dropdownValue1 ??
+              (classOptions.isNotEmpty ? classOptions.last : ''),
           options: classOptions.isEmpty ? ['No Classes'] : classOptions,
           controller: model.dropdownValueController1,
           onChanged: (val) {
@@ -44,7 +45,8 @@ class HomeworkClassDetailsSection extends StatelessWidget {
           context,
           model: model.formLabelModel2,
           label: 'Subject',
-          initialValue: model.dropdownValue2 ?? (subjectOptions.isNotEmpty ? subjectOptions.first : ''),
+          initialValue: model.dropdownValue2 ??
+              (subjectOptions.isNotEmpty ? subjectOptions.first : ''),
           options: subjectOptions.isEmpty ? ['No Subjects'] : subjectOptions,
           controller: model.dropdownValueController2,
           icon: Icons.menu_book_rounded,
@@ -57,7 +59,8 @@ class HomeworkClassDetailsSection extends StatelessWidget {
           context,
           model: null,
           label: 'Assigned By (Teacher)',
-          initialValue: model.dropdownValue3 ?? (teacherOptions.isNotEmpty ? teacherOptions.first : ''),
+          initialValue: model.dropdownValue3 ??
+              (teacherOptions.isNotEmpty ? teacherOptions.first : ''),
           options: teacherOptions.isEmpty ? ['No Teachers'] : teacherOptions,
           controller: model.dropdownValueController3,
           icon: Icons.person_rounded,
@@ -102,7 +105,8 @@ class HomeworkClassDetailsSection extends StatelessWidget {
             height: 48.0,
             textStyle: FlutterFlowTheme.of(context).bodyMedium,
             hintText: 'Choose...',
-            icon: Icon(icon, color: FlutterFlowTheme.of(context).secondaryText, size: 24.0),
+            icon: Icon(icon,
+                color: FlutterFlowTheme.of(context).secondaryText, size: 24.0),
             fillColor: FlutterFlowTheme.of(context).secondaryBackground,
             elevation: 2.0,
             borderColor: FlutterFlowTheme.of(context).alternate,

@@ -21,7 +21,7 @@ class AttendanceStudentCard extends StatelessWidget {
     final isPresent = status == 'Present';
     final statusColor = isPresent ? AppColors.success : AppColors.error;
     final theme = FlutterFlowTheme.of(context);
-    
+
     return Material(
       color: theme.secondaryBackground,
       borderRadius: BorderRadius.circular(AppRadius.md),
@@ -68,7 +68,9 @@ class AttendanceStudentCard extends StatelessWidget {
                       style: AppTypography.body.copyWith(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
-                        color: isPresent ? AppColors.textPrimary : AppColors.textSecondary,
+                        color: isPresent
+                            ? AppColors.textPrimary
+                            : AppColors.textSecondary,
                       ),
                     ),
                     Text(
@@ -80,7 +82,8 @@ class AttendanceStudentCard extends StatelessWidget {
               ),
               Container(
                 margin: const EdgeInsets.only(right: 12),
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: statusColor.withAlpha(isPresent ? 15 : 30),
                   borderRadius: BorderRadius.circular(20),

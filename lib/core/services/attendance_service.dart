@@ -32,8 +32,9 @@ class AttendanceService {
     }
 
     if (sendWhatsApp) {
-      final absentees = attendanceList.where((a) => a.status == 'Absent').toList();
-      
+      final absentees =
+          attendanceList.where((a) => a.status == 'Absent').toList();
+
       if (absentees.isNotEmpty) {
         // In a real app, you'd fetch parent info if not already in student_attendance
         // or ensure the repository has it.

@@ -23,7 +23,7 @@ class AppStatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = FlutterFlowTheme.of(context);
-    
+
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
@@ -54,7 +54,8 @@ class AppStatCard extends StatelessWidget {
               ),
               if (trend != null)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: (trendColor ?? color).withAlpha(25),
                     borderRadius: BorderRadius.circular(4),
@@ -72,7 +73,7 @@ class AppStatCard extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           Text(
-            value, 
+            value,
             style: AppTypography.title.copyWith(
               fontSize: 22,
               color: theme.primaryText,
@@ -80,7 +81,7 @@ class AppStatCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            title, 
+            title,
             style: AppTypography.caption.copyWith(
               color: theme.secondaryText,
               fontWeight: FontWeight.w500,

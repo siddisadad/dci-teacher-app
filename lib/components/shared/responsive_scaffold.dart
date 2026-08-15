@@ -37,7 +37,8 @@ class ResponsiveScaffold extends ConsumerWidget {
                     Expanded(
                       child: Center(
                         child: Container(
-                          constraints: const BoxConstraints(maxWidth: AppSpacing.maxContentWidth),
+                          constraints: const BoxConstraints(
+                              maxWidth: AppSpacing.maxContentWidth),
                           child: body,
                         ),
                       ),
@@ -60,7 +61,9 @@ class ResponsiveScaffold extends ConsumerWidget {
   void _onNavTap(BuildContext context, int index, WidgetRef ref) {
     final access = ref.read(accessControlProvider);
     final routes = [
-      access.isStudent ? StudentDashboardWidget.routeName : HomeDashboardWidget.routeName,
+      access.isStudent
+          ? StudentDashboardWidget.routeName
+          : HomeDashboardWidget.routeName,
       ReportsDashboardWidget.routeName,
       AttendanceDashboardWidget.routeName,
       TeacherProfileWidget.routeName,
@@ -97,11 +100,13 @@ class _Sidebar extends ConsumerWidget {
                   height: 60,
                   width: 60,
                   fit: BoxFit.contain,
-                  errorBuilder: (_, __, ___) => const Icon(Icons.school_rounded, color: AppColors.primary, size: 60),
+                  errorBuilder: (_, __, ___) => const Icon(Icons.school_rounded,
+                      color: AppColors.primary, size: 60),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: Text('Deshmukh ERP', style: AppTypography.title.copyWith(fontSize: 20)),
+                  child: Text('Deshmukh ERP',
+                      style: AppTypography.title.copyWith(fontSize: 20)),
                 ),
               ],
             ),
@@ -115,7 +120,9 @@ class _Sidebar extends ConsumerWidget {
                     title: 'Dashboard',
                     icon: Icons.dashboard_rounded,
                     isActive: currentIndex == 0,
-                    onTap: () => context.goNamed(access.isStudent ? StudentDashboardWidget.routeName : HomeDashboardWidget.routeName),
+                    onTap: () => context.goNamed(access.isStudent
+                        ? StudentDashboardWidget.routeName
+                        : HomeDashboardWidget.routeName),
                   ),
                   if (!access.isStudent) ...[
                     if (access.canViewDailyReports)
@@ -123,38 +130,45 @@ class _Sidebar extends ConsumerWidget {
                         title: 'Daily Report',
                         icon: Icons.edit_document,
                         isActive: false,
-                        onTap: () => NavigationService.navigateToReports(context),
+                        onTap: () =>
+                            NavigationService.navigateToReports(context),
                       ),
                     if (access.canViewAdminReports)
                       _SidebarItem(
                         title: 'Reports',
                         icon: Icons.assessment_rounded,
                         isActive: currentIndex == 1,
-                        onTap: () => NavigationService.navigateToReports(context),
+                        onTap: () =>
+                            NavigationService.navigateToReports(context),
                       ),
                     _SidebarItem(
                       title: 'Attendance',
                       icon: Icons.fact_check_rounded,
                       isActive: currentIndex == 2,
-                      onTap: () => NavigationService.navigateToAttendanceDashboard(context),
+                      onTap: () =>
+                          NavigationService.navigateToAttendanceDashboard(
+                              context),
                     ),
                     _SidebarItem(
                       title: 'Homework',
                       icon: Icons.edit_note_rounded,
                       isActive: false,
-                      onTap: () => NavigationService.navigateToHomework(context),
+                      onTap: () =>
+                          NavigationService.navigateToHomework(context),
                     ),
                     _SidebarItem(
                       title: 'Students',
                       icon: Icons.people_rounded,
                       isActive: false,
-                      onTap: () => NavigationService.navigateToStudentList(context),
+                      onTap: () =>
+                          NavigationService.navigateToStudentList(context),
                     ),
                     _SidebarItem(
                       title: 'Exams',
                       icon: Icons.assignment_rounded,
                       isActive: false,
-                      onTap: () => NavigationService.navigateToExamsDashboard(context),
+                      onTap: () =>
+                          NavigationService.navigateToExamsDashboard(context),
                     ),
                     _SidebarItem(
                       title: 'Results',
@@ -166,22 +180,25 @@ class _Sidebar extends ConsumerWidget {
                       title: 'Announcements',
                       icon: Icons.campaign_rounded,
                       isActive: false,
-                      onTap: () => NavigationService.navigateToAnnouncements(context),
+                      onTap: () =>
+                          NavigationService.navigateToAnnouncements(context),
                     ),
                     if (access.canViewFacultyList)
                       _SidebarItem(
                         title: 'Manage Faculty',
                         icon: Icons.people_outline_rounded,
                         isActive: false,
-                        onTap: () => context.pushNamed(FacultyListWidget.routeName),
+                        onTap: () =>
+                            context.pushNamed(FacultyListWidget.routeName),
                       ),
                   ],
                   if (access.isStudent) ...[
-                     _SidebarItem(
+                    _SidebarItem(
                       title: 'Homework',
                       icon: Icons.book_rounded,
                       isActive: false,
-                      onTap: () => context.pushNamed(MyHomeworkWidget.routeName),
+                      onTap: () =>
+                          context.pushNamed(MyHomeworkWidget.routeName),
                     ),
                     _SidebarItem(
                       title: 'Results',
@@ -193,7 +210,8 @@ class _Sidebar extends ConsumerWidget {
                       title: 'Attendance',
                       icon: Icons.fact_check_rounded,
                       isActive: false,
-                      onTap: () => context.pushNamed(MyAttendanceHistoryWidget.routeName),
+                      onTap: () => context
+                          .pushNamed(MyAttendanceHistoryWidget.routeName),
                     ),
                   ],
                   _SidebarItem(
@@ -257,14 +275,18 @@ class _SidebarItem extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
               children: [
-                Icon(icon, color: isActive ? theme.primary : theme.secondaryText, size: 24),
+                Icon(icon,
+                    color: isActive ? theme.primary : theme.secondaryText,
+                    size: 24),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: Text(title, style: AppTypography.body.copyWith(
-                    fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-                    color: isActive ? theme.primary : theme.primaryText,
-                    fontSize: 14,
-                  )),
+                  child: Text(title,
+                      style: AppTypography.body.copyWith(
+                        fontWeight:
+                            isActive ? FontWeight.bold : FontWeight.normal,
+                        color: isActive ? theme.primary : theme.primaryText,
+                        fontSize: 14,
+                      )),
                 ),
               ],
             ),

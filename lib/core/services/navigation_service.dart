@@ -51,7 +51,8 @@ class NavigationService {
     context.goNamed(AboutDCIWidget.routeName);
   }
 
-  static void navigateToStudentProfile(BuildContext context, {required dynamic student}) {
+  static void navigateToStudentProfile(BuildContext context,
+      {required dynamic student}) {
     context.pushNamed(
       StudentProfileWidget.routeName,
       extra: {'student': student},
@@ -65,7 +66,8 @@ class NavigationService {
     );
   }
 
-  static void navigateToTeacherProfile(BuildContext context, {dynamic userData}) {
+  static void navigateToTeacherProfile(BuildContext context,
+      {dynamic userData}) {
     context.pushNamed(
       TeacherProfileWidget.routeName,
       extra: {'userData': userData},

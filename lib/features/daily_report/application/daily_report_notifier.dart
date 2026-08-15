@@ -13,7 +13,7 @@ class DailyReportFormState {
   final List<String> subjectOptions;
   final List<String> classOptions;
   final DailyReport? lastReport;
-  
+
   // Form values
   final String? selectedClass;
   final String? selectedSubject;
@@ -61,16 +61,16 @@ class DailyReportFormState {
   }
 }
 
-class DailyReportNotifier extends AutoDisposeAsyncNotifier<DailyReportFormState> {
+class DailyReportNotifier
+    extends AutoDisposeAsyncNotifier<DailyReportFormState> {
   @override
   FutureOr<DailyReportFormState> build() async {
     final userRepo = ref.read(userRepositoryProvider);
-    final studentRepo = ref.read(studentRepositoryProvider);
     final reportRepo = ref.read(dailyReportRepositoryProvider);
-    
+
     final results = await Future.wait([
       userRepo.getTeachers(),
-      studentRepo.getAllStudents(),
+      ref.watch(studentsStreamProvider.future),
       userRepo.getAllUserSubjects(),
       reportRepo.getLastReport(),
     ]);
@@ -81,21 +81,32 @@ class DailyReportNotifier extends AutoDisposeAsyncNotifier<DailyReportFormState>
     final lastReport = results[3] as DailyReport?;
 
     final teacherNames = teachers.map((t) => t.displayName).toSet().toList();
-    final classNames = allStudents.map((s) => s.className).where((c) => c.isNotEmpty).toSet().toList();
+    final classNames = allStudents
+        .map((s) => s.className)
+        .where((c) => c.isNotEmpty)
+        .toSet()
+        .toList();
 
     return DailyReportFormState(
       teacherOptions: teacherNames..sort(),
-      subjectOptions: {'English', 'Marathi', 'Math', 'Science', ...subjects}.toList()..sort(),
+      subjectOptions:
+          {'English', 'Marathi', 'Math', 'Science', ...subjects}.toList()
+            ..sort(),
       classOptions: classNames..sort(),
       lastReport: lastReport,
     );
   }
 
-  void setClass(String? val) => state = AsyncData(state.value!.copyWith(selectedClass: val));
-  void setSubject(String? val) => state = AsyncData(state.value!.copyWith(selectedSubject: val));
-  void setTeacher(String? val) => state = AsyncData(state.value!.copyWith(selectedTeacher: val));
-  void setPresentCount(int val) => state = AsyncData(state.value!.copyWith(presentCount: val));
-  void setAbsentCount(int val) => state = AsyncData(state.value!.copyWith(absentCount: val));
+  void setClass(String? val) =>
+      state = AsyncData(state.value!.copyWith(selectedClass: val));
+  void setSubject(String? val) =>
+      state = AsyncData(state.value!.copyWith(selectedSubject: val));
+  void setTeacher(String? val) =>
+      state = AsyncData(state.value!.copyWith(selectedTeacher: val));
+  void setPresentCount(int val) =>
+      state = AsyncData(state.value!.copyWith(presentCount: val));
+  void setAbsentCount(int val) =>
+      state = AsyncData(state.value!.copyWith(absentCount: val));
 
   void applyLastReport() {
     final report = state.value!.lastReport;
@@ -119,7 +130,9 @@ class DailyReportNotifier extends AutoDisposeAsyncNotifier<DailyReportFormState>
     if (user == null) return false;
 
     final currentState = state.value!;
-    if (currentState.selectedClass == null || currentState.selectedSubject == null || currentState.selectedTeacher == null) {
+    if (currentState.selectedClass == null ||
+        currentState.selectedSubject == null ||
+        currentState.selectedTeacher == null) {
       return false;
     }
 
@@ -150,6 +163,7 @@ class DailyReportNotifier extends AutoDisposeAsyncNotifier<DailyReportFormState>
   }
 }
 
-final dailyReportNotifierProvider = AsyncNotifierProvider.autoDispose<DailyReportNotifier, DailyReportFormState>(() {
+final dailyReportNotifierProvider = AsyncNotifierProvider.autoDispose<
+    DailyReportNotifier, DailyReportFormState>(() {
   return DailyReportNotifier();
 });

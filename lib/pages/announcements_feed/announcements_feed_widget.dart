@@ -27,7 +27,8 @@ class AnnouncementsFeedWidget extends ConsumerStatefulWidget {
       _AnnouncementsFeedWidgetState();
 }
 
-class _AnnouncementsFeedWidgetState extends ConsumerState<AnnouncementsFeedWidget> {
+class _AnnouncementsFeedWidgetState
+    extends ConsumerState<AnnouncementsFeedWidget> {
   late AnnouncementsFeedModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -47,8 +48,8 @@ class _AnnouncementsFeedWidgetState extends ConsumerState<AnnouncementsFeedWidge
 
   void _shareAnnouncement(Announcement announcement) async {
     final isParentMeeting = announcement.category == 'PARENT_MEETING';
-    final message = isParentMeeting 
-      ? '''
+    final message = isParentMeeting
+        ? '''
 🤝 *Parent Meeting Invitation*
 Title: ${announcement.title}
 Date: ${dateTimeFormat('yMMMd', announcement.createdAt ?? DateTime.now())}
@@ -60,7 +61,7 @@ Please make it convenient to attend.
 Regards,
 Deshmukh Team
 '''
-      : '''
+        : '''
 📢 *New Announcement: ${announcement.title}*
 Category: ${announcement.category}
 Date: ${dateTimeFormat('yMMMd', announcement.createdAt ?? DateTime.now())}
@@ -75,7 +76,8 @@ Read more in the Deshmukh Teacher App.
       await whatsappService.launchWhatsapp(message: message);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error sharing: $e')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Error sharing: $e')));
       }
     }
   }
@@ -97,7 +99,8 @@ Read more in the Deshmukh Teacher App.
             HeaderSectionWidget(
               title: 'Notice Board',
               subtitle: 'Latest updates & alerts',
-              onBackPressed: () async => context.goNamed(HomeDashboardWidget.routeName),
+              onBackPressed: () async =>
+                  context.goNamed(HomeDashboardWidget.routeName),
               showActionIcon: false,
             ),
             Expanded(
@@ -123,46 +126,55 @@ Read more in the Deshmukh Teacher App.
 
   Widget _buildAnnouncementsList(BuildContext context) {
     return ref.watch(announcementsStreamProvider).when(
-      data: (announcements) {
-        if (announcements.isEmpty) {
-          return AppEmptyState(
-            icon: Icons.campaign_rounded,
-            title: 'No notices posted',
-            description: 'Important updates will appear here.',
-            actionLabel: 'Post Now',
-            onActionPressed: () => _showCreateAnnouncementBottomSheet(context),
-          );
-        }
-        return ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          itemCount: announcements.length,
-          itemBuilder: (context, index) {
-            final announcement = announcements[index];
-            return wrapWithModel(
-              model: createModel(context, () => AnnouncementCardModel()),
-              updateCallback: () => safeSetState(() {}),
-              child: AnnouncementCardWidget(
-                category: announcement.category,
-                date: dateTimeFormat('yMMMd', announcement.createdAt),
-                description: announcement.description,
-                title: announcement.title,
-                onTap: () async => _showAnnouncementDialog(context, announcement),
-                onShare: () => _shareAnnouncement(announcement),
-              ),
+          data: (announcements) {
+            if (announcements.isEmpty) {
+              return AppEmptyState(
+                icon: Icons.campaign_rounded,
+                title: 'No notices posted',
+                description: 'Important updates will appear here.',
+                actionLabel: 'Post Now',
+                onActionPressed: () =>
+                    _showCreateAnnouncementBottomSheet(context),
+              );
+            }
+            return ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              itemCount: announcements.length,
+              itemBuilder: (context, index) {
+                final announcement = announcements[index];
+                return wrapWithModel(
+                  model: createModel(context, () => AnnouncementCardModel()),
+                  updateCallback: () => safeSetState(() {}),
+                  child: AnnouncementCardWidget(
+                    category: announcement.category,
+                    date: dateTimeFormat('yMMMd', announcement.createdAt),
+                    description: announcement.description,
+                    title: announcement.title,
+                    onTap: () async =>
+                        _showAnnouncementDialog(context, announcement),
+                    onShare: () => _shareAnnouncement(announcement),
+                  ),
+                );
+              },
             );
           },
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (err, stack) => Center(child: Text('Error: $err')),
         );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, stack) => Center(child: Text('Error: $err')),
-    );
   }
 
   void _showCreateAnnouncementBottomSheet(BuildContext context) {
     final titleController = TextEditingController();
     final descriptionController = TextEditingController();
     String selectedCategory = 'GENERAL';
-    final categories = ['GENERAL', 'EXAM', 'EVENT', 'HOLIDAY', 'URGENT', 'PARENT_MEETING'];
+    final categories = [
+      'GENERAL',
+      'EXAM',
+      'EVENT',
+      'HOLIDAY',
+      'URGENT',
+      'PARENT_MEETING'
+    ];
     final theme = FlutterFlowTheme.of(context);
 
     showModalBottomSheet(
@@ -214,7 +226,8 @@ Read more in the Deshmukh Teacher App.
                   label: 'Category',
                   options: categories,
                   initialValue: selectedCategory,
-                  onChanged: (val) => setModalState(() => selectedCategory = val!),
+                  onChanged: (val) =>
+                      setModalState(() => selectedCategory = val!),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 TextFieldWidget(
@@ -228,14 +241,18 @@ Read more in the Deshmukh Teacher App.
                 AppPrimaryButton(
                   text: 'Post Announcement',
                   onPressed: () async {
-                    if (titleController.text.isEmpty || descriptionController.text.isEmpty) {
+                    if (titleController.text.isEmpty ||
+                        descriptionController.text.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Please fill all required fields')),
+                        const SnackBar(
+                            content: Text('Please fill all required fields')),
                       );
                       return;
                     }
 
-                    await ref.read(announcementServiceProvider).createAnnouncement(
+                    await ref
+                        .read(announcementServiceProvider)
+                        .createAnnouncement(
                           title: titleController.text,
                           description: descriptionController.text,
                           category: selectedCategory,
@@ -244,7 +261,8 @@ Read more in the Deshmukh Teacher App.
                     if (!context.mounted) return;
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Announcement posted successfully')),
+                      const SnackBar(
+                          content: Text('Announcement posted successfully')),
                     );
                   },
                 ),
@@ -256,7 +274,8 @@ Read more in the Deshmukh Teacher App.
     );
   }
 
-  void _showAnnouncementDialog(BuildContext context, Announcement announcement) {
+  void _showAnnouncementDialog(
+      BuildContext context, Announcement announcement) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -269,12 +288,13 @@ Read more in the Deshmukh Teacher App.
               Text(
                 announcement.category,
                 style: FlutterFlowTheme.of(context).labelSmall.override(
-                  font: GoogleFonts.inter(fontWeight: FontWeight.bold),
-                  color: FlutterFlowTheme.of(context).primary,
-                ),
+                      font: GoogleFonts.inter(fontWeight: FontWeight.bold),
+                      color: FlutterFlowTheme.of(context).primary,
+                    ),
               ),
               const SizedBox(height: 8),
-              Text(announcement.description, style: FlutterFlowTheme.of(context).bodyMedium),
+              Text(announcement.description,
+                  style: FlutterFlowTheme.of(context).bodyMedium),
               if (announcement.link != null) ...[
                 const SizedBox(height: 16),
                 InkWell(
@@ -282,9 +302,10 @@ Read more in the Deshmukh Teacher App.
                   child: Text(
                     'View Attachment/Link',
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
-                      font: GoogleFonts.inter(decoration: TextDecoration.underline),
-                      color: FlutterFlowTheme.of(context).primary,
-                    ),
+                          font: GoogleFonts.inter(
+                              decoration: TextDecoration.underline),
+                          color: FlutterFlowTheme.of(context).primary,
+                        ),
                   ),
                 ),
               ],
@@ -292,7 +313,9 @@ Read more in the Deshmukh Teacher App.
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Close')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Close')),
         ],
       ),
     );

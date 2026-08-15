@@ -29,7 +29,8 @@ class ExamsDashboardWidget extends ConsumerStatefulWidget {
   static String routePath = '/examsDashboard';
 
   @override
-  ConsumerState<ExamsDashboardWidget> createState() => _ExamsDashboardWidgetState();
+  ConsumerState<ExamsDashboardWidget> createState() =>
+      _ExamsDashboardWidgetState();
 }
 
 class _ExamsDashboardWidgetState extends ConsumerState<ExamsDashboardWidget> {
@@ -66,8 +67,10 @@ class _ExamsDashboardWidgetState extends ConsumerState<ExamsDashboardWidget> {
           ),
           Expanded(
             child: SingleChildScrollView(
-              physics: const NeverScrollableScrollPhysics(), // Extreme compression: disable outer scroll if possible
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+              physics:
+                  const NeverScrollableScrollPhysics(), // Extreme compression: disable outer scroll if possible
+              padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md, vertical: AppSpacing.sm),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -75,35 +78,57 @@ class _ExamsDashboardWidgetState extends ConsumerState<ExamsDashboardWidget> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('STATISTICS', style: AppTypography.caption.copyWith(fontWeight: FontWeight.bold, letterSpacing: 1, fontSize: 10)),
-                      const Icon(Icons.analytics_outlined, size: 14, color: AppColors.secondary),
+                      Text('STATISTICS',
+                          style: AppTypography.caption.copyWith(
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1,
+                              fontSize: 10)),
+                      const Icon(Icons.analytics_outlined,
+                          size: 14, color: AppColors.secondary),
                     ],
                   ),
                   const SizedBox(height: 8),
                   examsAsync.when(
                     data: (exams) {
                       final totalExams = exams.length;
-                      final upcomingExams = exams.where((e) => e.date.isAfter(DateTime.now())).length;
-                      
+                      final upcomingExams = exams
+                          .where((e) => e.date.isAfter(DateTime.now()))
+                          .length;
+
                       return Row(
                         children: [
-                          _buildMicroStat(context, 'Total', totalExams.toString(), Icons.assignment_outlined, theme.primary),
+                          _buildMicroStat(
+                              context,
+                              'Total',
+                              totalExams.toString(),
+                              Icons.assignment_outlined,
+                              theme.primary),
                           const SizedBox(width: 8),
-                          _buildMicroStat(context, 'Upcoming', upcomingExams.toString(), Icons.event_available_outlined, AppColors.info),
+                          _buildMicroStat(
+                              context,
+                              'Upcoming',
+                              upcomingExams.toString(),
+                              Icons.event_available_outlined,
+                              AppColors.info),
                           const SizedBox(width: 8),
-                          _buildMicroStat(context, 'Analysis', 'View', Icons.analytics_rounded, AppColors.secondary, onTap: () => NavigationService.navigateToResults(context)),
+                          _buildMicroStat(context, 'Analysis', 'View',
+                              Icons.analytics_rounded, AppColors.secondary,
+                              onTap: () =>
+                                  NavigationService.navigateToResults(context)),
                         ],
                       );
                     },
                     loading: () => const LinearProgressIndicator(),
-                    error: (err, stack) => Text('Error: $err', style: const TextStyle(fontSize: 10)),
+                    error: (err, stack) => Text('Error: $err',
+                        style: const TextStyle(fontSize: 10)),
                   ),
-                  
+
                   const SizedBox(height: 8),
-                  
+
                   // Ultra-Slim Performance Bar
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
                       color: theme.secondaryBackground,
                       borderRadius: BorderRadius.circular(8),
@@ -111,9 +136,15 @@ class _ExamsDashboardWidgetState extends ConsumerState<ExamsDashboardWidget> {
                     ),
                     child: Row(
                       children: [
-                        Text('Class Performance', style: AppTypography.caption.copyWith(fontWeight: FontWeight.bold, fontSize: 13)),
+                        Text('Class Performance',
+                            style: AppTypography.caption.copyWith(
+                                fontWeight: FontWeight.bold, fontSize: 13)),
                         const Spacer(),
-                        Text('85%', style: AppTypography.caption.copyWith(color: theme.primary, fontWeight: FontWeight.bold, fontSize: 12)),
+                        Text('85%',
+                            style: AppTypography.caption.copyWith(
+                                color: theme.primary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12)),
                         const SizedBox(width: 12),
                         Expanded(
                           flex: 2,
@@ -123,7 +154,8 @@ class _ExamsDashboardWidgetState extends ConsumerState<ExamsDashboardWidget> {
                               value: 0.85,
                               minHeight: 4,
                               backgroundColor: theme.alternate,
-                              valueColor: AlwaysStoppedAnimation<Color>(theme.primary),
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(theme.primary),
                             ),
                           ),
                         ),
@@ -134,7 +166,11 @@ class _ExamsDashboardWidgetState extends ConsumerState<ExamsDashboardWidget> {
                   const SizedBox(height: 12),
 
                   // Consolidated Action Grid (3 columns)
-                  Text('QUICK ACTIONS', style: AppTypography.caption.copyWith(fontWeight: FontWeight.bold, letterSpacing: 1, fontSize: 10)),
+                  Text('QUICK ACTIONS',
+                      style: AppTypography.caption.copyWith(
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1,
+                          fontSize: 10)),
                   const SizedBox(height: 8),
                   GridView.count(
                     crossAxisCount: 3,
@@ -144,14 +180,58 @@ class _ExamsDashboardWidgetState extends ConsumerState<ExamsDashboardWidget> {
                     physics: const NeverScrollableScrollPhysics(),
                     childAspectRatio: 1.2,
                     children: [
-                      _buildActionBtn(context, 'Create', Icons.add_task_rounded, theme.primary, () => context.pushNamed(AddExamWidget.routeName)),
-                      _buildActionBtn(context, 'Marks', Icons.edit_note_rounded, AppColors.info, () => context.pushNamed(ExamsWidget.routeName)),
-                      _buildActionBtn(context, 'Publish', Icons.publish_rounded, AppColors.success, () => context.pushNamed(ExamsWidget.routeName)),
-                      _buildActionBtn(context, 'Monthly', Icons.insights_rounded, theme.primary, () => context.pushNamed(MonthlyReportWidget.routeName)),
-                      _buildActionBtn(context, 'Class', Icons.grade_rounded, AppColors.info, () => context.pushNamed(ClassWiseReportWidget.routeName)),
-                      _buildActionBtn(context, 'Report', Icons.print_rounded, theme.secondary, () => _showStudentSelectionDialog(context, ref)),
-                      _buildActionBtn(context, 'Faculty', Icons.person_search_rounded, AppColors.warning, () => context.pushNamed(TeacherWiseReportWidget.routeName)),
-                      _buildActionBtn(context, 'Date', Icons.calendar_month_rounded, AppColors.secondary, () => context.pushNamed(DateWiseReportWidget.routeName)),
+                      _buildActionBtn(
+                          context,
+                          'Create',
+                          Icons.add_task_rounded,
+                          theme.primary,
+                          () => context.pushNamed(AddExamWidget.routeName)),
+                      _buildActionBtn(
+                          context,
+                          'Marks',
+                          Icons.edit_note_rounded,
+                          AppColors.info,
+                          () => context.pushNamed(ExamsWidget.routeName)),
+                      _buildActionBtn(
+                          context,
+                          'Publish',
+                          Icons.publish_rounded,
+                          AppColors.success,
+                          () => context.pushNamed(ExamsWidget.routeName)),
+                      _buildActionBtn(
+                          context,
+                          'Monthly',
+                          Icons.insights_rounded,
+                          theme.primary,
+                          () =>
+                              context.pushNamed(MonthlyReportWidget.routeName)),
+                      _buildActionBtn(
+                          context,
+                          'Class',
+                          Icons.grade_rounded,
+                          AppColors.info,
+                          () => context
+                              .pushNamed(ClassWiseReportWidget.routeName)),
+                      _buildActionBtn(
+                          context,
+                          'Report',
+                          Icons.print_rounded,
+                          theme.secondary,
+                          () => _showStudentSelectionDialog(context, ref)),
+                      _buildActionBtn(
+                          context,
+                          'Faculty',
+                          Icons.person_search_rounded,
+                          AppColors.warning,
+                          () => context
+                              .pushNamed(TeacherWiseReportWidget.routeName)),
+                      _buildActionBtn(
+                          context,
+                          'Date',
+                          Icons.calendar_month_rounded,
+                          AppColors.secondary,
+                          () => context
+                              .pushNamed(DateWiseReportWidget.routeName)),
                     ],
                   ),
 
@@ -161,11 +241,20 @@ class _ExamsDashboardWidgetState extends ConsumerState<ExamsDashboardWidget> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('RECENT ACTIVITY', style: AppTypography.caption.copyWith(fontWeight: FontWeight.bold, letterSpacing: 1, fontSize: 10)),
+                      Text('RECENT ACTIVITY',
+                          style: AppTypography.caption.copyWith(
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1,
+                              fontSize: 10)),
                       TextButton(
-                        onPressed: () => context.pushNamed(ExamsWidget.routeName),
-                        style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: const Size(0, 20), tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-                        child: const Text('View All', style: TextStyle(fontSize: 10)),
+                        onPressed: () =>
+                            context.pushNamed(ExamsWidget.routeName),
+                        style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            minimumSize: const Size(0, 20),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+                        child: const Text('View All',
+                            style: TextStyle(fontSize: 10)),
                       ),
                     ],
                   ),
@@ -174,7 +263,10 @@ class _ExamsDashboardWidgetState extends ConsumerState<ExamsDashboardWidget> {
                       if (exams.isEmpty) return const SizedBox();
                       final recentExams = exams.take(2).toList();
                       return Column(
-                        children: recentExams.map((exam) => _buildMiniActivityCard(context, exam, theme)).toList(),
+                        children: recentExams
+                            .map((exam) =>
+                                _buildMiniActivityCard(context, exam, theme))
+                            .toList(),
                       );
                     },
                     loading: () => const SizedBox(),
@@ -185,7 +277,7 @@ class _ExamsDashboardWidgetState extends ConsumerState<ExamsDashboardWidget> {
             ),
           ),
           AppBottomNavBar(
-            currentIndex: 1, 
+            currentIndex: 1,
             onTap: (index) {
               final routes = [
                 HomeDashboardWidget.routeName,
@@ -201,7 +293,9 @@ class _ExamsDashboardWidgetState extends ConsumerState<ExamsDashboardWidget> {
     );
   }
 
-  Widget _buildMicroStat(BuildContext context, String label, String value, IconData icon, Color color, {VoidCallback? onTap}) {
+  Widget _buildMicroStat(BuildContext context, String label, String value,
+      IconData icon, Color color,
+      {VoidCallback? onTap}) {
     final theme = FlutterFlowTheme.of(context);
     return Expanded(
       child: Material(
@@ -227,8 +321,13 @@ class _ExamsDashboardWidgetState extends ConsumerState<ExamsDashboardWidget> {
                   child: Icon(icon, size: 12, color: color),
                 ),
                 const SizedBox(height: 8),
-                Text(value, style: AppTypography.title.copyWith(fontSize: 18, height: 1.1)),
-                Text(label, style: AppTypography.caption.copyWith(fontSize: 11, fontWeight: FontWeight.w500), overflow: TextOverflow.ellipsis),
+                Text(value,
+                    style: AppTypography.title
+                        .copyWith(fontSize: 18, height: 1.1)),
+                Text(label,
+                    style: AppTypography.caption
+                        .copyWith(fontSize: 11, fontWeight: FontWeight.w500),
+                    overflow: TextOverflow.ellipsis),
               ],
             ),
           ),
@@ -237,7 +336,8 @@ class _ExamsDashboardWidgetState extends ConsumerState<ExamsDashboardWidget> {
     );
   }
 
-  Widget _buildActionBtn(BuildContext context, String label, IconData icon, Color color, VoidCallback onTap) {
+  Widget _buildActionBtn(BuildContext context, String label, IconData icon,
+      Color color, VoidCallback onTap) {
     final theme = FlutterFlowTheme.of(context);
     return Material(
       color: theme.secondaryBackground,
@@ -262,7 +362,11 @@ class _ExamsDashboardWidgetState extends ConsumerState<ExamsDashboardWidget> {
                 child: Icon(icon, size: 18, color: color),
               ),
               const SizedBox(height: 8),
-              Text(label, style: AppTypography.caption.copyWith(fontWeight: FontWeight.bold, fontSize: 12, color: AppColors.textPrimary)),
+              Text(label,
+                  style: AppTypography.caption.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                      color: AppColors.textPrimary)),
             ],
           ),
         ),
@@ -270,7 +374,8 @@ class _ExamsDashboardWidgetState extends ConsumerState<ExamsDashboardWidget> {
     );
   }
 
-  Widget _buildMiniActivityCard(BuildContext context, Exam exam, FlutterFlowTheme theme) {
+  Widget _buildMiniActivityCard(
+      BuildContext context, Exam exam, FlutterFlowTheme theme) {
     return Container(
       margin: const EdgeInsets.only(bottom: 6),
       decoration: BoxDecoration(
@@ -285,7 +390,8 @@ class _ExamsDashboardWidgetState extends ConsumerState<ExamsDashboardWidget> {
         child: ListTile(
           dense: true,
           visualDensity: VisualDensity.compact,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           leading: Container(
             width: 32,
             height: 32,
@@ -293,10 +399,16 @@ class _ExamsDashboardWidgetState extends ConsumerState<ExamsDashboardWidget> {
               color: theme.primary.withAlpha(20),
               shape: BoxShape.circle,
             ),
-            child: Icon(Icons.assignment_rounded, color: theme.primary, size: 16),
+            child:
+                Icon(Icons.assignment_rounded, color: theme.primary, size: 16),
           ),
-          title: Text('${exam.subject} - ${exam.className}', style: AppTypography.caption.copyWith(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.textPrimary)),
-          subtitle: Text(dateTimeFormat('yMMMd', exam.date), style: AppTypography.caption.copyWith(fontSize: 11)),
+          title: Text('${exam.subject} - ${exam.className}',
+              style: AppTypography.caption.copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                  color: AppColors.textPrimary)),
+          subtitle: Text(dateTimeFormat('yMMMd', exam.date),
+              style: AppTypography.caption.copyWith(fontSize: 11)),
           trailing: const Icon(Icons.chevron_right_rounded, size: 16),
           onTap: () => context.pushNamed(ExamsWidget.routeName),
         ),
@@ -304,8 +416,9 @@ class _ExamsDashboardWidgetState extends ConsumerState<ExamsDashboardWidget> {
     );
   }
 
-  Future<void> _showStudentSelectionDialog(BuildContext context, WidgetRef ref) async {
-    final students = await ref.read(studentRepositoryProvider).getAllStudentsStream().first;
+  Future<void> _showStudentSelectionDialog(
+      BuildContext context, WidgetRef ref) async {
+    final students = await ref.read(studentsStreamProvider.future);
     final config = ref.read(instituteInfoStreamProvider).value;
     final instituteName = config?['name'] ?? 'Deshmukh Coaching Institute';
 
@@ -319,9 +432,9 @@ class _ExamsDashboardWidgetState extends ConsumerState<ExamsDashboardWidget> {
         builder: (context, setDialogState) {
           final query = searchController.text.toLowerCase();
           final filteredStudents = students.where((s) {
-            return s.name.toLowerCase().contains(query) || 
-                   s.rollNo.toLowerCase().contains(query) ||
-                   s.className.toLowerCase().contains(query);
+            return s.name.toLowerCase().contains(query) ||
+                s.rollNo.toLowerCase().contains(query) ||
+                s.className.toLowerCase().contains(query);
           }).toList();
 
           return AlertDialog(
@@ -344,7 +457,8 @@ class _ExamsDashboardWidgetState extends ConsumerState<ExamsDashboardWidget> {
                   if (filteredStudents.isEmpty)
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 24),
-                      child: Text('No students found.', style: AppTypography.caption),
+                      child: Text('No students found.',
+                          style: AppTypography.caption),
                     )
                   else
                     Flexible(
@@ -357,18 +471,28 @@ class _ExamsDashboardWidgetState extends ConsumerState<ExamsDashboardWidget> {
                           return ListTile(
                             dense: true,
                             contentPadding: EdgeInsets.zero,
-                            title: Text(student.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                            subtitle: Text('${student.className} • Roll: ${student.rollNo}'),
+                            title: Text(student.name,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold)),
+                            subtitle: Text(
+                                '${student.className} • Roll: ${student.rollNo}'),
                             onTap: () async {
                               Navigator.pop(context);
-                              final results = await ref.read(resultRepositoryProvider).getStudentResultsStream(student.id).first;
+                              final results = await ref
+                                  .read(resultRepositoryProvider)
+                                  .getStudentResultsStream(student.id)
+                                  .first;
                               if (results.isEmpty) {
                                 if (context.mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No results found for this student.')));
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              'No results found for this student.')));
                                 }
                                 return;
                               }
-                              await ReportCardService.generateAndPrintReportCard(
+                              await ReportCardService
+                                  .generateAndPrintReportCard(
                                 student: student,
                                 results: results,
                                 instituteName: instituteName,
@@ -382,7 +506,9 @@ class _ExamsDashboardWidgetState extends ConsumerState<ExamsDashboardWidget> {
               ),
             ),
             actions: [
-              TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+              TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel')),
             ],
           );
         },

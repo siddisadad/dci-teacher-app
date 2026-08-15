@@ -42,7 +42,7 @@ class _EditStudentWidgetState extends ConsumerState<EditStudentWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => EditStudentModel());
-    
+
     if (widget.student != null) {
       _model.setFromStudent(widget.student!);
     }
@@ -50,7 +50,9 @@ class _EditStudentWidgetState extends ConsumerState<EditStudentWidget> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(editStudentNotifierProvider.notifier).initialize().then((_) {
         if (widget.student != null) {
-          ref.read(editStudentNotifierProvider.notifier).setPhotoUrl(widget.student!.photoUrl);
+          ref
+              .read(editStudentNotifierProvider.notifier)
+              .setPhotoUrl(widget.student!.photoUrl);
         }
       });
     });
@@ -64,7 +66,7 @@ class _EditStudentWidgetState extends ConsumerState<EditStudentWidget> {
 
   Future<void> _saveStudent() async {
     final notifier = ref.read(editStudentNotifierProvider.notifier);
-    
+
     final name = _model.nameModel.inputTextController?.text.trim() ?? '';
     if (name.isEmpty || _model.selectedClass == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -73,21 +75,26 @@ class _EditStudentWidgetState extends ConsumerState<EditStudentWidget> {
       return;
     }
 
-    final student = _model.toStudent(widget.student?.id ?? '', existing: widget.student);
-    final success = await notifier.saveStudent(student, isNew: widget.student == null);
-    
+    final student =
+        _model.toStudent(widget.student?.id ?? '', existing: widget.student);
+    final success =
+        await notifier.saveStudent(student, isNew: widget.student == null);
+
     if (success && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Student saved successfully!')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Student saved successfully!')));
       context.safePop();
     } else if (!success && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed to save student.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to save student.')));
     }
   }
 
   Future<void> _deleteStudent() async {
     final notifier = ref.read(editStudentNotifierProvider.notifier);
     if (!notifier.isAdmin) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Only Admins can delete students.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Only Admins can delete students.')));
       return;
     }
 
@@ -95,10 +102,16 @@ class _EditStudentWidgetState extends ConsumerState<EditStudentWidget> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Delete Student'),
-        content: const Text('Are you sure you want to delete this student? This action cannot be undone.'),
+        content: const Text(
+            'Are you sure you want to delete this student? This action cannot be undone.'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: Text('Delete', style: TextStyle(color: FlutterFlowTheme.of(context).error))),
+          TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Cancel')),
+          TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text('Delete',
+                  style: TextStyle(color: FlutterFlowTheme.of(context).error))),
         ],
       ),
     );
@@ -107,7 +120,8 @@ class _EditStudentWidgetState extends ConsumerState<EditStudentWidget> {
 
     final success = await notifier.deleteStudent(widget.student!.id);
     if (success && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Student deleted successfully.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Student deleted successfully.')));
       context.safePop();
     }
   }
@@ -129,46 +143,59 @@ class _EditStudentWidgetState extends ConsumerState<EditStudentWidget> {
               model: _model.headerSectionModel,
               updateCallback: () => safeSetState(() {}),
               child: HeaderSectionWidget(
-                title: widget.student == null ? 'Add Student' : 'Student Details',
+                title:
+                    widget.student == null ? 'Add Student' : 'Student Details',
                 subtitle: widget.student?.name ?? 'New Entry',
                 onBackPressed: () async => context.safePop(),
               ),
             ),
             Expanded(
-              child: state.isLoading 
-                ? const Center(child: CircularProgressIndicator())
-                : SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(AppSpacing.lg),
-                      child: Column(
-                        children: [
-                          if (widget.student != null) _buildQuickActions(theme),
-                          
-                          _buildProfileSection(state, theme),
-                          const SizedBox(height: AppSpacing.lg),
-                          
-                          const AppSectionHeader(title: 'Basic Information', icon: Icons.person_outline_rounded),
-                          BasicInfoSection(model: _model, isAdmin: isAdmin, onChanged: () => safeSetState(() {})),
-                          
-                          const SizedBox(height: AppSpacing.lg),
-                          const AppSectionHeader(title: 'Parent Information', icon: Icons.family_restroom_rounded),
-                          ParentInfoSection(model: _model, onChanged: () => safeSetState(() {})),
-                          
-                          const SizedBox(height: AppSpacing.lg),
-                          const AppSectionHeader(title: 'Address Details', icon: Icons.location_on_outlined),
-                          AddressInfoSection(model: _model, onChanged: () => safeSetState(() {})),
-                          
-                          const SizedBox(height: AppSpacing.lg),
-                          const AppSectionHeader(title: 'Academic Information', icon: Icons.school_outlined),
-                          AcademicInfoSection(model: _model, onChanged: () => safeSetState(() {})),
-                          
-                          const SizedBox(height: AppSpacing.xl),
-                          _buildActionButtons(state, isAdmin),
-                          const SizedBox(height: AppSpacing.xl),
-                        ],
+              child: state.isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(AppSpacing.lg),
+                        child: Column(
+                          children: [
+                            if (widget.student != null)
+                              _buildQuickActions(theme),
+                            _buildProfileSection(state, theme),
+                            const SizedBox(height: AppSpacing.lg),
+                            const AppSectionHeader(
+                                title: 'Basic Information',
+                                icon: Icons.person_outline_rounded),
+                            BasicInfoSection(
+                                model: _model,
+                                isAdmin: isAdmin,
+                                onChanged: () => safeSetState(() {})),
+                            const SizedBox(height: AppSpacing.lg),
+                            const AppSectionHeader(
+                                title: 'Parent Information',
+                                icon: Icons.family_restroom_rounded),
+                            ParentInfoSection(
+                                model: _model,
+                                onChanged: () => safeSetState(() {})),
+                            const SizedBox(height: AppSpacing.lg),
+                            const AppSectionHeader(
+                                title: 'Address Details',
+                                icon: Icons.location_on_outlined),
+                            AddressInfoSection(
+                                model: _model,
+                                onChanged: () => safeSetState(() {})),
+                            const SizedBox(height: AppSpacing.lg),
+                            const AppSectionHeader(
+                                title: 'Academic Information',
+                                icon: Icons.school_outlined),
+                            AcademicInfoSection(
+                                model: _model,
+                                onChanged: () => safeSetState(() {})),
+                            const SizedBox(height: AppSpacing.xl),
+                            _buildActionButtons(state, isAdmin),
+                            const SizedBox(height: AppSpacing.xl),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
             ),
           ],
         ),
@@ -217,15 +244,23 @@ class _EditStudentWidgetState extends ConsumerState<EditStudentWidget> {
         children: [
           Expanded(
             child: _buildActionButton(
-              'Call Parent', Icons.call_rounded, theme.primary, 
-              () => phone != null && phone.isNotEmpty ? launchURL('tel:$phone') : null,
+              'Call Parent',
+              Icons.call_rounded,
+              theme.primary,
+              () => phone != null && phone.isNotEmpty
+                  ? launchURL('tel:$phone')
+                  : null,
             ),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: _buildActionButton(
-              'WhatsApp', Icons.chat_rounded, theme.success, 
-              () => phone != null && phone.isNotEmpty ? launchURL('https://wa.me/$phone') : null,
+              'WhatsApp',
+              Icons.chat_rounded,
+              theme.success,
+              () => phone != null && phone.isNotEmpty
+                  ? launchURL('https://wa.me/$phone')
+                  : null,
             ),
           ),
         ],
@@ -233,7 +268,8 @@ class _EditStudentWidgetState extends ConsumerState<EditStudentWidget> {
     );
   }
 
-  Widget _buildActionButton(String label, IconData icon, Color color, VoidCallback onTap) {
+  Widget _buildActionButton(
+      String label, IconData icon, Color color, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(AppRadius.md),
@@ -249,7 +285,9 @@ class _EditStudentWidgetState extends ConsumerState<EditStudentWidget> {
           children: [
             Icon(icon, color: color, size: 18),
             const SizedBox(width: 8),
-            Text(label, style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 13)),
+            Text(label,
+                style: TextStyle(
+                    color: color, fontWeight: FontWeight.bold, fontSize: 13)),
           ],
         ),
       ),
@@ -279,10 +317,13 @@ class _EditStudentWidgetState extends ConsumerState<EditStudentWidget> {
                         ? CachedNetworkImage(
                             imageUrl: state.photoUrl!,
                             fit: BoxFit.cover,
-                            placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
-                            errorWidget: (context, url, error) => const Icon(Icons.person, size: 60),
+                            placeholder: (context, url) => const Center(
+                                child: CircularProgressIndicator()),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.person, size: 60),
                           )
-                        : Icon(Icons.person_rounded, size: 60, color: theme.secondaryText),
+                        : Icon(Icons.person_rounded,
+                            size: 60, color: theme.secondaryText),
                   ),
                 ),
               ),
@@ -293,7 +334,9 @@ class _EditStudentWidgetState extends ConsumerState<EditStudentWidget> {
                   onTap: () async {
                     final url = await _showPhotoUrlDialog(state.photoUrl);
                     if (url != null) {
-                      ref.read(editStudentNotifierProvider.notifier).setPhotoUrl(url);
+                      ref
+                          .read(editStudentNotifierProvider.notifier)
+                          .setPhotoUrl(url);
                     }
                   },
                   child: Container(
@@ -302,7 +345,8 @@ class _EditStudentWidgetState extends ConsumerState<EditStudentWidget> {
                       color: theme.primary,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.camera_alt_rounded, size: 16, color: Colors.white),
+                    child: const Icon(Icons.camera_alt_rounded,
+                        size: 16, color: Colors.white),
                   ),
                 ),
               ),
@@ -334,8 +378,12 @@ class _EditStudentWidgetState extends ConsumerState<EditStudentWidget> {
           controller: TextEditingController(text: url),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(context, url), child: const Text('OK')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel')),
+          TextButton(
+              onPressed: () => Navigator.pop(context, url),
+              child: const Text('OK')),
         ],
       ),
     );
