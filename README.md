@@ -69,3 +69,37 @@ flutter analyze
 flutter test
 cd firebase && npm --prefix tests ci && firebase emulators:exec --only firestore "npm --prefix tests test"
 ```
+
+## CI/CD (GitHub Actions)
+
+```
+Developer → git push → GitHub
+  → Flutter analyze + test
+  → Signed Android AAB (+ APK)
+  → Firebase App Distribution
+  → Play Closed Testing (alpha)
+  → Play production (git tags `v*` only)
+```
+
+Pull requests run analyze, tests, and Firestore rules tests only.
+
+Pushes to `R1` / `main` / `dev` and `workflow_dispatch` also build a signed AAB when Android signing secrets are present. Firebase App Distribution uses the universal APK (AAB upload requires the Firebase project to already be linked to Play). Closed Testing uploads the AAB to the Play **alpha** track. Pushing a `v*` tag also promotes that AAB to **production**.
+
+### Required GitHub secrets
+
+| Secret | Used for |
+| --- | --- |
+| `ANDROID_KEYSTORE_BASE64` | Base64-encoded upload keystore (`*.jks`) |
+| `ANDROID_KEYSTORE_PASSWORD` | Keystore password |
+| `ANDROID_KEY_PASSWORD` | Key password (defaults to store password) |
+| `ANDROID_KEY_ALIAS` | Key alias (defaults to `upload`) |
+| `FIREBASE_SERVICE_ACCOUNT_JSON` | Firebase / GCP service account with App Distribution Admin |
+| `PLAY_STORE_SERVICE_ACCOUNT_JSON` | Play Console service account with Release to production / closed tracks |
+
+Optional: `ANDROID_KEY_PROPERTIES` (whole `key.properties` file instead of the individual key fields). Optional repo variables: `FIREBASE_ANDROID_APP_ID`, `FIREBASE_TESTER_GROUPS` (default `testers`).
+
+Create the `testers` group in Firebase App Distribution and invite testers there. The Play app `com.dciteacherapp` must already exist in Play Console, and the service account must be invited under Play Console → Users and permissions.
+
+```bash
+base64 -w0 android/app/upload-keystore.jks
+```
