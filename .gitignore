@@ -56,3 +56,6 @@ keystore-base64.txt
 firebase/**/node_modules/
 firebase/**/*.log
 
+# Local analyzer dumps
+analysis_results.txt
+

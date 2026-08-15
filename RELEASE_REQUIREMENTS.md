@@ -51,7 +51,8 @@ Google requires you to fill out a "Data Safety" form based on the following:
 * **Security Practices**:
   * Data is **encrypted in transit** (using Firebase HTTPS).
   * Users can request that their data be deleted.
-* **Privacy Policy URL**: (You must host the content of `PRIVACY_POLICY.md` and provide the link here).
+* **Privacy Policy URL**: https://d-c-i-teacher-app-lffjyu.web.app/privacy.html
+* **Terms of Service URL**: https://d-c-i-teacher-app-lffjyu.web.app/tos.html
 
 ---
 
@@ -64,5 +65,5 @@ Google requires you to fill out a "Data Safety" form based on the following:
 ## 6. Pre-Submission Checklist
 - [ ] GitHub Actions `AAB → App Distribution → Play` job is green on `R1` (or run **workflow_dispatch**).
 - [ ] Repository secrets for the upload keystore, Firebase App Distribution, and Play Console are set (see README CI/CD).
-- [ ] Host the Privacy Policy on a public URL.
+- [ ] Host the Privacy Policy on a public URL (Firebase Hosting pages are in `firebase/public/`; deploy needs `FIREBASE_SERVICE_ACCOUNT_JSON`).
 - [ ] Capture 4 high-quality screenshots from your device or emulator.

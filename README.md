@@ -25,6 +25,11 @@ flutter run
 
 Android and iOS Firebase config files (`google-services.json`, `GoogleService-Info.plist`) are already in the repo.
 
+Public legal pages live in `firebase/public/` and deploy to Firebase Hosting on pushes to `main` when `FIREBASE_SERVICE_ACCOUNT_JSON` is set:
+
+- Privacy Policy: https://d-c-i-teacher-app-lffjyu.web.app/privacy.html
+- Terms of Service: https://d-c-i-teacher-app-lffjyu.web.app/tos.html
+
 ## Security deploy (required)
 
 This branch tightens Firestore/Storage rules, blocks public Auth sign-up, and moves staff-user creation and WhatsApp Cloud API sends to Cloud Functions. Deploy them before using Add User or WhatsApp Cloud sends:
