@@ -1,0 +1,22 @@
+# Task List - Institutional Branding Refresh
+
+- `[/]` **Global Constants & Configuration**
+    - `[ ]` Update `lib/backend/services/app_constants.dart`
+    - `[ ]` Update `lib/backend/repositories/config_repository.dart`
+- `[/]` **App Metadata & Identity**
+    - `[ ]` Update `android/app/src/main/AndroidManifest.xml`
+    - `[ ]` Update `android/app/src/main/res/values/strings.xml`
+    - `[ ]` Update `ios/Runner/Info.plist`
+    - `[ ]` Update `lib/main.dart`
+- `[/]` **UI Branding & Components**
+    - `[ ]` Update `lib/components/shared/responsive_scaffold.dart`
+    - `[ ]` Update `lib/components/header_section/header_section_widget.dart`
+    - `[ ]` Update `lib/components/auth_header/auth_header_widget.dart`
+    - `[ ]` Update `lib/pages/ai_chat/ai_chat_widget.dart`
+    - `[ ]` Update `lib/pages/about_dci/about_dci_widget.dart`
+- `[/]` **Document Branding**
+    - `[ ]` Update `lib/backend/services/pdf_service.dart`
+    - `[ ]` Update `lib/pages/announcements_feed/announcements_feed_widget.dart`
+- `[ ]` **Verification**
+    - `[ ]` Visual audit of all screens
+    - `[ ]` Verify PDF report headers
