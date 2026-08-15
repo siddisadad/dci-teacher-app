@@ -70,16 +70,11 @@ jobs:
       - name: Run Firestore rules tests
         run: firebase emulators:exec --only firestore "npm --prefix tests test"
 
-  release_android:
-    name: AAB → App Distribution → Play
+  build_android:
+    name: Build Android Release
     needs: test
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/R1' || github.ref == 'refs/heads/dev' || startsWith(github.ref, 'refs/tags/v'))
     runs-on: ubuntu-latest
-    env:
-      FIREBASE_ANDROID_APP_ID: ${{ vars.FIREBASE_ANDROID_APP_ID || '1:185309718906:android:b7183fa10298724e6d8ec3' }}
-      FIREBASE_TESTER_GROUPS: ${{ vars.FIREBASE_TESTER_GROUPS }}
-      HAS_FIREBASE: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON != '' }}
-      HAS_PLAY: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -99,7 +94,7 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Resolve build version
+      - name: Get Version
         id: version
         run: |
           NAME=$(grep '^version:' pubspec.yaml | sed 's/version: //; s/+.*//; s/[[:space:]]//g')
@@ -109,31 +104,42 @@ jobs:
           echo "code=$BUILD" >> "$GITHUB_OUTPUT"
           echo "Using versionName=$NAME versionCode=$BUILD"
 
-      - name: Configure Android signing
+      - name: Setup Signing
         id: signing
         env:
-          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-          ANDROID_KEY_PROPERTIES: ${{ secrets.ANDROID_KEY_PROPERTIES }}
+          # Check both secrets and vars in case they were misconfigured
+          SEC_KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          SEC_KEY_PROPS: ${{ secrets.ANDROID_KEY_PROPERTIES }}
+          VAR_KEYSTORE_B64: ${{ vars.ANDROID_KEYSTORE_BASE64 }}
+          VAR_KEY_PROPS: ${{ vars.ANDROID_KEY_PROPERTIES }}
+          
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
         run: |
-          if [ -z "$ANDROID_KEYSTORE_BASE64" ]; then
-            echo "::warning::ANDROID_KEYSTORE_BASE64 is not set. Skipping signed Android release, Firebase App Distribution, and Play upload."
+          # Prioritize secrets over vars
+          B64="${SEC_KEYSTORE_B64:-$VAR_KEYSTORE_B64}"
+          PROPS="${SEC_KEY_PROPS:-$VAR_KEY_PROPS}"
+          
+          if [ -z "$B64" ] && [ -z "$PROPS" ]; then
+            echo "::warning::Signing secrets (ANDROID_KEYSTORE_BASE64 or ANDROID_KEY_PROPERTIES) not found in secrets or vars. Skipping signed Android release."
             echo "ready=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
+          
           KEYSTORE_PATH="$GITHUB_WORKSPACE/android/app/upload-keystore.jks"
-          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$KEYSTORE_PATH"
-          if [ -n "$ANDROID_KEY_PROPERTIES" ]; then
-            printf '%s\n' "$ANDROID_KEY_PROPERTIES" > android/key.properties
+          
+          if [ -n "$B64" ]; then
+            echo "$B64" | base64 --decode > "$KEYSTORE_PATH"
+          fi
+          
+          if [ -n "$PROPS" ]; then
+            printf '%s\n' "$PROPS" > android/key.properties
+            # Force the storeFile path to the local decoded file
             sed -i '/^storeFile=/d' android/key.properties
             echo "storeFile=$KEYSTORE_PATH" >> android/key.properties
           else
-            if [ -z "$ANDROID_KEYSTORE_PASSWORD" ]; then
-              echo "::error::Set ANDROID_KEYSTORE_PASSWORD (or ANDROID_KEY_PROPERTIES) in GitHub secrets."
-              exit 1
-            fi
+            # Manual fallback if key.properties is not provided
             {
               echo "storePassword=${ANDROID_KEYSTORE_PASSWORD}"
               echo "keyPassword=${ANDROID_KEY_PASSWORD:-$ANDROID_KEYSTORE_PASSWORD}"
@@ -143,7 +149,7 @@ jobs:
           fi
           echo "ready=true" >> "$GITHUB_OUTPUT"
 
-      - name: Build Android App Bundle
+      - name: Build App Bundle
         if: steps.signing.outputs.ready == 'true'
         run: |
           flutter build appbundle --release \
@@ -152,7 +158,7 @@ jobs:
             --obfuscate \
             --split-debug-info=build/app/outputs/symbols
 
-      - name: Build Android APK
+      - name: Build APK
         if: steps.signing.outputs.ready == 'true'
         run: |
           flutter build apk --release \
@@ -175,67 +181,51 @@ jobs:
           name: release-apk
           path: build/app/outputs/flutter-apk/*.apk
 
-      - name: Locate R8 mapping file
-        if: steps.signing.outputs.ready == 'true'
-        id: mapping
-        run: |
-          if [ -f build/app/outputs/mapping/release/mapping.txt ]; then
-            echo "file=build/app/outputs/mapping/release/mapping.txt" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Firebase App Distribution
-        if: steps.signing.outputs.ready == 'true' && env.HAS_FIREBASE == 'true'
+        if: steps.signing.outputs.ready == 'true' && secrets.FIREBASE_SERVICE_ACCOUNT_JSON != ''
         continue-on-error: true
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
-          appId: ${{ env.FIREBASE_ANDROID_APP_ID }}
+          appId: ${{ secrets.FIREBASE_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
-          groups: ${{ env.FIREBASE_TESTER_GROUPS }}
+          groups: ${{ vars.FIREBASE_TESTER_GROUPS }}
           file: build/app/outputs/flutter-apk/app-release.apk
           releaseNotes: |
             ${{ github.ref_name }} (${{ steps.version.outputs.name }}+${{ steps.version.outputs.code }})
             ${{ github.event.head_commit.message }}
 
-      - name: Skip Firebase App Distribution
-        if: steps.signing.outputs.ready == 'true' && env.HAS_FIREBASE != 'true'
-        run: echo "::warning::FIREBASE_SERVICE_ACCOUNT_JSON is not set. Skipping Firebase App Distribution."
-
-      - name: Google Play Closed Testing
-        if: >-
-          steps.signing.outputs.ready == 'true' &&
-          env.HAS_PLAY == 'true' &&
-          startsWith(github.ref, 'refs/tags/v') == false
+      - name: Google Play Store
+        if: steps.signing.outputs.ready == 'true' && secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON != ''
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
           packageName: com.dciteacherapp
           releaseFiles: build/app/outputs/bundle/release/app-release.aab
-          track: alpha
-          tracks: alpha
+          track: ${{ startsWith(github.ref, 'refs/tags/v') && 'production' || 'alpha' }}
           status: completed
           changesNotSentForReview: true
-          whatsNewDirectory: .github/whatsnew
-          mappingFile: ${{ steps.mapping.outputs.file }}
 
-      - name: Skip Google Play Closed Testing
-        if: steps.signing.outputs.ready == 'true' && env.HAS_PLAY != 'true'
-        run: echo "::warning::PLAY_STORE_SERVICE_ACCOUNT_JSON is not set. Skipping Play Closed Testing and production."
-
-      - name: Google Play Closed Testing + Release
-        if: >-
-          steps.signing.outputs.ready == 'true' &&
-          env.HAS_PLAY == 'true' &&
-          startsWith(github.ref, 'refs/tags/v')
-        uses: r0adkll/upload-google-play@v1
+  deploy_firestore:
+    name: Deploy Firestore Rules
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: firebase
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
-          packageName: com.dciteacherapp
-          releaseFiles: build/app/outputs/bundle/release/app-release.aab
-          tracks: alpha,production
-          status: completed
-          changesNotSentForReview: true
-          whatsNewDirectory: .github/whatsnew
-          mappingFile: ${{ steps.mapping.outputs.file }}
+          node-version: '20'
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+      - name: Deploy Rules
+        if: secrets.FIREBASE_SERVICE_ACCOUNT_JSON != ''
+        run: firebase deploy --only firestore:rules,firestore:indexes --project d-c-i-teacher-app-lffjyu
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
 
   build_web:
     name: Build Web
