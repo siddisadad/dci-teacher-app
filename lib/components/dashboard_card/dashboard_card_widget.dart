@@ -104,17 +104,17 @@ class _DashboardCardWidgetState extends State<DashboardCardWidget> {
                     children: [
                       Flexible(
                         child: Container(
-                          width: 42,
-                          height: 42,
+                          width: 48,
+                          height: 48,
                           decoration: BoxDecoration(
                             color: theme.primary.withAlpha(25),
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(12),
                           ),
                           alignment: Alignment.center,
                           child: IconTheme(
                             data: IconThemeData(
                               color: theme.primary,
-                              size: 20,
+                              size: 24,
                             ),
                             child:
                                 widget.icon ?? const Icon(Icons.apps_rounded),
@@ -129,7 +129,7 @@ class _DashboardCardWidgetState extends State<DashboardCardWidget> {
                             textAlign: TextAlign.center,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: AppTypography.label.copyWith(
+                            style: AppTypography.caption.copyWith(
                               fontWeight: FontWeight.bold,
                               color: theme.primaryText,
                               fontSize: 12,

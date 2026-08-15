@@ -62,18 +62,18 @@ class _HomeDashboardWidgetState extends ConsumerState<HomeDashboardWidget> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           _buildSectionTitle('Management Modules'),
-                          const SizedBox(height: AppSpacing.md),
+                          const SizedBox(height: AppSpacing.lg),
                           _buildModulesGrid(context, constraints.maxWidth,
                               isManagement: true),
                           if (access.canViewAdminReports ||
                               access.canViewFacultyList) ...[
-                            const SizedBox(height: AppSpacing.xl),
+                            const SizedBox(height: AppSpacing.xxl),
                             _buildSectionTitle('Administrative Tools'),
-                            const SizedBox(height: AppSpacing.md),
+                            const SizedBox(height: AppSpacing.lg),
                             _buildModulesGrid(context, constraints.maxWidth,
                                 isManagement: false),
                           ],
-                          const SizedBox(height: AppSpacing.xl),
+                          const SizedBox(height: AppSpacing.xxl),
                         ],
                       ),
                     ),
@@ -115,8 +115,8 @@ class _HomeDashboardWidgetState extends ConsumerState<HomeDashboardWidget> {
             borderRadius: hideActions
                 ? null
                 : const BorderRadius.only(
-                    bottomLeft: Radius.circular(32.0),
-                    bottomRight: Radius.circular(32.0),
+                    bottomLeft: Radius.circular(AppRadius.xxl),
+                    bottomRight: Radius.circular(AppRadius.xxl),
                   ),
             boxShadow: AppShadows.low,
           ),
@@ -131,7 +131,8 @@ class _HomeDashboardWidgetState extends ConsumerState<HomeDashboardWidget> {
                         style: theme.bodyMedium.override(
                             font: GoogleFonts.inter(),
                             color: theme.onBackground80,
-                            fontSize: 13)),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500)),
                     const SizedBox(height: 4),
                     Text(
                       displayName,
@@ -139,9 +140,9 @@ class _HomeDashboardWidgetState extends ConsumerState<HomeDashboardWidget> {
                       overflow: TextOverflow.ellipsis,
                       style: theme.titleMedium.override(
                         font: GoogleFonts.plusJakartaSans(
-                            fontWeight: FontWeight.bold),
+                            fontWeight: FontWeight.w800),
                         color: theme.onBackground,
-                        fontSize: 24,
+                        fontSize: 26,
                         lineHeight: 1.1,
                       ),
                     ),
@@ -238,7 +239,7 @@ class _HomeDashboardWidgetState extends ConsumerState<HomeDashboardWidget> {
   Widget _buildModulesGrid(BuildContext context, double width,
       {required bool isManagement}) {
     final crossAxisCount =
-        width > 1000 ? 5 : (width > 700 ? 4 : (width > 400 ? 3 : 2));
+        width > 1200 ? 6 : (width > 800 ? 4 : (width > 450 ? 3 : 2));
     final access = ref.watch(accessControlProvider);
 
     final List<Map<String, dynamic>> modules;
@@ -320,7 +321,7 @@ class _HomeDashboardWidgetState extends ConsumerState<HomeDashboardWidget> {
         crossAxisCount: crossAxisCount,
         crossAxisSpacing: 16,
         mainAxisSpacing: 16,
-        childAspectRatio: 1.2,
+        childAspectRatio: 1.25,
       ),
       itemCount: modules.length,
       shrinkWrap: true,
