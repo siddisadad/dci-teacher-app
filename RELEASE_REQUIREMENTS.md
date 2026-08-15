@@ -7,9 +7,9 @@ This document contains all the metadata and asset requirements needed for the **
 ## 1. Technical Details
 * **App Name**: Deshmukh Coaching Institute App
 * **Package Name**: `com.dciteacherapp`
-* **Version Name**: `1.0.4`
-* **Version Code**: `6`
-* **Build Format**: `.aab` (Android App Bundle) for Play Store, `.apk` for App Center.
+* **Version Name**: `1.0.5` (from `pubspec.yaml`; CI may bump the build number)
+* **Version Code**: `7+` (CI uses `pubspec` build number + GitHub `run_number`)
+* **Build Format**: `.aab` (Android App Bundle) for Play Closed Testing / production, `.apk` for Firebase App Distribution.
 
 ---
 
@@ -62,7 +62,7 @@ Google requires you to fill out a "Data Safety" form based on the following:
 ---
 
 ## 6. Pre-Submission Checklist
-- [ ] Run `./build_bundle.ps1` and ensure it says "Success!".
-- [ ] Verify `android/key.properties` exists and contains correct signing info.
+- [ ] GitHub Actions `AAB → App Distribution → Play` job is green on `R1` (or run **workflow_dispatch**).
+- [ ] Repository secrets for the upload keystore, Firebase App Distribution, and Play Console are set (see README CI/CD).
 - [ ] Host the Privacy Policy on a public URL.
 - [ ] Capture 4 high-quality screenshots from your device or emulator.
