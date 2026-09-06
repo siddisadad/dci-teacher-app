@@ -18,7 +18,7 @@ service cloud.firestore {
         ? request.auth.token.role
         : (isAuthenticated() && exists(userDocPath())
             ? get(userDocPath()).data.role
-            : '');
+            : 'Student');
     }
 
     function assignedClasses() {

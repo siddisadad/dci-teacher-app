@@ -62,7 +62,7 @@ Google requires you to fill out a "Data Safety" form based on the following:
 ---
 
 ## 6. Pre-Submission Checklist
-- [ ] GitHub Actions `AAB → App Distribution → Play` job is green on `R1` (or run **workflow_dispatch**).
+- [ ] GitHub Actions `AAB → App Distribution → Play` job is green on `R1` / `R2` / `R3` (or run **workflow_dispatch**).
 - [ ] Repository secrets for the upload keystore, Firebase App Distribution, and Play Console are set (see README CI/CD).
 - [ ] Host the Privacy Policy on a public URL.
 - [ ] Capture 4 high-quality screenshots from your device or emulator.

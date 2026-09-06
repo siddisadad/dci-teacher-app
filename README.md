@@ -83,7 +83,7 @@ Developer → git push → GitHub
 
 Pull requests run analyze, tests, and Firestore rules tests only.
 
-Pushes to `R1` / `main` / `dev` and `workflow_dispatch` also build a signed AAB when Android signing secrets are present. Firebase App Distribution uses the universal APK (AAB upload requires the Firebase project to already be linked to Play). Closed Testing uploads the AAB to the Play **alpha** track. Pushing a `v*` tag also promotes that AAB to **production**.
+Pushes to `R1` / `R2` / `R3` / `main` / `dev` and `workflow_dispatch` also build a signed AAB when Android signing secrets are present. Firebase App Distribution uses the universal APK (AAB upload requires the Firebase project to already be linked to Play). Closed Testing uploads the AAB to the Play **alpha** track. Pushing a `v*` tag also promotes that AAB to **production**.
 
 ### Required GitHub secrets
 

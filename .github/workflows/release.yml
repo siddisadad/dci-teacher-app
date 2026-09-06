@@ -2,7 +2,7 @@ name: Release
 
 on:
   push:
-    branches: [ dev, main, R1, R2 ]
+    branches: [ dev, main, R1, R2, R3 ]
     tags: [ 'v*' ]
   workflow_dispatch:
 

@@ -10,14 +10,14 @@ class AccessControl {
   AccessControl(this.user);
 
   UserRole get role {
-    if (user == null) return UserRole.unknown;
+    if (user == null) return UserRole.student;
     final roleStr = user!.role.trim().toLowerCase();
     return switch (roleStr) {
       'director' => UserRole.director,
       'admin' => UserRole.admin,
       'teacher' => UserRole.teacher,
       'student' => UserRole.student,
-      _ => UserRole.unknown,
+      _ => UserRole.student,
     };
   }
 

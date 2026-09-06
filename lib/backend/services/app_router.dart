@@ -29,6 +29,13 @@ final routerProvider = Provider<GoRouter>((ref) {
           AddUserWidget.routePath,
           FacultyListWidget.routePath,
           InstituteSettingsWidget.routePath,
+          AuditLogsWidget.routePath,
+          StaffAnalyticsWidget.routePath,
+        ];
+
+        final managerOnlyRoutes = [
+          ComparativeResultsWidget.routePath,
+          EditStudentWidget.routePath,
         ];
 
         final staffOnlyRoutes = [
@@ -39,10 +46,23 @@ final routerProvider = Provider<GoRouter>((ref) {
           ExamsDashboardWidget.routePath,
           ResultsDashboardWidget.routePath,
           StudentListWidget.routePath,
+          AddExamWidget.routePath,
+          EnterMarksWidget.routePath,
+          TeacherWiseReportWidget.routePath,
+          DateWiseReportWidget.routePath,
+          AttendanceReportWidget.routePath,
+          HomeworkAssignmentWidget.routePath,
+          HomeworkDashboardWidget.routePath,
+          HomeworkHistoryWidget.routePath,
         ];
 
         if (adminOnlyRoutes.contains(state.matchedLocation) &&
             !access.canManageTeachers) {
+          return '/';
+        }
+
+        if (managerOnlyRoutes.contains(state.matchedLocation) &&
+            !access.isManager) {
           return '/';
         }
 
