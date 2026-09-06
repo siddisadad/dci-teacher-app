@@ -101,8 +101,10 @@ service cloud.firestore {
       allow read: if (isStaff() && (resource.data.markedBy == request.auth.uid || canReadClass(resource.data.class)))
         || (isAuthenticated() && resource.data.studentId == request.auth.uid);
       allow create: if isStaff() && request.resource.data.markedBy == request.auth.uid;
-      allow update, delete: if isStaff()
-        && (resource.data.markedBy == request.auth.uid || isAdmin());
+      allow update: if isStaff()
+        && (resource.data.markedBy == request.auth.uid || isAdmin())
+        && request.resource.data.updatedBy == request.auth.uid;
+      allow delete: if isAdmin();
     }
 
     match /homework_assignments/{assignmentId} {

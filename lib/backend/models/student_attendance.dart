@@ -10,6 +10,8 @@ class StudentAttendance {
   final DateTime date;
   final String markedBy;
   final DateTime? createdAt;
+  final String? updatedBy;
+  final DateTime? updatedAt;
 
   StudentAttendance({
     required this.id,
@@ -21,6 +23,8 @@ class StudentAttendance {
     required this.date,
     required this.markedBy,
     this.createdAt,
+    this.updatedBy,
+    this.updatedAt,
   });
 
   factory StudentAttendance.fromFirestore(DocumentSnapshot doc) {
@@ -35,6 +39,8 @@ class StudentAttendance {
       date: (data['date'] as Timestamp?)?.toDate() ?? DateTime.now(),
       markedBy: data['markedBy']?.toString() ?? '',
       createdAt: (data['createdAt'] as Timestamp?)?.toDate(),
+      updatedBy: data['updatedBy']?.toString(),
+      updatedAt: (data['updatedAt'] as Timestamp?)?.toDate(),
     );
   }
 
@@ -50,6 +56,8 @@ class StudentAttendance {
       'createdAt': createdAt != null
           ? Timestamp.fromDate(createdAt!)
           : FieldValue.serverTimestamp(),
+      if (updatedBy != null) 'updatedBy': updatedBy,
+      if (updatedAt != null) 'updatedAt': Timestamp.fromDate(updatedAt!),
     };
   }
 }
