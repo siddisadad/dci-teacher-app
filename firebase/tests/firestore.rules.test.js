@@ -58,14 +58,15 @@ describe("Firestore rules", () => {
     await assertFails(db.collection("students").get());
   });
 
-  it("lets unrestricted teachers list all students", async () => {
+  it("denies unassigned teachers student reads", async () => {
     await seed({
       "users/t1": {role: "Teacher", assigned_classes: []},
       "students/stu1": {class: "10A", name: "A"},
       "students/stu2": {class: "10B", name: "B"},
     });
     const db = authed("t1", {role: "Teacher", assigned_classes: []});
-    await assertSucceeds(db.collection("students").get());
+    await assertFails(db.collection("students").get());
+    await assertFails(db.doc("students/stu1").get());
   });
 
   it("scopes assigned teachers to their classes", async () => {

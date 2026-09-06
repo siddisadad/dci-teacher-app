@@ -59,11 +59,7 @@ service cloud.firestore {
     }
 
     function teacherCanReadClass(className) {
-      return isTeacher() && (
-        assignedClasses() == null
-        || assignedClasses().size() == 0
-        || className in assignedClasses()
-      );
+      return isTeacher() && assignedClasses() != null && assignedClasses().size() > 0 && className in assignedClasses();
     }
 
     function canReadClass(className) {

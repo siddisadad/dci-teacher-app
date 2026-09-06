@@ -74,13 +74,15 @@ class AccessControl {
   /// (legacy staff, or managers).
   List<String> get assignedClasses => user?.assignedClasses ?? const [];
 
-  bool get hasClassRestriction =>
-      role == UserRole.teacher && assignedClasses.isNotEmpty;
+  bool get hasClassRestriction => role == UserRole.teacher;
 
   bool canAccessClass(String className) {
     if (isManager) return true;
-    if (assignedClasses.isEmpty) return true;
-    return assignedClasses.contains(className);
+    if (role == UserRole.teacher) {
+      if (assignedClasses.isEmpty) return false;
+      return assignedClasses.contains(className);
+    }
+    return false;
   }
 }
 

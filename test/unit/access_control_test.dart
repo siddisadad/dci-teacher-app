@@ -63,9 +63,9 @@ void main() {
       expect(restricted.canAccessClass('10A'), isTrue);
       expect(restricted.canAccessClass('10C'), isFalse);
 
-      final unrestricted = AccessControl(_user('Teacher'));
-      expect(unrestricted.hasClassRestriction, isFalse);
-      expect(unrestricted.canAccessClass('10C'), isTrue);
+      final unassignedTeacher = AccessControl(_user('Teacher'));
+      expect(unassignedTeacher.hasClassRestriction, isTrue);
+      expect(unassignedTeacher.canAccessClass('10C'), isFalse);
 
       final admin = AccessControl(
         _user('Admin').copyWith(assignedClasses: ['10A']),
