@@ -58,7 +58,7 @@ class UserRepository implements IUserRepository {
 
   Future<String> getUserRole() async {
     final teacher = await getUserData();
-    return teacher?.role ?? 'Teacher';
+    return teacher?.role ?? 'Student';
   }
 
   Future<bool> isAdmin() async {

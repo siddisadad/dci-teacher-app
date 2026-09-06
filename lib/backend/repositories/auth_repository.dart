@@ -87,39 +87,46 @@ class AuthRepository {
       return;
     }
 
-    // If doc by UID doesn't exist, check if there's a pre-provisioned doc by EMAIL
-    final preProvisionedQuery = await _firestore
-        .collection('users')
-        .where('email', isEqualTo: user.email?.toLowerCase())
-        .where('is_pre_provisioned', isEqualTo: true)
-        .get();
+    final email = user.email?.toLowerCase().trim() ?? '';
 
-    if (preProvisionedQuery.docs.isNotEmpty) {
-      final preDoc = preProvisionedQuery.docs.first;
-      final preData = preDoc.data();
+    // Step 1: Check if an approved pre-provisioned staff record exists by email
+    if (email.isNotEmpty) {
+      final preProvisionedQuery = await _firestore
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .where('is_pre_provisioned', isEqualTo: true)
+          .limit(1)
+          .get();
 
-      // Found a pre-provisioned doc. Copy data to the UID-based doc and remove the old one.
-      await userDocRef.set({
-        ...preData,
-        'uid': user.uid,
-        'photo_url': user.photoURL ?? preData['photo_url'] ?? '',
-        'is_pre_provisioned': false, // No longer pre-provisioned
-        'updated_time': FieldValue.serverTimestamp(),
-      });
+      if (preProvisionedQuery.docs.isNotEmpty) {
+        final preDoc = preProvisionedQuery.docs.first;
+        final preData = preDoc.data();
 
-      // Delete the temporary pre-provisioned doc
-      await preDoc.reference.delete();
-      return;
+        // Approved pre-provisioned staff record exists: activate approved role!
+        await userDocRef.set({
+          ...preData,
+          'uid': user.uid,
+          'photo_url': user.photoURL ?? preData['photo_url'] ?? '',
+          'is_pre_provisioned': false,
+          'updated_time': FieldValue.serverTimestamp(),
+        });
+
+        if (preDoc.id != user.uid) {
+          await preDoc.reference.delete();
+        }
+        return;
+      }
     }
 
-    // Default: Create a brand new Teacher profile if nothing existed
+    // Step 2: No approved staff record exists -> assign unprivileged 'Student' role.
+    // Unknown/unapproved accounts are denied staff access.
     await userDocRef.set({
-      'email': user.email?.toLowerCase() ?? '',
+      'email': email,
       'display_name': user.displayName ?? '',
       'photo_url': user.photoURL ?? '',
       'uid': user.uid,
       'created_time': FieldValue.serverTimestamp(),
-      'role': 'Teacher',
+      'role': 'Student',
       'notifications_enabled': true,
     });
   }

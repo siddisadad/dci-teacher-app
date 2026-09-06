@@ -52,7 +52,7 @@ class Teacher {
       email: data['email']?.toString() ?? '',
       displayName: data['display_name']?.toString() ?? '',
       photoUrl: data['photo_url']?.toString() ?? '',
-      role: data['role']?.toString() ?? 'Teacher',
+      role: data['role']?.toString() ?? 'Student',
       designation: data['designation']?.toString() ?? '',
       phoneNumber: data['phone_number']?.toString() ?? '',
       employeeId: data['employee_id']?.toString(),
