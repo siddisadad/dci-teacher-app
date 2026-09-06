@@ -68,8 +68,7 @@ class AttendanceRepository implements IAttendanceRepository {
         final docRef = _studentAttendanceCollection.doc(docId);
         final data = studentAttendance.toFirestore();
         data['markedBy'] = user.uid;
-        batch.set(
-            docRef, data, SetOptions(merge: true));
+        batch.set(docRef, data, SetOptions(merge: true));
       }
       await batch.commit();
     }
