@@ -17,7 +17,10 @@ class HomeworkRepository {
     final user = _auth.currentUser;
     if (user == null) throw Exception('User not authenticated');
 
-    await _homeworkCollection.add(homework.toFirestore());
+    final data = homework.toFirestore();
+    data['createdBy'] = user.uid;
+
+    await _homeworkCollection.add(data);
   }
 
   Stream<List<HomeworkAssignment>> getUserHomework({int limit = 20}) {

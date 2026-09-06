@@ -16,7 +16,10 @@ class ExamRepository {
     final user = _auth.currentUser;
     if (user == null) throw Exception('User not authenticated');
 
-    await _examsCollection.add(exam.toFirestore());
+    final data = exam.toFirestore();
+    data['createdBy'] = user.uid;
+
+    await _examsCollection.add(data);
   }
 
   Stream<List<Exam>> getExamsStream({int limit = 50}) {

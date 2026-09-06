@@ -152,20 +152,21 @@ service cloud.firestore {
     match /exam_results/{resultId} {
       allow read: if isStaff()
         || (isAuthenticated() && resource.data.studentId == request.auth.uid);
-      allow create, update: if isStaff();
+      allow create: if isStaff() && request.resource.data.recordedBy == request.auth.uid;
+      allow update: if isStaff();
       allow delete: if isManager();
     }
 
     match /audit_logs/{logId} {
       allow read: if isManager()
         || (isStaff() && resource.data.userId == request.auth.uid);
-      allow create: if isStaff();
+      allow create: if isStaff() && request.resource.data.userId == request.auth.uid;
       allow update, delete: if false;
     }
 
     match /error_logs/{logId} {
       allow read: if isManager();
-      allow create: if isAuthenticated();
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
       allow update, delete: if false;
     }
 

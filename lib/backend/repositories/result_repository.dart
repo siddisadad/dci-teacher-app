@@ -1,22 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:d_c_i_teacher_app/backend/models/exam_result.dart';
 
 class ResultRepository {
-  ResultRepository({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+  ResultRepository({FirebaseFirestore? firestore, FirebaseAuth? auth})
+      : _firestore = firestore ?? FirebaseFirestore.instance,
+        _auth = auth ?? FirebaseAuth.instance;
 
   final FirebaseFirestore _firestore;
+  final FirebaseAuth _auth;
 
   CollectionReference get _resultsCollection =>
       _firestore.collection('exam_results');
 
   Future<void> saveResults(List<ExamResult> results) async {
+    final user = _auth.currentUser;
+    if (user == null) throw Exception('User not authenticated');
+
     final batch = _firestore.batch();
     for (var result in results) {
       final docRef = result.id.isEmpty
           ? _resultsCollection.doc()
           : _resultsCollection.doc(result.id);
-      batch.set(docRef, result.toFirestore(), SetOptions(merge: true));
+      final data = result.toFirestore();
+      data['recordedBy'] = user.uid;
+      batch.set(docRef, data, SetOptions(merge: true));
     }
     await batch.commit();
   }

@@ -22,7 +22,11 @@ class AttendanceRepository implements IAttendanceRepository {
     final user = _auth.currentUser;
     if (user == null) throw Exception('User not authenticated');
 
-    await _attendanceCollection.add(record.toFirestore());
+    final data = record.toFirestore();
+    data['createdBy'] = user.uid;
+    if (user.email != null) data['createdByEmail'] = user.email;
+
+    await _attendanceCollection.add(data);
   }
 
   @override
@@ -62,8 +66,10 @@ class AttendanceRepository implements IAttendanceRepository {
                 .replaceAll(' ', '_');
 
         final docRef = _studentAttendanceCollection.doc(docId);
+        final data = studentAttendance.toFirestore();
+        data['markedBy'] = user.uid;
         batch.set(
-            docRef, studentAttendance.toFirestore(), SetOptions(merge: true));
+            docRef, data, SetOptions(merge: true));
       }
       await batch.commit();
     }

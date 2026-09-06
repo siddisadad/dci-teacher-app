@@ -19,7 +19,10 @@ class DailyReportRepository implements IDailyReportRepository {
     final user = _auth.currentUser;
     if (user == null) throw Exception('User not authenticated');
 
-    await _reportsCollection.add(report.toFirestore());
+    final data = report.toFirestore();
+    data['createdBy'] = user.uid;
+
+    await _reportsCollection.add(data);
   }
 
   @override
