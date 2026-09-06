@@ -22,7 +22,7 @@ class RootDashboardWidget extends ConsumerWidget {
           'director' => const HomeDashboardWidget(),
           'teacher' => const HomeDashboardWidget(),
           'student' => const StudentDashboardWidget(),
-          _ => const HomeDashboardWidget(),
+          _ => const StudentDashboardWidget(),
         };
       },
       loading: () => const Scaffold(

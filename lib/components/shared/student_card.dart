@@ -130,6 +130,13 @@ class StudentCard extends StatelessWidget {
       children: [
         Icon(icon, size: 14, color: theme.secondaryText),
         const SizedBox(width: 4),
+        Text(
+          '$label: ',
+          style: AppTypography.caption.copyWith(
+            color: theme.secondaryText,
+            fontSize: 11,
+          ),
+        ),
         Flexible(
           child: Text(
             value,
