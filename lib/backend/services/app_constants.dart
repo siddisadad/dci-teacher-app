@@ -1,7 +1,7 @@
 class AppConstants {
   static const String instituteName = 'Deshmukh Coaching Institute';
-  static const String appVersion = '1.0.5';
-  static const String buildNumber = '7';
+  static const String appVersion = '1.0.7';
+  static const String buildNumber = '9';
 
   static const List<String> classOptions = [
     'Class 4',

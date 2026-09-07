@@ -1,4 +1,4 @@
-# Release Requirements: Deshmukh Coaching Institute App
+Release Requirements: Deshmukh Coaching Institute App
 
 This document contains all the metadata and asset requirements needed for the **Google Play Store** and **Android App Center**.
 
@@ -7,8 +7,8 @@ This document contains all the metadata and asset requirements needed for the **
 ## 1. Technical Details
 * **App Name**: Deshmukh Coaching Institute App
 * **Package Name**: `com.dciteacherapp`
-* **Version Name**: `1.0.5` (from `pubspec.yaml`; CI may bump the build number)
-* **Version Code**: `7+` (CI uses `pubspec` build number + GitHub `run_number`)
+* **Version Name**: `1.0.7` (from `pubspec.yaml`; CI may bump the build number)
+* **Version Code**: `9+` (CI uses `pubspec` build number + GitHub `run_number`)
 * **Build Format**: `.aab` (Android App Bundle) for Play Closed Testing / production, `.apk` for Firebase App Distribution.
 
 ---

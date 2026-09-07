@@ -4,6 +4,8 @@
 *.pyc
 *.swp
 *.zip
+*.aab
+*.apk
 .DS_Store
 .atom/
 .build/
@@ -50,6 +52,8 @@ android/key.properties
 **/*.jks
 **/*.keystore
 keystore-base64.txt
+github_secrets.env
+*.env
 **/*.json.secret
 **/*.p12
 
